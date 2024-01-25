@@ -1,0 +1,202 @@
+.recent-booking-person-image {
+  width: 40px;
+  height: 40px;
+}
+button {
+  border: 0px;
+  background-color: transparent;
+}
+thead th {
+  font-weight: 500;
+}
+/* thead th, */
+.time,
+.date,
+.name,
+.service_type,
+.date,
+.phoneno {
+  color: #6174a5 !important;
+}
+.time {
+  font-weight: 600;
+}
+.name {
+  font-weight: 600;
+}
+.email {
+  font-weight: 400;
+  color: #a3afcf;
+}
+/* .frame {
+  width: 85vw !important;
+} */
+.recent-booking-head i {
+  color: #6174a5;
+  font-size: 25px;
+}
+.recent-booking-head h2 {
+  font-weight: 600;
+  color: #6174a5 !important;
+  font-size: 22px;
+}
+.recent-booking-head {
+  background-color: white;
+  padding: 20px 0px 5px 10px;
+  border-radius: 20px 20px 0px 0px;
+}
+/* .main-wrapper {
+  margin: 20px;
+} */
+
+.action {
+  text-align: center;
+}
+.paid,
+.pending,
+.failed,
+.StartEvaluation,
+.action-select-plan,
+.action-view-eval {
+  border-radius: 10px;
+  width: fit-content;
+  height: 30px;
+
+  padding: 4px 15px;
+  color: white;
+}
+
+tbody {
+  background-color: transparent;
+}
+.action-view-eval {
+  border-radius: 8.622px;
+  background: #5122ce;
+  width: 160px !important;
+}
+.action-select-plan {
+  border-radius: 8.622px;
+  background: #42cc7d;
+  width: 160px !important;
+}
+.main-wrapper table tbody tr:hover + tr {
+  background-color: rgb(28, 14, 68, 0.2) !important;
+  color: white !important;
+}
+.main-wrapper table thead tr th {
+  background: rgb(28, 14, 68, 0.9) !important;
+  color: rgb(255, 255, 255) !important;
+}
+.main-wrapper table {
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+  text-align: center;
+}
+/* { */
+.paid,
+.StartEvaluation {
+  background: rgba(66, 204, 125, 0.75);
+}
+.pending {
+  background: rgba(242, 167, 59, 0.75);
+}
+.failed {
+  background: rgba(234, 51, 75, 0.75);
+}
+.dropdown-toggle,
+.dropdown-toggle:hover {
+  background-color: transparent;
+  color: #6174a5;
+  border: 1px solid #a3afcf;
+  border-radius: 10px;
+}
+.frame {
+  width: 85%;
+  margin: auto;
+  /* height: 600px; */
+}
+
+.main-wrapper {
+  width: 100%;
+  /* height: 100vh; */
+  /* overflow-y: hidden;
+  overflow-x: hidden; */
+}
+.evaluation-buttons-cont {
+  width: 90%;
+  margin: auto;
+  /* margin-top: 30px; */
+}
+.name-email-image-cont {
+  display: flex;
+  text-align: start !important;
+}
+.recent-bookings-cont tr td {
+  background-color: #f2f8fc !important;
+}
+@media only screen and (max-width: 600px) {
+  .frame {
+    width: 90vw !important;
+    margin: auto;
+
+    /* height: 600px; */
+  }
+  .buttons-cont {
+    height: 60px !important;
+  }
+  .table-div {
+    overflow-x: scroll;
+    height: calc(80vh - 60px) !important;
+  }
+  .table-div-booking {
+    overflow-x: scroll;
+    height: 80vh !important;
+  }
+  .search-bar {
+    display: none;
+  }
+  .recent-bookings-cont {
+    height: 90vh !important;
+    overflow-y: scroll;
+    overflow-x: scroll !important;
+    font-size: 12px;
+  }
+  .StartEvaluation {
+    height: fit-content !important;
+    width: fit-content !important;
+    text-align: center;
+    text-transform: uppercase !important;
+    font-weight: 800;
+  }
+
+  /* .recent-booking-head {
+    position: fixed;
+    width: 90vw;
+    height: 80px !important;
+  } */
+  .booking-presc {
+    margin-top: 0px !important;
+  }
+  .evaluation-buttons-cont {
+    margin-top: 10px !important;
+  }
+
+  .recent-booking-head h2 {
+    font-size: 20px;
+    font-weight: 900;
+  }
+  .recent-booking-person-image {
+    display: none;
+  }
+  .name {
+    font-size: 14px;
+  }
+  .email {
+    font-size: 13px;
+  }
+  .name-email-image-cont {
+    display: table-cell !important;
+  }
+  th {
+    width: 200px;
+  }
+}
