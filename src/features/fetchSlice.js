@@ -7,6 +7,7 @@ const fetchSlice = createSlice({
     error: false,
     errMsg: "",
     appointments: [],
+    prescriptions: [],
     totalPages: [],
     bookings: [],
   },
@@ -20,6 +21,7 @@ const fetchSlice = createSlice({
       state.error = false;
       state.isFetching = false;
       state.appointments = action?.payload?.appointments;
+      state.prescriptions = action?.payload?.data;
       state.bookings = action?.payload?.data;
       state.totalPages = action?.payload?.totalPages;
     },

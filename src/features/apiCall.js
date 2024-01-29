@@ -141,6 +141,27 @@ export const GetTodayAppointmentDetails = async (dispatch) => {
     return false; // Return false to indicate that the request failed
   }
 };
+export const GetRecentPrescriptions = async (
+  dispatch,
+  { currentPage, pageSize }
+) => {
+  const token = localStorage.getItem("userToken");
+  dispatch(FetchStart());
+  try {
+    const { data } = await axios.get("/api/doctor/recent-prescriptions", {
+      params: { page_no: currentPage, per_page_count: pageSize },
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    console.log(data);
+    dispatch(FetchSuccess(data));
+    return data;
+  } catch (error) {
+    const errorMessage = parseError(error);
+    toast.error(errorMessage, ErrorToastOptions);
+    dispatch(FetchFailure(errorMessage));
+    return false; // Return false to indicate that the request failed
+  }
+};
 export const GetRecentBookings = async (
   dispatch,
   { currentPage, pageSize }
@@ -162,6 +183,7 @@ export const GetRecentBookings = async (
     return false; // Return false to indicate that the request failed
   }
 };
+
 export const appointment = async (dispatch, formData) => {
   const email = localStorage.getItem("userEmail");
   const token = localStorage.getItem("userToken");

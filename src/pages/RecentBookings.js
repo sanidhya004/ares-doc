@@ -31,6 +31,13 @@ const RecentBookings = () => {
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
   };
+  const Service_ENUM_values = {
+    SportsVision: "Sports Vision Evaluation",
+    TrainingSessions: "Training Sessions",
+    ConcussionEval: "Concussion Evaluation",
+    MedicalOfficeVisit: "Medical Office Visit",
+    Consultation: "Consultation Call",
+  };
 
   return (
     <DoctorMenu>
@@ -113,14 +120,7 @@ const RecentBookings = () => {
                   <th></th> {/* Empty th for three dots */}
                 </tr>
               </thead>
-              {/* <ReactPlaceholder
-                type="text"
-                color="#F0F0F0"
-                showLoadingAnimation
-                rows={8}
-                style={{ width: "100%" }}
-                ready={!isFetching}
-              > */}
+
               {!isFetching ? (
                 <>
                   {" "}
@@ -152,7 +152,7 @@ const RecentBookings = () => {
                               </div>
                             </td>
                             <td className="service_type">
-                              {booking?.service_type}
+                              {Service_ENUM_values[booking?.service_type]}
                             </td>
                             <td className="date">{booking?.app_date}</td>
                             <td className="time">{booking?.app_time}</td>
@@ -173,7 +173,7 @@ const RecentBookings = () => {
                         <tr>
                           <td>
                             {" "}
-                            <div className="text-center">
+                            <div className="text-center ">
                               No Appointments
                             </div>{" "}
                           </td>
