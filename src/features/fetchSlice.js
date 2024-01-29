@@ -7,6 +7,7 @@ const fetchSlice = createSlice({
     error: false,
     errMsg: "",
     appointments: [],
+    totalPages: [],
     bookings: [],
   },
   reducers: {
@@ -20,6 +21,7 @@ const fetchSlice = createSlice({
       state.isFetching = false;
       state.appointments = action?.payload?.appointments;
       state.bookings = action?.payload?.data;
+      state.totalPages = action?.payload?.totalPages;
     },
     FetchFailure: (state, action) => {
       state.errMsg = action.payload;

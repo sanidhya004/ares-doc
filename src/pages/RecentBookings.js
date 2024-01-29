@@ -1,5 +1,5 @@
 import { default as React, useEffect, useState } from "react";
-import { Dropdown, Table } from "react-bootstrap";
+import { Dropdown, Spinner, Table } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import DoctorMenu from "../components/layout/DoctorMenu";
 import { GetRecentBookings } from "../features/apiCall";
@@ -7,85 +7,11 @@ import { GetRecentBookings } from "../features/apiCall";
 
 const RecentBookings = () => {
   const bookings = useSelector((state) => state.fetch_app.bookings);
+  const totalPages = useSelector((state) => state.fetch_app.totalPages);
+  const isFetching = useSelector((state) => state.fetch_app.isFetching);
   const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 5; // Number of items per page
+  const pageSize = 8; // Number of items per page
   const dispatch = useDispatch();
-
-  const bookingsData = [
-    {
-      time: "9:23 AM",
-      date: "Oct 17, 2023",
-      serviceType: "Sports Vision Performance",
-      name: "Mr. Scott Mctominay",
-      email: "curtis.weaver@example.com",
-      phoneNumber: "(406) 555-0120",
-      status: "PAID",
-    },
-    {
-      time: "9:23 AM",
-      date: "Oct 17, 2023",
-      serviceType: "Sports Vision Performance",
-      name: "Mr. Scott Mctominay",
-      email: "curtis.weaver@example.com",
-      phoneNumber: "(406) 555-0120",
-      status: "FAILED",
-    },
-    {
-      time: "9:23 AM",
-      date: "Oct 17, 2023",
-      serviceType: "Sports Vision Performance",
-      name: "Mr. Scott Mctominay",
-      email: "curtis.weaver@example.com",
-      phoneNumber: "(406) 555-0120",
-      status: "PENDING",
-    },
-    {
-      time: "9:23 AM",
-      date: "Oct 17, 2023",
-      serviceType: "Sports Vision Performance",
-      name: "Mr. Scott Mctominay",
-      email: "curtis.weaver@example.com",
-      phoneNumber: "(406) 555-0120",
-      status: "PAID",
-    },
-    {
-      time: "9:23 AM",
-      date: "Oct 17, 2023",
-      serviceType: "Sports Vision Performance",
-      name: "Mr. Scott Mctominay",
-      email: "curtis.weaver@example.com",
-      phoneNumber: "(406) 555-0120",
-      status: "PAID",
-    },
-    {
-      time: "9:23 AM",
-      date: "Oct 17, 2023",
-      serviceType: "Sports Vision Performance",
-      name: "Mr. Scott Mctominay",
-      email: "curtis.weaver@example.com",
-      phoneNumber: "(406) 555-0120",
-      status: "PAID",
-    },
-    {
-      time: "9:23 AM",
-      date: "Oct 17, 2023",
-      serviceType: "Sports Vision Performance",
-      name: "Mr. Scott Mctominay",
-      email: "curtis.weaver@example.com",
-      phoneNumber: "(406) 555-0120",
-      status: "PAID",
-    },
-    {
-      time: "9:23 AM",
-      date: "Oct 17, 2023",
-      serviceType: "Sports Vision Performance",
-      name: "Mr. Scott Mctominay",
-      email: "curtis.weaver@example.com",
-      phoneNumber: "(406) 555-0120",
-      status: "PAID",
-    },
-    // Add more data objects for each booking...
-  ];
 
   useEffect(() => {
     // Fetch data from your API here
@@ -99,14 +25,13 @@ const RecentBookings = () => {
     };
 
     fetchData();
-  }, []);
-  const totalPages = Math.ceil(bookings.length / pageSize);
+  }, [currentPage]);
   const startIndex = (currentPage - 1) * pageSize;
-  const visibleBookings = bookings.slice(startIndex, startIndex + pageSize);
-  console.log(visibleBookings);
+  console.log(bookings);
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
   };
+
   return (
     <DoctorMenu>
       <div className="p-3 main-wrapper mt-5 booking-presc">
@@ -188,60 +113,166 @@ const RecentBookings = () => {
                   <th></th> {/* Empty th for three dots */}
                 </tr>
               </thead>
-              <tbody className="recent-bookings-cont">
-                {visibleBookings.length > 0 ? (
-                  <>
-                    {" "}
-                    {visibleBookings.map((booking, index) => (
-                      <tr key={index}>
-                        <td
-                          className=" name-email-image-cont"
-                          style={{ paddingLeft: "20px" }}
-                        >
-                          <img
-                            src="/images/image3.png"
-                            alt={booking?.name}
-                            className="recent-booking-person-image "
-                            style={{ marginRight: "10px" }}
-                          />
-                          <div>
-                            <small className="name">
-                              {booking?.client?.name}{" "}
-                            </small>
-                            <br />
-                            <small className="email">
-                              {booking?.client?.email}
-                            </small>
-                          </div>
-                        </td>
-                        <td className="service_type">{booking?.serviceType}</td>
-                        <td className="date">{booking?.app_date}</td>
-                        <td className="time">{booking?.app_time}</td>
-                        <td className="phoneno">
-                          {booking?.client?.phoneNumber}
-                        </td>
-                        <td className="status">
-                          <div className={`${booking?.status} `}>
-                            {booking.status}
-                          </div>
-                        </td>
-                        <td>...</td>
-                      </tr>
-                    ))}
-                  </>
-                ) : (
-                  <>
+              {/* <ReactPlaceholder
+                type="text"
+                color="#F0F0F0"
+                showLoadingAnimation
+                rows={8}
+                style={{ width: "100%" }}
+                ready={!isFetching}
+              > */}
+              {!isFetching ? (
+                <>
+                  {" "}
+                  <tbody className="recent-bookings-cont">
+                    {bookings.length > 0 ? (
+                      <>
+                        {" "}
+                        {bookings.map((booking, index) => (
+                          <tr key={index}>
+                            <td
+                              className=" name-email-image-cont"
+                              style={{ paddingLeft: "20px" }}
+                            >
+                              <img
+                                src="/images/image3.png"
+                                alt={booking?.name}
+                                className="recent-booking-person-image "
+                                style={{ marginRight: "10px" }}
+                              />
+                              <div>
+                                <small className="name">
+                                  {booking?.client?.first_name}{" "}
+                                  {booking?.client?.last_name}
+                                </small>
+                                <br />
+                                <small className="email">
+                                  {booking?.client?.email}
+                                </small>
+                              </div>
+                            </td>
+                            <td className="service_type">
+                              {booking?.service_type}
+                            </td>
+                            <td className="date">{booking?.app_date}</td>
+                            <td className="time">{booking?.app_time}</td>
+                            <td className="phoneno">
+                              {booking?.client?.phone_number}
+                            </td>
+                            <td className="status">
+                              <div className={`${booking?.status} `}>
+                                {booking.status}
+                              </div>
+                            </td>
+                            <td>...</td>
+                          </tr>
+                        ))}
+                      </>
+                    ) : (
+                      <>
+                        <tr>
+                          <td>
+                            {" "}
+                            <div className="text-center">
+                              No Appointments
+                            </div>{" "}
+                          </td>
+                        </tr>
+                      </>
+                    )}
+                  </tbody>
+                </>
+              ) : (
+                <>
+                  {/* <tbody>
                     <tr>
+                      {" "}
                       <td>
                         {" "}
-                        <div className="text-center">No Appointments</div>{" "}
+                        <Placeholder size="lg" />
+                      </td>{" "}
+                      <td>
+                        {" "}
+                        <Placeholder size="lg" />
+                      </td>{" "}
+                      <td>
+                        {" "}
+                        <Placeholder size="lg" />
+                      </td>{" "}
+                      <td>
+                        {" "}
+                        <Placeholder size="lg" />
+                      </td>{" "}
+                      <td>
+                        {" "}
+                        <Placeholder size="lg" />
+                      </td>{" "}
+                      <td>
+                        {" "}
+                        <Placeholder size="lg" />
                       </td>
-                    </tr>
-                  </>
-                )}
-              </tbody>
+                    </tr>{" "}
+                    <tr><td></td><td></td></tr>
+                    <tr>
+                      {" "}
+                      <td>
+                        {" "}
+                        <Placeholder size="lg" />
+                      </td>{" "}
+                      <td>
+                        {" "}
+                        <Placeholder size="lg" />
+                      </td>{" "}
+                      <td>
+                        {" "}
+                        <Placeholder size="lg" />
+                      </td>{" "}
+                      <td>
+                        {" "}
+                        <Placeholder size="lg" />
+                      </td>{" "}
+                      <td>
+                        {" "}
+                        <Placeholder size="lg" />
+                      </td>{" "}
+                      <td>
+                        {" "}
+                        <Placeholder size="lg" />
+                      </td>
+                    </tr>{" "}
+                    <tr>
+                      {" "}
+                      <td>
+                        {" "}
+                        <Placeholder size="lg" />
+                      </td>{" "}
+                      <td>
+                        {" "}
+                        <Placeholder size="lg" />
+                      </td>{" "}
+                      <td>
+                        {" "}
+                        <Placeholder size="lg" />
+                      </td>{" "}
+                      <td>
+                        {" "}
+                        <Placeholder size="lg" />
+                      </td>{" "}
+                      <td>
+                        {" "}
+                        <Placeholder size="lg" />
+                      </td>{" "}
+                      <td>
+                        {" "}
+                        <Placeholder size="lg" />
+                      </td>
+                    </tr>{" "}
+                    <tr></tr>
+                  </tbody> */}
+                  <Spinner className="m-auto" />
+                </>
+              )}
             </Table>
-            {/* Pagination controls */}
           </div>
         </div>
       </div>
