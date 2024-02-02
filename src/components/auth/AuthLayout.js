@@ -19,9 +19,7 @@ const AuthLayout = ({ children }) => {
         </Col>
         <Col sm={12} md={8} style={{ flexBasis: "calc(75% - 10px)" }}>
           <div className="d-flex align-items-center justify-content-center vh-100">
-            <main style={{ width: "407px" }} className="sign-in-container">
-              {children}
-            </main>
+            <main className="sign-in-container">{children}</main>
             {/* <ToastContainer position="top-center" /> */}
           </div>
         </Col>

@@ -72,7 +72,7 @@ tbody {
 .action-view-eval {
   border-radius: 8.622px;
   background: #5122ce;
-  width: 160px !important;
+  width: 160px;
 }
 .action-select-plan {
   border-radius: 8.622px;
