@@ -1,9 +1,17 @@
 import { Route, Routes } from "react-router-dom";
-import Step1 from "../src/pages/Forms.js/Client Information/Step1";
 import SignIn from "./components/auth/SignIn";
+import SignUp from "./components/auth/SignUp";
 import UpdatePassword from "./components/auth/password/UpdatePassword";
 import ForgotPassword from "./components/auth/password/forgotPassword";
+import AtheProfile from "./components/layout/AtheProfileLayout";
 import DoctorTraining from "./components/layout/DoctorTrainingComponent";
+import AtheBookings from "./pages/AtheBookings";
+import Account from "./pages/AtheProfileNavigations/Account";
+import EditProfile from "./pages/AtheProfileNavigations/EditProfile";
+import Password from "./pages/AtheProfileNavigations/Password";
+import AtheTransactions from "./pages/AtheTransactions";
+import Athedrill from "./pages/Athedrill";
+import AtheleHome from "./pages/AtheleHome";
 import DoctorAppointment from "./pages/DoctorAppointment";
 import DoctorConsultationCall from "./pages/DoctorConsultationCall";
 import DoctorSelectUserType from "./pages/DoctorHome";
@@ -12,6 +20,7 @@ import DoctorPlansPackages from "./pages/DoctorPlansPackages";
 import DoctorPrescriptionForm from "./pages/DoctorPrescriptionForm";
 import DoctorProfile from "./pages/DoctorProfile";
 import DoctorServiceSelection from "./pages/DoctorServiceSelection";
+import Step1 from "./pages/Forms/Client Information/Step1";
 import PageNotFound from "./pages/PageNotFound";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import RecentBookings from "./pages/RecentBookings";
@@ -31,6 +40,16 @@ function App() {
         {/* <Router> */}
         <Routes>
           <Route path="/" element={<SignIn />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/a-home" element={<AtheleHome />} />
+          <Route path="/a-transactions" element={<AtheTransactions />} />
+          <Route path="/athelete-home" element={<AtheleHome />} />
+          <Route path="/a-booking" element={<AtheBookings />} />
+          <Route path="/a-drill" element={<Athedrill />} />
+          <Route path="/a-profile" element={<EditProfile />} />
+          <Route path="/a-account" element={<Account />} />
+          <Route path="/a-security" element={<Password />} />
+          <Route path="/a-profile" element={<AtheProfile />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/update-password" element={<UpdatePassword />} />
           <Route path="*" element={<PageNotFound />} />

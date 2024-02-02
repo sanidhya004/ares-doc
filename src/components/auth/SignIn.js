@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Button, Form, FormCheck, Spinner } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { login } from "../../features/apiCall";
 import AuthLayout from "./AuthLayout";
 
@@ -60,7 +60,7 @@ const SignIn = () => {
   // }, [error, isFetching, isLoogedIn, errMsg]);
   return (
     <AuthLayout>
-      <Form onSubmit={handleSubmit}>
+      <Form onSubmit={handleSubmit} style={{ width: "407px" }}>
         <h3 className="mb-5 font-weight-bold">Log in for Ares Elite</h3>
         <Form.Control
           type="email"
@@ -106,7 +106,17 @@ const SignIn = () => {
             Login
           </Button>
         )}
+        <Link to="/signup">
+          <p
+            className="position-relative bottom text-center"
+            style={{ top: "20vh" }}
+          >
+            Don’t have an account?{" "}
+            <span className="color-purple font-weight-bold">{"  "}Sign up</span>
+          </p>{" "}
+        </Link>
       </Form>
+
       <section className="illustration-container">
         <img
           src="images/UpdatePassword.png"

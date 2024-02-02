@@ -7,12 +7,8 @@ const DoctorSelectUserType = () => {
   return (
     <DoctorMenu>
       <div className="d-flex Doctor-home justify-content-around flex-wrap">
-        {/* <div className=" text-right" style={{ marginTop: "40px" }}>
-          <img src="images/Rectangle.png" style={{ width: "90%" }} />
-        </div> */}
         <DoctorSelectUser />
-        {/*  <DoctorServices /> */}
-        {/* <DoctorTraining /> */}
+
         <DoctorTodayAppointment />
       </div>
     </DoctorMenu>
