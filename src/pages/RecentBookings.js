@@ -1,33 +1,75 @@
-import { default as React, useEffect, useState } from "react";
-import { Dropdown, Spinner, Table } from "react-bootstrap";
+import React, { useEffect, useState } from "react";
+import { Dropdown, Pagination, Table } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import DoctorMenu from "../components/layout/DoctorMenu";
 import { GetRecentBookings } from "../features/apiCall";
 // import { Group } from "./Group";
+import DatePicker from "react-datepicker";
+
+import "react-datepicker/dist/react-datepicker.css";
+import Loader from "../components/layout/Components/Loader";
 
 const RecentBookings = () => {
   const bookings = useSelector((state) => state.fetch_app.bookings);
-  const totalPages = useSelector((state) => state.fetch_app.totalPages);
+  // const totalPages = useSelector((state) => state.fetch_app.totalPages);
+  const totalPages = 10;
   const isFetching = useSelector((state) => state.fetch_app.isFetching);
+  const [showDateInput, setShowDateInput] = useState(null);
+  const [selectedServiceTypes, setSelectedServiceTypes] = useState([]);
+  const [selectedStatus, setSelectedStatus] = useState("");
+  const [selectedDate, setSelectedDate] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 8; // Number of items per page
+
+  const isDesktop = window.matchMedia("(min-width: 768px)").matches;
+  const isLargeDesktop = window.matchMedia("(min-width: 1900px)").matches;
+  let pageSize;
+
+  if (isLargeDesktop) {
+    pageSize = 11;
+  } else if (isDesktop) {
+    pageSize = 7;
+  } else {
+    pageSize = 9;
+  }
   const dispatch = useDispatch();
+  console.log(bookings);
+  const fetchData = async () => {
+    try {
+      // Create an object to hold the parameters
+      const params = {
+        currentPage,
+        pageSize,
+      };
+
+      // Add parameters only if they are not empty
+      if (selectedStatus) {
+        params.selectedStatus = selectedStatus;
+      }
+
+      if (selectedServiceTypes.length > 0) {
+        params.selectedServiceTypes = selectedServiceTypes.toString();
+      }
+
+      if (selectedDate) {
+        // Format the date to 'yyyy-MM-dd'
+        const formattedDate = new Date(selectedDate).toLocaleDateString(
+          "en-CA"
+        );
+
+        params.selectedDate = formattedDate;
+      }
+
+      await GetRecentBookings(dispatch, params);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
   useEffect(() => {
-    // Fetch data from your API here
-    const fetchData = async () => {
-      try {
-        await GetRecentBookings(dispatch, { currentPage, pageSize });
-        // setAppointments(data); // Assuming your API response is an array of appointments
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
+    fetchData(); // Fetch data whenever currentPage changes
+  }, [currentPage, selectedDate, selectedStatus, selectedServiceTypes]);
 
-    fetchData();
-  }, [currentPage]);
   const startIndex = (currentPage - 1) * pageSize;
-  console.log(bookings);
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
   };
@@ -37,6 +79,102 @@ const RecentBookings = () => {
     ConcussionEval: "Concussion Evaluation",
     MedicalOfficeVisit: "Medical Office Visit",
     Consultation: "Consultation Call",
+  };
+  const Status_ENUM_values = {
+    paid: "paid",
+    pending: "pending",
+    failed: "failed",
+    All: "All",
+  };
+  const handleServiceTypeFilter = (selectedServiceType) => {
+    setSelectedServiceTypes((prevSelectedServiceTypes) => {
+      const updatedServiceTypes = prevSelectedServiceTypes.includes(
+        selectedServiceType
+      )
+        ? prevSelectedServiceTypes.filter(
+            (type) => type !== selectedServiceType
+          )
+        : [...prevSelectedServiceTypes, selectedServiceType];
+
+      console.log(updatedServiceTypes);
+
+      // Update state before calling fetchData
+      setSelectedServiceTypes(updatedServiceTypes);
+
+      // fetchData(); // Call fetchData after state has been updated
+
+      return updatedServiceTypes;
+    });
+  };
+  const handleStatusFilter = (status) => {
+    if (status == "All") {
+      setSelectedStatus("");
+    } else {
+      setSelectedStatus(status);
+    }
+  };
+
+  const handleDateFilter = (date) => {
+    setSelectedDate(date);
+  };
+
+  const renderPaginationItems = () => {
+    const items = [];
+    const range = 1; // Number of pages to show before and after current page
+
+    // Previous Page
+    items.push(
+      // <Pagination.Prev
+      //   key="prev"
+      //   onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
+      //   disabled={currentPage === 1}
+      // />
+      <li class="page-item">
+        <button
+          class="page-link"
+          href="#"
+          disabled={currentPage === 1}
+          onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
+        >
+          Previous
+        </button>
+      </li>
+    );
+
+    // Pagination Items
+    for (
+      let i = Math.max(1, currentPage - range);
+      i <= Math.min(totalPages, currentPage + range);
+      i++
+    ) {
+      items.push(
+        <Pagination.Item
+          key={i}
+          active={i === currentPage}
+          onClick={() => handlePageChange(i)}
+        >
+          {i}
+        </Pagination.Item>
+      );
+    }
+
+    // Next Page
+    items.push(
+      <li class="page-item">
+        <button
+          class="page-link"
+          href="#"
+          onClick={() =>
+            handlePageChange(Math.min(currentPage + 1, totalPages))
+          }
+          disabled={currentPage === totalPages}
+        >
+          Next
+        </button>
+      </li>
+    );
+
+    return items;
   };
 
   return (
@@ -49,7 +187,7 @@ const RecentBookings = () => {
             </div>
             <div
               className="input-group mb-3 search-bar"
-              style={{ width: "400px" }}
+              style={{ width: "40%" }}
             >
               <input
                 type="text"
@@ -57,6 +195,7 @@ const RecentBookings = () => {
                 placeholder="Search..."
                 aria-label="Search"
                 aria-describedby="searchIcon"
+                style={{ height: "40px" }}
               />
               <div className="input-group-append ">
                 <span className="input-group-text" id="searchIcon">
@@ -66,8 +205,13 @@ const RecentBookings = () => {
             </div>
 
             <div
-              className=" d-flex flex-row  justify-content-center mt-3"
-              style={{ width: "150px", gap: "10px", marginRight: "15px" }}
+              className=" d-flex flex-row  justify-content-center "
+              style={{
+                width: "150px",
+                gap: "10px",
+                marginRight: "15px",
+                marginBottom: "18px",
+              }}
             >
               <i class="fa-solid fa-calendar m-auto" />
               <Dropdown>
@@ -92,32 +236,83 @@ const RecentBookings = () => {
           <div className="table-div-booking">
             <Table
               className="table"
-              striped
+              // striped
               hover
-              variant="light"
+              // variant="dark"
               // style={{ height: "70vh" }}
             >
               <thead className="table-head">
                 <tr>
                   <th style={{ paddingLeft: "20px" }}>
-                    Name <i className="fa-solid fa-sort" />
+                    <div>Name</div>
                   </th>
                   <th>
-                    Service Type <i className="fa-solid fa-filter" />
+                    <Dropdown>
+                      <Dropdown.Toggle variant="light" id="dropdown-basic">
+                        SELECT SERVICE TYPES
+                        <i className="fa-solid fa-filter m-1" />
+                      </Dropdown.Toggle>
+                      <Dropdown.Menu>
+                        {Object.keys(Service_ENUM_values).map((key) => (
+                          <Dropdown.Item key={key}>
+                            <input
+                              type="checkbox"
+                              id={key}
+                              checked={selectedServiceTypes.includes(key)}
+                              onChange={() => handleServiceTypeFilter(key)}
+                            />
+                            <label htmlFor={key}>
+                              {Service_ENUM_values[key]}
+                            </label>
+                          </Dropdown.Item>
+                        ))}
+                      </Dropdown.Menu>
+                    </Dropdown>
                   </th>
                   <th>
-                    Date <i className="fa-solid fa-sort" />
+                    <div className="date-container">
+                      <div
+                        className="date-display "
+                        onClick={() => setShowDateInput(!showDateInput)}
+                      >
+                        {selectedDate === null
+                          ? "Date"
+                          : new Date(selectedDate).toLocaleDateString("en-CA")}
+                        <i className="fa-solid fa-sort m-1" />
+                      </div>
+                      {showDateInput && (
+                        <DatePicker
+                          selected={selectedDate}
+                          onChange={(date) => {
+                            handleDateFilter(date);
+                            setShowDateInput(false);
+                          }}
+                        />
+                      )}
+                    </div>
                   </th>
+                  <th>Time</th>
+                  <th>Mobile Number</th>
                   <th>
-                    Time <i className="fa-solid fa-sort" />
+                    <Dropdown
+                      onSelect={(eventKey) => handleStatusFilter(eventKey)}
+                    >
+                      <Dropdown.Toggle variant="light" id="status-dropdown">
+                        {selectedStatus
+                          ? Status_ENUM_values[selectedStatus]
+                          : "SELECT STATUS"}
+                        <i className="fa-solid fa-filter m-1" />
+                      </Dropdown.Toggle>
+                      <Dropdown.Menu>
+                        {Object.keys(Status_ENUM_values).map((status) => (
+                          <Dropdown.Item key={status} eventKey={status}>
+                            {Status_ENUM_values[status]}
+                          </Dropdown.Item>
+                        ))}
+                      </Dropdown.Menu>
+                    </Dropdown>
                   </th>
-                  <th>
-                    Mobile Number <i className="fa-solid fa-sort" />
-                  </th>
-                  <th>
-                    Status <i className="fa-solid fa-filter" />
-                  </th>
-                  <th></th> {/* Empty th for three dots */}
+                  <th></th>
                 </tr>
               </thead>
 
@@ -125,7 +320,7 @@ const RecentBookings = () => {
                 <>
                   {" "}
                   <tbody className="recent-bookings-cont">
-                    {bookings.length > 0 ? (
+                    {bookings && bookings.length > 0 ? (
                       <>
                         {" "}
                         {bookings.map((booking, index) => (
@@ -157,11 +352,12 @@ const RecentBookings = () => {
                             <td className="date">{booking?.app_date}</td>
                             <td className="time">{booking?.app_time}</td>
                             <td className="phoneno">
-                              {booking?.client?.phone_number}
+                              {/* {booking?.client?.phone_number} */}
+                              98107213755
                             </td>
                             <td className="status">
-                              <div className={`${booking?.status} `}>
-                                {booking.status}
+                              <div className={`${booking?.status} m-auto`}>
+                                <p> {booking.status}</p>
                               </div>
                             </td>
                             <td>...</td>
@@ -184,96 +380,14 @@ const RecentBookings = () => {
                 </>
               ) : (
                 <>
-                  {/* <tbody>
-                    <tr>
-                      {" "}
-                      <td>
-                        {" "}
-                        <Placeholder size="lg" />
-                      </td>{" "}
-                      <td>
-                        {" "}
-                        <Placeholder size="lg" />
-                      </td>{" "}
-                      <td>
-                        {" "}
-                        <Placeholder size="lg" />
-                      </td>{" "}
-                      <td>
-                        {" "}
-                        <Placeholder size="lg" />
-                      </td>{" "}
-                      <td>
-                        {" "}
-                        <Placeholder size="lg" />
-                      </td>{" "}
-                      <td>
-                        {" "}
-                        <Placeholder size="lg" />
-                      </td>
-                    </tr>{" "}
-                    <tr><td></td><td></td></tr>
-                    <tr>
-                      {" "}
-                      <td>
-                        {" "}
-                        <Placeholder size="lg" />
-                      </td>{" "}
-                      <td>
-                        {" "}
-                        <Placeholder size="lg" />
-                      </td>{" "}
-                      <td>
-                        {" "}
-                        <Placeholder size="lg" />
-                      </td>{" "}
-                      <td>
-                        {" "}
-                        <Placeholder size="lg" />
-                      </td>{" "}
-                      <td>
-                        {" "}
-                        <Placeholder size="lg" />
-                      </td>{" "}
-                      <td>
-                        {" "}
-                        <Placeholder size="lg" />
-                      </td>
-                    </tr>{" "}
-                    <tr>
-                      {" "}
-                      <td>
-                        {" "}
-                        <Placeholder size="lg" />
-                      </td>{" "}
-                      <td>
-                        {" "}
-                        <Placeholder size="lg" />
-                      </td>{" "}
-                      <td>
-                        {" "}
-                        <Placeholder size="lg" />
-                      </td>{" "}
-                      <td>
-                        {" "}
-                        <Placeholder size="lg" />
-                      </td>{" "}
-                      <td>
-                        {" "}
-                        <Placeholder size="lg" />
-                      </td>{" "}
-                      <td>
-                        {" "}
-                        <Placeholder size="lg" />
-                      </td>
-                    </tr>{" "}
-                    <tr></tr>
-                  </tbody> */}
-                  <Spinner className="m-auto" />
+                  <Loader />
                 </>
               )}
             </Table>
           </div>
+        </div>
+        <div className="pag-cont">
+          <Pagination className="m-auto ">{renderPaginationItems()}</Pagination>
         </div>
       </div>
     </DoctorMenu>

@@ -35,8 +35,10 @@ const DoctorServices = () => {
         break;
 
       case "TrainingSessions":
+        // alert("hi");
         // Logic for TrainingSessions service
         // You can navigate or perform other actions specific to this service
+        navigate("/doctor/dashboard/doctor-service-selection/training");
         break;
 
       case "ConcussionEval":
@@ -78,11 +80,83 @@ const DoctorServices = () => {
         <img src="/images/areseliteLogo.png" width={100} alt="logo" />
         <h5>Select type of Service</h5>
 
-        <Form
-          className="d-flex flex-wrap justify-content-center "
-          style={{ gap: "24px" }}
-        >
-          <Form.Check
+        <Form className="d-flex flex-wrap justify-content-center ">
+          <label
+            htmlFor="sportsVision"
+            className={`radio-label ${
+              selectedService === "SportsVision" ? "checked" : ""
+            }`}
+          >
+            Sports Vision Performance Evaluation - In Office
+            <input
+              type="radio"
+              name="SportsVision"
+              id="sportsVision"
+              onChange={() => handleServiceChange("SportsVision")}
+              checked={selectedService === "SportsVision"}
+            />
+          </label>
+          <label
+            htmlFor="trainingSessions"
+            className={`radio-label ${
+              selectedService === "TrainingSessions" ? "checked" : ""
+            }`}
+          >
+            Training Sessions
+            <input
+              type="radio"
+              name="TrainingSessions"
+              id="trainingSessions"
+              onChange={() => handleServiceChange("TrainingSessions")}
+              checked={selectedService === "TrainingSessions"}
+            />
+          </label>
+          <label
+            htmlFor="concussionEval"
+            className={`radio-label ${
+              selectedService === "ConcussionEval" ? "checked" : ""
+            }`}
+          >
+            Post-Concussion Evaluation
+            <input
+              type="radio"
+              name="ConcussionEval"
+              id="concussionEval"
+              onChange={() => handleServiceChange("ConcussionEval")}
+              checked={selectedService === "ConcussionEval"}
+            />
+          </label>
+          <label
+            htmlFor="medicalOfficeVisit "
+            className={`radio-label ${
+              selectedService === "MedicalOfficeVisit" ? "checked" : ""
+            }`}
+          >
+            Medical/Office Visit
+            <input
+              type="radio"
+              name="MedicalOfficeVisit"
+              id="medicalOfficeVisit"
+              onChange={() => handleServiceChange("MedicalOfficeVisit")}
+              checked={selectedService === "MedicalOfficeVisit"}
+            />
+          </label>
+          <label
+            htmlFor="consultation"
+            className={`radio-label  ${
+              selectedService === "Consultation" ? "checked" : ""
+            }`}
+          >
+            Consultation Call
+            <input
+              type="radio"
+              name="Consultation"
+              id="consultation"
+              onChange={() => handleServiceChange("Consultation")}
+              checked={selectedService === "Consultation"}
+            />
+          </label>
+          {/* <Form.Check
             type="radio"
             name="SportsVision"
             id="sportsVision"
@@ -137,7 +211,7 @@ const DoctorServices = () => {
             className={`doctor-services ${
               selectedService === "Consultation" ? "checked" : ""
             }`}
-          />
+          /> */}
         </Form>
         {isFetching ? (
           <button className="purple-button c-b">

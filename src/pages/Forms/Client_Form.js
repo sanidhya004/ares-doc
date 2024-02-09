@@ -3,14 +3,15 @@ import { Col, Form, Row, Spinner } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import BootstrapModal from "../../../components/layout/Components/BootstrapModal";
-import DoctorMenu from "../../../components/layout/DoctorMenu";
-import { SubmitClientForm } from "../../../features/apiCall";
+
+import BootstrapModal from "../../components/layout/Components/BootstrapModal";
+import DoctorMenu from "../../components/layout/DoctorMenu";
+import { SubmitClientForm } from "../../features/apiCall";
 const capitalizeFirstLetter = (str) => {
   return str.charAt(0).toUpperCase() + str.slice(1);
 };
 
-const Step1 = () => {
+const Client_Form = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -267,7 +268,7 @@ const Step1 = () => {
   );
 };
 
-export default Step1;
+export default Client_Form;
 
 const ModalContent = () => {
   return (

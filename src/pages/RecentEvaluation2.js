@@ -12,25 +12,31 @@ const RecentEvaluation2 = () => {
 
   return (
     <DoctorMenu>
-      <div className=" evaluation-buttons-cont mt-5">
-        <div className="d-flex buttons-cont ">
-          <button
-            className={`bt-2  ${
-              activeTab === "Completed" ? "active bt-3" : ""
-            }`}
-            onClick={() => handleTabChange("Completed")}
+      <div className="eval-cont">
+        {" "}
+        <div className=" evaluation-buttons-cont">
+          <div
+            className="d-flex buttons-cont m-auto  "
+            style={{ width: "90%" }}
           >
-            Completed Requests
-          </button>
-          <button
-            className={`bt-2 ${activeTab === "InQueue" ? "active bt-3" : ""}`}
-            onClick={() => handleTabChange("InQueue")}
-          >
-            In-Queue Requests
-          </button>
-        </div>
+            <button
+              className={`bt-2  ${
+                activeTab === "Completed" ? "active bt-3" : ""
+              }`}
+              onClick={() => handleTabChange("Completed")}
+            >
+              Completed Requests
+            </button>
+            <button
+              className={`bt-2 ${activeTab === "InQueue" ? "active bt-3" : ""}`}
+              onClick={() => handleTabChange("InQueue")}
+            >
+              In-Queue Requests
+            </button>
+          </div>
 
-        {activeTab === "InQueue" ? <InQueueReuests /> : <CompletedRequests />}
+          {activeTab === "InQueue" ? <InQueueReuests /> : <CompletedRequests />}
+        </div>
       </div>
     </DoctorMenu>
   );

@@ -1,8 +1,10 @@
-import React from "react";
-import { Dropdown, Table } from "react-bootstrap";
+import React, { useState } from "react";
+import { Dropdown, Pagination, Table } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
 const CompletedRequests = () => {
+  const [currentPage, setCurrentPage] = useState(1);
+
   const bookingsData = [
     {
       time: "9:23 AM",
@@ -70,6 +72,67 @@ const CompletedRequests = () => {
 
     // Add more data objects for each booking...
   ];
+  const totalPages = 10;
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+  };
+  const renderPaginationItems = () => {
+    const items = [];
+    const range = 1; // Number of pages to show before and after current page
+
+    // Previous Page
+    items.push(
+      // <Pagination.Prev
+      //   key="prev"
+      //   onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
+      //   disabled={currentPage === 1}
+      // />
+      <li class="page-item">
+        <button
+          class="page-link"
+          href="#"
+          disabled={currentPage === 1}
+          onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
+        >
+          Previous
+        </button>
+      </li>
+    );
+
+    for (
+      let i = Math.max(1, currentPage - range);
+      i <= Math.min(totalPages, currentPage + range);
+      i++
+    ) {
+      items.push(
+        <Pagination.Item
+          key={i}
+          active={i === currentPage}
+          onClick={() => handlePageChange(i)}
+        >
+          {i}
+        </Pagination.Item>
+      );
+    }
+
+    // Next Page
+    items.push(
+      <li class="page-item">
+        <button
+          class="page-link"
+          href="#"
+          onClick={() =>
+            handlePageChange(Math.min(currentPage + 1, totalPages))
+          }
+          disabled={currentPage === totalPages}
+        >
+          Next
+        </button>
+      </li>
+    );
+
+    return items;
+  };
   return (
     <>
       <div className="mt-4 main-wrapper">
@@ -82,7 +145,7 @@ const CompletedRequests = () => {
             </div>
             <div
               className="input-group mb-3 search-bar"
-              style={{ width: "400px" }}
+              style={{ width: "40%" }}
             >
               <input
                 type="text"
@@ -90,6 +153,7 @@ const CompletedRequests = () => {
                 placeholder="Search..."
                 aria-label="Search"
                 aria-describedby="searchIcon"
+                style={{ height: "40px" }}
               />
               <div className="input-group-append">
                 <span className="input-group-text" id="searchIcon">
@@ -99,7 +163,13 @@ const CompletedRequests = () => {
             </div>
             <div
               className=" d-flex flex-row "
-              style={{ width: "150px", gap: "10px", marginRight: "15px" }}
+              style={{
+                width: "150px",
+                gap: "10px",
+                marginRight: "15px",
+
+                marginBottom: "18px",
+              }}
             >
               <i class="fa-solid fa-calendar m-auto" />
               <Dropdown>
@@ -181,6 +251,9 @@ const CompletedRequests = () => {
               </tbody>
             </Table>
           </div>
+        </div>
+        <div className="pag-cont">
+          <Pagination className="m-auto ">{renderPaginationItems()}</Pagination>
         </div>
       </div>
     </>

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { Form } from "react-bootstrap";
 import ReactPlaceholder from "react-placeholder";
 import { useDispatch, useSelector } from "react-redux";
 import DoctorMenu from "../components/layout/DoctorMenu";
@@ -90,7 +89,7 @@ const DoctorProfile = () => {
             <p>Change Password</p>
             <span>Change password to login to your account.</span>
           </div>
-          <div className="d-flex justify-content-between prof-cont">
+          {/* <div className="d-flex justify-content-between prof-cont">
             <div>
               <p>2-step verification</p>
               <span>
@@ -112,9 +111,9 @@ const DoctorProfile = () => {
                 </div>
               </Form>
             </div>
-          </div>
+          </div> */}
           <h5 className="mb-3 mt-4">Support</h5>
-          <div className="d-flex justify-content-between prof-cont">
+          {/* <div className="d-flex justify-content-between prof-cont">
             <div>
               <p>Support Access</p>
               <span>
@@ -137,21 +136,21 @@ const DoctorProfile = () => {
                 </div>
               </Form>
             </div>
-          </div>
+          </div> */}
           <div className="prof-cont">
             <p>Privacy Policy</p>
-            <span>View the privacy policy of Ares Elite.</span>
+            <span>View the privacy policy </span>
           </div>
           <div className="prof-cont">
             <p>Terms of use</p>
-            <span>View the terms of use of Ares Elite,.</span>
+            <span>View the terms of use </span>
           </div>
           <div className="prof-cont ">
             <button className="text-danger p-0" onClick={handleLogout}>
-              Log out from all devices
+              Log out
             </button>
             <br />
-            <span>Log out of all other active sessions on other devices.</span>
+            <span>Log out from this device.</span>
           </div>
         </section>
       </div>

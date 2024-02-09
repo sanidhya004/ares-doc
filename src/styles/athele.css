@@ -252,51 +252,7 @@ a:hover {
 .profile-password div {
   padding: 10px 20px;
 }
-@media only screen and (max-width: 991px) {
-  .select-user {
-    width: 100% !important;
-    gap: 15px !important;
-    margin-bottom: 40px !important;
-  }
 
-  .athel-home {
-    flex-direction: row-reverse;
-  }
-  .athel-user-type,
-  .athel-services,
-  .athel-user {
-    background-color: transparent;
-    border: 0;
-    font-size: 13px !important;
-    width: 300px !important;
-    border-radius: 10px;
-    border: 1px solid #b1b1b1;
-    background: rgba(255, 255, 255, 0.24);
-    cursor: pointer;
-  }
-  .athel-services Form,
-  .athel-user Form {
-    gap: 15px !important;
-  }
-  .athel-service-container h5,
-  .select-user h5 {
-    font-weight: 800;
-    font-size: 25px !important;
-  }
-  .athel-service-container,
-  .select-user {
-    width: 80% !important;
-    margin: auto;
-  }
-  .today-appoint-container {
-    width: 90% !important;
-    margin: 0px auto 100px auto !important;
-    padding: 20px 10px !important;
-  }
-  .athel-menu ul {
-    height: 300px;
-  }
-}
 .athel-user-type,
 .athel-services,
 .athel-user {

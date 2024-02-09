@@ -31,6 +31,7 @@ thead th {
 /* .frame {
   width: 85vw !important;
 } */
+
 .recent-booking-head i {
   color: #6174a5;
   font-size: 25px;
@@ -57,13 +58,16 @@ thead th {
 .failed,
 .StartEvaluation,
 .action-select-plan,
+.StartPrescription,
 .action-view-eval {
   border-radius: 10px;
   width: fit-content;
   height: 30px;
-
-  padding: 4px 15px;
+  text-transform: uppercase;
+  padding: 4px 10px;
   color: white;
+  word-spacing: 1px;
+  font-weight: 300;
 }
 
 tbody {
@@ -72,27 +76,46 @@ tbody {
 .action-view-eval {
   border-radius: 8.622px;
   background: #5122ce;
-  width: 160px;
+  width: 150px;
+  height: 34px !important;
+  padding: 6px 5px;
+  text-transform: capitalize;
 }
 .action-select-plan {
+  height: 34px !important;
+  padding: 6px 5px;
+  text-transform: capitalize;
   border-radius: 8.622px;
   background: #42cc7d;
-  width: 160px !important;
+  width: 150px !important;
 }
 .main-wrapper table tbody tr:hover + tr {
   background-color: rgb(28, 14, 68, 0.2) !important;
   color: white !important;
 }
 .main-wrapper table thead tr th {
+  text-transform: uppercase;
   background: rgb(28, 14, 68, 0.9) !important;
   color: rgb(255, 255, 255) !important;
+  padding: 0 !important;
+  padding: 10px !important;
 }
 .main-wrapper table {
   text-align: center;
 }
+.StartPrescription {
+  height: 38px !important;
+}
+
 /* { */
-.paid,
-.StartEvaluation {
+.StartEvaluation,
+.StartPrescription {
+  height: fit-content;
+  padding: 6px 10px;
+  background-color: #42cc7d;
+  text-transform: capitalize !important;
+}
+.paid {
   background: rgba(66, 204, 125, 0.75);
 }
 .pending {
@@ -100,6 +123,31 @@ tbody {
 }
 .failed {
   background: rgba(234, 51, 75, 0.75);
+}
+.table-div-booking .dropdown-toggle,
+.table-div-booking .dropdown-toggle:hover,
+.table-div-booking .show > .btn-light.dropdown-toggle,
+.table-div-booking .show > .btn-light.dropdown-toggle:focus,
+.table-div .dropdown-toggle,
+.table-div .dropdown-toggle:hover,
+.table-div .show > .btn-light.dropdown-toggle,
+.table-div .show > .btn-light.dropdown-toggle:focus {
+  background-color: transparent;
+  color: white;
+  border: 0px;
+  border-radius: 0px;
+  box-shadow: none;
+  padding: 0px;
+}
+.table-div-booking {
+  overflow-y: scroll;
+  width: 100%;
+}
+.table-div-booking .react-datepicker-wrapper {
+  /* display: none; */
+}
+.table-div-booking .dropdown-toggle::after {
+  display: none;
 }
 .dropdown-toggle,
 .dropdown-toggle:hover {
@@ -109,11 +157,33 @@ tbody {
   border-radius: 10px;
 }
 .frame {
-  width: 85%;
+  width: 90%;
   margin: auto;
-  box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+  /* box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px; */
   border-radius: 20px 20px 0px 0px;
-  height: 670px;
+  height: 80vh;
+}
+/* niranjan laptpo */
+@media screen and (min-width: 1901px) {
+  .pag-cont {
+    width: 80% !important;
+    margin: auto;
+    margin-top: 30px;
+    padding: 20px 0px;
+  }
+  .frame {
+    width: 80%;
+    margin: auto;
+    /* box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px; */
+    border-radius: 20px 20px 0px 0px;
+    height: 80vh;
+  }
+  .buttons-cont {
+    width: 80% !important;
+  }
+  .search-bar {
+    width: 30% !important;
+  }
 }
 .no-details {
   /* display: flex; */
@@ -134,17 +204,46 @@ tbody {
   /* overflow-y: hidden;
   overflow-x: hidden; */
 }
-.evaluation-buttons-cont {
+/* .evaluation-buttons-cont {
   width: 90%;
   margin: auto;
-  /* margin-top: 30px; */
-}
+
+} */
 .name-email-image-cont {
   display: flex;
   text-align: start !important;
 }
 .recent-bookings-cont tr td {
+  /* height: 13px !important; */
+}
+.recent-bookings-cont tr td {
   background-color: #f2f8fc !important;
+}
+
+.recent-booking-head .search-bar .form-control {
+  width: fit-content !important;
+}
+.pagination {
+  width: fit-content;
+}
+.pag-cont {
+  width: 90%;
+  margin: auto;
+  margin-top: 15px;
+  padding: 10px 0px;
+  background-color: white;
+}
+.page-link {
+  border: 0px;
+}
+.page-item.active .page-link {
+  border-radius: 10px;
+  background-color: #6174a5;
+}
+.page-link {
+  color: #6174a5;
+  min-width: 30px;
+  min-height: 30px;
 }
 @media only screen and (max-width: 600px) {
   .frame {
@@ -168,8 +267,8 @@ tbody {
     display: none;
   }
   .recent-bookings-cont {
-    height: 90vh !important;
-    overflow-y: scroll;
+    /* height: 90vh !important; */
+    /* overflow-y: scroll; */
     overflow-x: scroll !important;
     font-size: 12px;
   }

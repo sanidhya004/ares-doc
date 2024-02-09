@@ -4,7 +4,7 @@ import SignUp from "./components/auth/SignUp";
 import UpdatePassword from "./components/auth/password/UpdatePassword";
 import ForgotPassword from "./components/auth/password/forgotPassword";
 import AtheProfile from "./components/layout/AtheProfileLayout";
-import DoctorTraining from "./components/layout/DoctorTrainingComponent";
+import DoctorTrainingServices from "./components/layout/DoctorTrainingSession/DoctorTrainingServices";
 import AtheBookings from "./pages/AtheBookings";
 import Account from "./pages/AtheProfileNavigations/Account";
 import EditProfile from "./pages/AtheProfileNavigations/EditProfile";
@@ -14,13 +14,14 @@ import Athedrill from "./pages/Athedrill";
 import AtheleHome from "./pages/AtheleHome";
 import DoctorAppointment from "./pages/DoctorAppointment";
 import DoctorConsultationCall from "./pages/DoctorConsultationCall";
+import DoctorForm from "./pages/DoctorForm";
 import DoctorSelectUserType from "./pages/DoctorHome";
 import DoctorInOffice from "./pages/DoctorInOffice";
 import DoctorPlansPackages from "./pages/DoctorPlansPackages";
-import DoctorPrescriptionForm from "./pages/DoctorPrescriptionForm";
 import DoctorProfile from "./pages/DoctorProfile";
 import DoctorServiceSelection from "./pages/DoctorServiceSelection";
-import Step1 from "./pages/Forms/Client Information/Step1";
+// import Step1 from "./pages/Forms/Client Information/Step1";
+import Client_Form from "./pages/Forms/Client_Form";
 import PageNotFound from "./pages/PageNotFound";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import RecentBookings from "./pages/RecentBookings";
@@ -56,13 +57,15 @@ function App() {
 
           <Route path="/doctor" element={<ProtectedRoute />}>
             <Route path="dashboard" element={<DoctorSelectUserType />} />
-            <Route path="dashboard/client_form" element={<Step1 />} />
-            {/* <Route path="/step2" element={<Step2 />} />
-            <Route path="/step3" element={<Step3 />} /> */}
+            <Route path="dashboard/client_form" element={<Client_Form />} />
             <Route path="dashboard/profile" element={<DoctorProfile />} />
             <Route
               path="dashboard/doctor-service-selection"
               element={<DoctorServiceSelection />}
+            />{" "}
+            <Route
+              path="dashboard/doctor-service-selection/training"
+              element={<DoctorTrainingServices />}
             />
             <Route
               path="dashboard/doctor-inoffice"
@@ -80,7 +83,6 @@ function App() {
               path="dashboard/appointment"
               element={<DoctorAppointment />}
             />
-            <Route path="dashboard/training" element={<DoctorTraining />} />
             {/* <Route path="/recent-evaluation" element={<RecentEvaluation />} /> */}
             <Route
               path="dashboard/recent-evaluation2"
@@ -91,8 +93,12 @@ function App() {
               element={<RecentPrescriptions />}
             />{" "}
             <Route
-              path="dashboard/start-prescription"
-              element={<DoctorPrescriptionForm />}
+              path="dashboard/start-prescription/:client_id"
+              element={<DoctorForm form="pres" />}
+            />{" "}
+            <Route
+              path="dashboard/start-evaluation"
+              element={<DoctorForm form="eval" />}
             />
             <Route
               path="dashboard/recent-bookings"

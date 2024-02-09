@@ -5,6 +5,7 @@
 }
 .doctor-menu ul {
   margin-top: 40px;
+  margin-left: 14px;
 }
 .doctor-menu .selected {
   color: white;
@@ -14,43 +15,46 @@
 }
 /* menu */
 .menu-logo {
-  display: none;
-  transition: visibility 0.1s ease;
+  display: block;
+  /* display: none; */
+  /* transition: visibility 0.1s ease; */
   margin: auto;
 }
-.menu-logo-collapse {
+/* .menu-logo-collapse {
   display: block;
   padding-top: 20px;
-}
-.doctor-menu-cont:hover .menu-logo-collapse {
+} */
+/* .doctor-menu-cont:hover .menu-logo-collapse {
   display: none;
 }
 .doctor-menu-cont:hover .menu-logo {
   display: block;
-}
+} */
 
 .doctor-menu-cont {
-  width: 70px;
+  /* width: 70px; */
+  width: 210px;
+  padding: 0px;
   position: absolute;
   height: 100vh;
   display: inline;
-  transition: width 0.3s ease;
+  /* transition: width 0.3s ease; */
 }
-
+/* 
 .doctor-menu-cont:hover {
   width: 210px;
   position: absolute;
   z-index: 2 !important;
-}
-.doctor-menu-cont:hover + .children-cont {
+} */
+/* .doctor-menu-cont:hover + .children-cont {
 }
 
 .doctor-menu-cont:hover + .children-cont {
   width: 90vw;
   margin-left: 13vw;
-}
+} */
 
-.doctor-menu:hover .icons {
+/* .doctor-menu:hover .icons {
   font-size: 14px;
   margin-left: 10px;
   margin-right: 12px;
@@ -59,16 +63,23 @@
   opacity: 50%;
   transition: font-size 0.3s ease, margin-left 0.3s ease, margin-right 0.3s ease,
     width 0.3s ease, opacity 0.3s ease;
-}
+} */
 
 .children-cont {
-  width: 95vw;
-  margin-left: 8vw;
+  /* width: 95vw;
+  margin-left: 8vw; */
+  width: calc(100vw - 230px);
+  margin-left: 230px;
   /* margin-left: 80px; */
   height: 100vh !important;
   overflow-x: hidden;
   overflow-y: scroll;
+  /* font-family: "Josefin Sans", sans-serif; */
   font-family: "Mukta", sans-serif !important;
+}
+h5,
+h4 {
+  font-family: "Libre Baskerville", serif;
 }
 
 .doctor-menu:hover i {
@@ -77,11 +88,11 @@
 }
 
 .doctor-menu .menu-icon-cont {
-  width: 30px;
+  /* width: 30px; */
   display: inline-block;
 }
 
-.doctor-menu i,
+/* .doctor-menu i,
 .doctor-menu .icons {
   font-size: 14px;
   margin-left: 15px;
@@ -89,20 +100,23 @@
   width: 100%;
   opacity: 100%;
   height: 30px;
-}
+} */
 
 .menu-list-items {
   margin: auto;
   white-space: nowrap;
-  visibility: hidden;
+  visibility: visible;
+
   margin-left: 10px;
-  transition: display 0.6s ease-out, margin-left 0.1s ease-out;
+  /* transition: display 0.6s ease-out, margin-left 0.1s ease-out; */
 }
 
 .doctor-menu-cont:hover .menu-list-items {
   visibility: visible;
 }
-
+.parent-of-all {
+  margin: 0px 0px;
+}
 a,
 a:hover {
   color: inherit;
@@ -121,7 +135,9 @@ a:hover {
 .doctor-user-type:hover,
 .doctor-services.checked,
 .doctor-user.checked {
+  color: #7257ff;
   border-radius: 10px;
+  font-size: 20px;
   border: 1px solid #e3e3e3;
   background: rgba(107, 78, 255, 0.2);
 }
@@ -179,6 +195,79 @@ a:hover {
   width: 80%;
   height: 80%;
 }
+.doctor-service-container form {
+  gap: 17px;
+}
+.evaluation-buttons-cont {
+  margin-top: 17px;
+}
+.eval-cont {
+  width: 100%;
+  height: 100vh;
+  overflow-y: hidden;
+}
+.menu-logo {
+  width: 130px !important;
+}
+@media screen and (min-width: 1901px) {
+  .doctor-menu-cont {
+    /* width: 70px; */
+    width: 270px;
+    padding: 0px;
+    position: absolute;
+    height: 100vh;
+    display: inline;
+    /* transition: width 0.3s ease; */
+  }
+  .doctor-menu .menu-icon-cont img {
+    height: 100%;
+    width: 100%;
+  }
+  .doctor-menu .menu-icon-cont {
+    width: 33px;
+    height: 33px;
+    display: inline-block;
+  }
+  .menu-logo {
+    width: 180px !important;
+  }
+  .doctor-menu li {
+    font-family: Inter;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    margin-bottom: 50px;
+    text-transform: capitalize;
+  }
+  .select-user img,
+  .doctor-service-container img {
+    width: 130px;
+  }
+  .select-user,
+  .doctor-service-container {
+    gap: 5.5vh !important;
+  }
+  .select-user h5,
+  .doctor-service-container h5 {
+    font-size: 25px;
+  }
+
+  .select-user form,
+  .doctor-service-container form {
+    gap: 10px !important;
+  }
+  .select-user .radio-label {
+    margin-bottom: 30px !important;
+  }
+  .radio-label {
+    width: 450px !important;
+    height: 80px !important;
+  }
+  .evaluation-buttons-cont {
+    margin-top: 40px;
+  }
+}
 
 @media only screen and (max-width: 991px) {
   .select-user {
@@ -225,7 +314,8 @@ a:hover {
     height: 300px;
   }
 }
-.doctor-user-type,
+
+/* .doctor-user-type,
 .doctor-services,
 .doctor-user {
   background-color: transparent;
@@ -235,19 +325,30 @@ a:hover {
   border: 1px solid #b1b1b1;
   background: rgba(255, 255, 255, 0.24);
   cursor: pointer;
-}
+  text-transform: capitalize;
+  color: rgb(80, 77, 77);
+  /* font-size: 16px !important; */
+
 .doctor-service-container,
 .select-user {
   padding: 20px;
   box-sizing: content-box;
 }
-.doctor-user-type {
+/* .doctor-user-type {
   padding: 24px 103px;
-}
+} */
+/* .label ::clic {
+  display: block;
+  height: 50px !important;
+  margin: auto;
+  text-align: center;
+  width: 400px !important;
+} */
 .doctor-services,
 .doctor-user {
-  padding: 20px 0px;
-  font-size: 15px;
+  /* padding: 20px 0px;
+  font-size: 15px; */
+  /* font-weight: 700 !important; */
 }
 .today-appoint-container thead {
   font-size: 14px;
@@ -258,10 +359,22 @@ a:hover {
   padding: var(--16, 16px) var(--24, 24px);
   box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
 }
-tr,
-thead {
-  border-style: none !important;
+.today-appoint-container thead tr td {
+  background-color: #1c0d44;
+  color: white;
+
+  text-align: center;
+  text-transform: uppercase;
 }
+.today-appoint-container tbody tr td {
+  /* background-color: #ebe5ff; */
+  color: rgb(0, 0, 0);
+  border: 1px solid rgb(242, 242, 242);
+  /* box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 2px 0px,
+    rgba(0, 0, 0, 0.15) 0px 1px 3px 1px; */
+  text-align: center;
+}
+
 .today-appoint-container .view-all {
   text-decoration: underline;
   color: #7257ff;
@@ -355,6 +468,14 @@ thead {
   background-color: transparent;
 }
 @media only screen and (max-width: 600px) {
+  .radio-label {
+    width: 300px !important;
+  }
+
+  .doctor-service-container h5,
+  .select-user h5 {
+    font-size: 1.25rem !important;
+  }
   .bt-2 {
     margin-right: 10px !important;
   }
@@ -407,6 +528,9 @@ thead {
     font-weight: 500;
     text-transform: capitalize;
   }
+  .today-appoint-container tbody {
+    font-size: 12px !important;
+  }
   .today-appoint-container > div:first-child {
     padding: 10px;
   }
@@ -421,4 +545,94 @@ thead {
     width: auto !important;
     height: 50px !important;
   }
+}
+.btn.disabled,
+.btn:disabled,
+fieldset:disabled .btn {
+  color: white;
+  pointer-events: none;
+  background-color: grey;
+  border-color: grey;
+  opacity: var(--bs-btn-disabled-opacity);
+}
+
+.doctor-service-container .radio-label {
+  font-size: 15px;
+}
+.doctor-service-container .radio-label.checked {
+  font-size: 16px;
+}
+.radio-label {
+  font-family: "Mukta", sans-serif !important;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  margin-bottom: 10px;
+  color: #646465;
+  border-radius: 10px;
+  font-size: 17px;
+  border: 1px solid #e3e3e3;
+  background: rgba(255, 255, 255, 0.2);
+  width: 400px;
+  height: 60px;
+  justify-content: center;
+  margin-bottom: 20px !important;
+  text-transform: uppercase;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+    rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+}
+
+.radio-label input[type="radio"] {
+  opacity: 0;
+  position: absolute;
+}
+
+.radio-label::before {
+  content: "";
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  border: 2px solid #ccc;
+  border-radius: 50%;
+  display: none;
+}
+
+.radio-label.checked {
+  margin-bottom: 10px;
+  color: #7257ff;
+  border-radius: 10px;
+  font-size: 20px;
+  border: 0px !important;
+  background: rgba(107, 78, 255, 0.2);
+  width: 400px;
+  height: 60px;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+    rgba(0, 0, 0, 0.15) 0px 1px 3px 1px;
+}
+.radio-label.checked::before {
+  /* background-color: #007bff; */
+  color: #7257ff;
+  border-radius: 10px;
+  font-size: 20px;
+  border: 1px solid #e3e3e3;
+  background: #ebe5ff;
+}
+
+.radio-label input[type="radio"]:checked + .radio-label::before {
+  /* background-color: #007bff; */
+  /* color: #7257ff;
+  border-radius: 10px;
+  font-size: 20px;
+  border: 1px solid #e3e3e3;
+  background: rgba(107, 78, 255, 0.2); */
+}
+
+.radio-label:hover::before {
+  /* border-color: #007bff; */
+  /* color: #7257ff;
+  border-radius: 10px;
+  font-size: 20px;
+  border: 1px solid #e3e3e3;
+  background: rgba(107, 78, 255, 0.2); */
 }

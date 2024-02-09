@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Dropdown, Spinner, Table } from "react-bootstrap";
+import { Dropdown, Pagination, Table } from "react-bootstrap";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import Loader from "../components/layout/Components/Loader";
 import DoctorMenu from "../components/layout/DoctorMenu";
 import { GetRecentPrescriptions } from "../features/apiCall";
 
@@ -9,6 +12,8 @@ const RecentPrescriptions = () => {
   const prescriptions = useSelector((state) => state.fetch_app.prescriptions);
   const totalPages = useSelector((state) => state.fetch_app.totalPages);
   const isFetching = useSelector((state) => state.fetch_app.isFetching);
+  const [showDateInput, setShowDateInput] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 8; // Number of items per page
   const dispatch = useDispatch();
@@ -16,19 +21,93 @@ const RecentPrescriptions = () => {
   useEffect(() => {
     // Fetch data from your API here
     const fetchData = async () => {
+      if (selectedDate) {
+        // Format the date to 'yyyy-MM-dd'
+        const formattedDate = new Date(selectedDate).toLocaleDateString(
+          "en-CA"
+        );
+
+        setSelectedDate(formattedDate);
+      }
       try {
-        await GetRecentPrescriptions(dispatch, { currentPage, pageSize });
+        await GetRecentPrescriptions(dispatch, {
+          currentPage,
+          pageSize,
+          selectedDate,
+        });
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
 
     fetchData();
-  }, [currentPage]);
+  }, [currentPage, selectedDate]);
   const startIndex = (currentPage - 1) * pageSize;
   console.log(prescriptions);
+
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
+  };
+  const handleDateFilter = (date) => {
+    setSelectedDate(date);
+  };
+  const renderPaginationItems = () => {
+    const items = [];
+    const range = 1; // Number of pages to show before and after current page
+
+    // Previous Page
+    items.push(
+      // <Pagination.Prev
+      //   key="prev"
+      //   onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
+      //   disabled={currentPage === 1}
+      // />
+      <li class="page-item">
+        <button
+          class="page-link"
+          href="#"
+          disabled={currentPage === 1}
+          onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
+        >
+          Previous
+        </button>
+      </li>
+    );
+
+    // Pagination Items
+    for (
+      let i = Math.max(1, currentPage - range);
+      i <= Math.min(totalPages, currentPage + range);
+      i++
+    ) {
+      items.push(
+        <Pagination.Item
+          key={i}
+          active={i === currentPage}
+          onClick={() => handlePageChange(i)}
+        >
+          {i}
+        </Pagination.Item>
+      );
+    }
+
+    // Next Page
+    items.push(
+      <li class="page-item">
+        <button
+          class="page-link"
+          href="#"
+          onClick={() =>
+            handlePageChange(Math.min(currentPage + 1, totalPages))
+          }
+          disabled={currentPage === totalPages}
+        >
+          Next
+        </button>
+      </li>
+    );
+
+    return items;
   };
 
   return (
@@ -41,13 +120,17 @@ const RecentPrescriptions = () => {
                 Prescription Requests
               </h2>
             </div>
-            <div className="input-group mb-3 " style={{ width: "400px" }}>
+            <div
+              className="input-group mb-3 search-bar"
+              style={{ width: "40%" }}
+            >
               <input
                 type="text"
                 className="form-control"
                 placeholder="Search..."
                 aria-label="Search"
                 aria-describedby="searchIcon"
+                style={{ height: "40px" }}
               />
               <div className="input-group-append">
                 <span className="input-group-text" id="searchIcon">
@@ -57,7 +140,12 @@ const RecentPrescriptions = () => {
             </div>
             <div
               className=" d-flex flex-row "
-              style={{ width: "150px", gap: "10px", marginRight: "15px" }}
+              style={{
+                width: "150px",
+                gap: "10px",
+                marginRight: "15px",
+                marginBottom: "18px",
+              }}
             >
               <i class="fa-solid fa-calendar m-auto"></i>
               <Dropdown>
@@ -79,30 +167,44 @@ const RecentPrescriptions = () => {
             </div>
           </div>
           <div className="table-div-booking">
-            <Table className="table" striped variant="light">
+            <Table className="table" variant="light">
               <thead>
                 <tr>
-                  <th style={{ paddingLeft: "20px" }}>
-                    Name <i className="fa-solid fa-sort" />
+                  <th style={{ paddingLeft: "20px" }}>Name</th>
+                  <th>Mobile Number</th>
+                  <th>
+                    <div className="date-container">
+                      <div
+                        className="date-display "
+                        onClick={() => setShowDateInput(!showDateInput)}
+                      >
+                        {selectedDate === null
+                          ? "Date"
+                          : new Date(selectedDate).toLocaleDateString("en-CA")}
+                        <i className="fa-solid fa-sort m-1" />
+                      </div>
+                      {showDateInput && (
+                        <DatePicker
+                          selected={selectedDate}
+                          onChange={(date) => {
+                            handleDateFilter(date);
+                            setShowDateInput(false);
+                          }}
+                        />
+                      )}
+                    </div>
                   </th>
                   <th>
-                    Mobile Number <i className="fa-solid fa-sort" />
+                    Time <i className="fa-solid fa-sort m-1" />
                   </th>
-                  <th>
-                    Date <i className="fa-solid fa-sort" />
-                  </th>
-                  <th>
-                    Time <i className="fa-solid fa-sort" />
-                  </th>
-                  <th>
-                    Action <i className="fa-solid fa-filter" />
-                  </th>
+                  <th></th>
+                  <th>Action</th>
                 </tr>
               </thead>
               {!isFetching ? (
                 <>
                   {" "}
-                  {prescriptions.length > 0 ? (
+                  {prescriptions && prescriptions.length > 0 ? (
                     <>
                       {" "}
                       <tbody className="recent-bookings-cont">
@@ -131,17 +233,22 @@ const RecentPrescriptions = () => {
                             </td>
                             <td className="phoneno">
                               {" "}
-                              {booking?.client?.phone_number}
+                              35285482735473
+                              {/* {booking?.client?.phone_number} */}
                             </td>
                             <td className="date">{booking?.app_date}</td>
                             <td className="time">{booking?.app_time}</td>
                             {/* <td className="phoneno">
                               {booking?.client?.phone_number}
                             </td> */}
+                            <td></td>
                             <td className="status ">
-                              <div className="StartEvaluation w-75">
-                                <Link to="/doctor/dashboard/start-prescription">
-                                  Start Prescription
+                              <div className="StartPrescription m-auto">
+                                <Link
+                                  to={`/doctor/dashboard/start-prescription/${booking?.client?.client_id}`}
+                                  className=" "
+                                >
+                                  <p> Start Prescription</p>
                                 </Link>
                               </div>
                             </td>
@@ -158,11 +265,14 @@ const RecentPrescriptions = () => {
                 </>
               ) : (
                 <>
-                  <Spinner className="m-auto" />
+                  <Loader />
                 </>
               )}
             </Table>
           </div>
+        </div>
+        <div className="pag-cont">
+          <Pagination className="m-auto ">{renderPaginationItems()}</Pagination>
         </div>
       </div>
     </DoctorMenu>

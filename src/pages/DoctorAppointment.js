@@ -1,26 +1,36 @@
+import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { Button, Form, Spinner } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import BootstrapModal from "../components/layout/Components/BootstrapModal";
+import Loader from "../components/layout/Components/Loader";
 import DoctorMenu from "../components/layout/DoctorMenu";
 import DoctorTodayAppointment from "../components/layout/DoctorTodayAppointment";
-import { appointment } from "../features/apiCall";
+import { appointment, fetchAvailableAppointments } from "../features/apiCall";
 
 const DoctorAppointment = () => {
   const navigate = useNavigate();
+  const slots = useSelector((state) => state.fetch_app.slots);
+  const doctors = useSelector((state) => state.fetch_app.doctors);
   const [selectedService, setSelectedService] = useState("");
-  const { isFetching } = useSelector((state) => state.auth);
+  const { isFetching: authIsFetching } = useSelector((state) => state.auth);
+  const { isFetching: fetchAppIsFetching } = useSelector(
+    (state) => state.fetch_app
+  );
   const dispatch = useDispatch();
   const [showModal, setShowModal] = useState(false);
   const [formValid, setFormValid] = useState(false);
+  const [disabledDates, setDisabledDates] = useState([]); // State to store disabled dates
+
   const [formData, setFormData] = useState({
     date: "",
     time: "",
     selectedDoctor: "",
     selectedLocation: "",
   });
+
   const ErrorToastOptions = {
     position: "bottom-center",
     autoClose: 3000,
@@ -28,19 +38,35 @@ const DoctorAppointment = () => {
     draggable: true,
     theme: "dark",
   };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
       [name]: value,
     });
+
+    if (name === "date" && value) {
+      console.log("hi");
+      const selectedSlot = slots.find(
+        (slot) => moment(slot.date).format("YYYY-MM-DD") === value
+      );
+
+      if (selectedSlot) {
+        console.log("Selected slot:", selectedSlot);
+        setFormData((prevState) => ({
+          ...prevState,
+          selectedLocation: selectedSlot.address,
+        }));
+        console.log("FormData after update:", formData);
+      } else {
+        console.log("No slot found for the selected date.");
+      }
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    console.log("Form Data:", formData);
-
     // Validate form data
     if (
       !formData.date ||
@@ -52,7 +78,6 @@ const DoctorAppointment = () => {
       return;
     }
     setFormValid(true);
-    console.log("Form Data2:", formData);
     try {
       const success = await appointment(dispatch, formData);
       if (success) {
@@ -62,53 +87,53 @@ const DoctorAppointment = () => {
       toast.error("Unexpected Error", ErrorToastOptions);
     }
   };
+
   const handleClose = () => {
     setShowModal(false);
-
-    // Redirect to a new page after 2 seconds (adjust the timeout duration as needed)
-    // setTimeout(() => {
     navigate("/doctor/dashboard/doctor-service-selection");
     localStorage.removeItem("selectedService");
-    // }, 200);
+  };
+
+  const fetchAvailableAppointmentDates = async (selectedDoctor) => {
+    try {
+      await fetchAvailableAppointments(dispatch, {
+        selectedDoctor,
+      });
+      const availableDates = slots.map((appointment) =>
+        moment(appointment.date).format("YYYY-MM-DD")
+      );
+      setDisabledDates(availableDates);
+    } catch (error) {
+      console.error("Error fetching available appointment dates:", error);
+    }
   };
 
   useEffect(() => {
-    // Check if selectedService is empty in localStorage
+    if (doctors.length === 0)
+      navigate("/doctor/dashboard/doctor-service-selection");
+  }, []);
+
+  useEffect(() => {
     const storedSelectedService = localStorage.getItem("selectedService");
     const clientId = localStorage.getItem("client_id");
     if (storedSelectedService && clientId) {
       setSelectedService(storedSelectedService);
     } else {
-      // If empty, navigate to the desired page
       navigate("/doctor/dashboard/doctor-service-selection");
     }
-  }, [navigate]);
+  }, [navigate, dispatch]);
+
+  useEffect(() => {
+    if (formData.selectedDoctor) {
+      fetchAvailableAppointmentDates(formData.selectedDoctor);
+    }
+  }, [formData.selectedDoctor]);
 
   return (
     <DoctorMenu>
-      <div className="d-flex Doctor-Consul justify-between ">
+      <div className="d-flex Doctor-Consul justify-between">
         <section className="appo-cont">
           <Form onSubmit={handleSubmit} className="appo-cont-form">
-            <Form.Group controlId="formDate" className="mb-3">
-              <Form.Label>Appointment Date</Form.Label>
-              <Form.Control
-                type="date"
-                name="date"
-                value={formData.date}
-                onChange={handleChange}
-              />
-            </Form.Group>
-
-            <Form.Group controlId="formTime" className="mb-3">
-              <Form.Label>Appointment Time</Form.Label>
-              <Form.Control
-                type="time"
-                name="time"
-                value={formData.time}
-                onChange={handleChange}
-              />
-            </Form.Group>
-
             <Form.Group controlId="formDoctor" className="mb-3">
               <Form.Label>Select Trainer/Doctor</Form.Label>
               <Form.Control
@@ -118,48 +143,88 @@ const DoctorAppointment = () => {
                 onChange={handleChange}
               >
                 <option value="">Select a Trainer/Doctor</option>
-                <option value="Dr. LaPlaca">Dr. LaPlaca</option>{" "}
-                <option value="Dr. LaPlaca">Dr. LaPlaca</option>
-                {/* Add more options as needed */}
+                {doctors &&
+                  doctors.length > 0 &&
+                  doctors.map((doctor) => (
+                    <option key={doctor.temp_code} value={doctor.fullname}>
+                      {doctor.fullname}
+                    </option>
+                  ))}
               </Form.Control>
             </Form.Group>
-            {selectedService && selectedService !== "Consultation" && (
-              <Form.Group controlId="formLocation" className="mb-3">
-                <Form.Label>Select Location</Form.Label>
-                <Form.Control
-                  as="select"
-                  name="selectedLocation"
-                  value={formData.selectedLocation}
-                  onChange={handleChange}
-                >
-                  <option value="">Select a Location</option>
-                  <option value="Carmel">
-                    Carmel Office- 510 W. Carmel Dr. Carmel, IN 46032
-                  </option>
-                  <option value="Santa">
-                    Santa Ana Office- 2972 Westheimer Rd. Santa Ana, Illinois
-                    85486{" "}
-                  </option>
-                  {/* Add more options as needed */}
-                </Form.Control>
-              </Form.Group>
+
+            {/* Render the rest of the form fields if a doctor is selected */}
+            {formData.selectedDoctor && (
+              <>
+                {fetchAppIsFetching ? (
+                  <Loader
+                    className="slots-fetch"
+                    title="Hold on ! Fetching Doctor available dates"
+                  />
+                ) : (
+                  <>
+                    <Form.Group controlId="formDate" className="mb-3">
+                      <Form.Label>Appointment Date</Form.Label>
+                      <Form.Control
+                        as="select"
+                        name="date"
+                        value={formData.date}
+                        onChange={handleChange}
+                      >
+                        <option value="">Select an Appointment Date</option>
+                        {disabledDates.map((date) => (
+                          <option key={date} value={date}>
+                            {moment(date).format("MMMM Do YYYY")}
+                          </option>
+                        ))}
+                      </Form.Control>
+                    </Form.Group>
+
+                    <Form.Group controlId="formTime" className="mb-3">
+                      <Form.Label>Appointment Time</Form.Label>
+                      <Form.Control
+                        type="time"
+                        name="time"
+                        value={formData.time}
+                        onChange={handleChange}
+                      />
+                    </Form.Group>
+
+                    {selectedService !== "Consultation" && (
+                      <Form.Group controlId="formLocation" className="mb-3">
+                        <Form.Label>Select Location</Form.Label>
+                        <Form.Control
+                          type="text"
+                          name="selectedLocation"
+                          value={formData.selectedLocation}
+                          onChange={handleChange}
+                          placeholder="Enter Location"
+                        />
+                      </Form.Group>
+                    )}
+                  </>
+                )}
+                <div className="d-flex justify-content-center">
+                  {authIsFetching ? (
+                    <Button className="purple-button c-b">
+                      <Spinner animation="border" variant="light" />
+                    </Button>
+                  ) : (
+                    <>
+                      {" "}
+                      {!fetchAppIsFetching && (
+                        <Button
+                          className="purple-button d-block w-25"
+                          type="submit"
+                        >
+                          Submit
+                        </Button>
+                      )}
+                    </>
+                  )}
+                </div>
+              </>
             )}
-            <div className="d-flex justify-content-center">
-              {isFetching ? (
-                <Button className="purple-button c-b">
-                  <Spinner animation="border" variant="light" />
-                </Button>
-              ) : (
-                <Button
-                  className="purple-button  d-block"
-                  type="submit"
-                  style={{ width: "250px", height: "52px", zIndex: "0" }}
-                  // disabled={!formValid}
-                >
-                  Next
-                </Button>
-              )}
-            </div>
           </Form>
         </section>
         <BootstrapModal
@@ -175,6 +240,7 @@ const DoctorAppointment = () => {
 };
 
 export default DoctorAppointment;
+
 const ModalContent = () => {
   return (
     <section className="text-center">

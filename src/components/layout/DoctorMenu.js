@@ -112,20 +112,19 @@ const DoctorMenu = ({ children }) => {
           ) : (
             <div className="doctor-menu-cont">
               <main className="w-100 h-100 doctor-menu text-center text-secondary">
-                <div style={{ height: "130px" }}>
+                <div>
                   <img
                     src="/images/DoctorMenuLogo.png
               "
                     alt="logo"
-                    width={130}
                     className="menu-logo"
                   />
-                  <img
+                  {/* <img
                     src="/images/Logo.png"
                     alt="logo"
                     width={60}
                     className="menu-logo-collapse"
-                  />
+                  /> */}
                 </div>
                 <ul className="list-unstyled text-start ">
                   {navigationMenu.map((item, index) => (

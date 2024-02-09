@@ -50,18 +50,17 @@ const DoctorSelectUser = () => {
         className="text-center d-flex flex-column justify-content-center align-items-center select-user"
         style={{ gap: "3vh", width: "40%" }}
       >
-        <img src="/images/areseliteLogo.png" width={100} alt="logo" />
-        <h5>Please select Type of user</h5>
+        <img src="/images/areseliteLogo.png" width={120} alt="logo" />
+        <h5 style={{ fontWeight: "700" }}>Please select type of User</h5>
         <Form
           className="d-flex flex-wrap justify-content-center "
-          style={{ gap: "24px" }}
+          style={{ gap: "30px" }}
           onSubmit={handleSubmit}
         >
-          <Form.Check
+          {/* <Form.Check
             type="radio"
             id="newUser"
             label="New"
-            value="New"
             checked={selectedUserType === "New"}
             onChange={handleUserTypeChange}
             className={`doctor-user ${
@@ -79,12 +78,44 @@ const DoctorSelectUser = () => {
             className={`doctor-user ${
               selectedUserType === "Existing" ? "checked" : ""
             }`}
-          />
+          /> */}
+          <div className="radio-container">
+            <label
+              htmlFor="newUser"
+              className={`radio-label ${
+                selectedUserType === "New" ? "checked" : ""
+              }`}
+            >
+              <input
+                type="radio"
+                id="newUser"
+                value="New"
+                checked={selectedUserType === "New"}
+                onChange={handleUserTypeChange}
+              />
+              New
+            </label>
 
+            <label
+              htmlFor="existingUser"
+              className={`radio-label ${
+                selectedUserType === "Existing" ? "checked" : ""
+              }`}
+            >
+              <input
+                type="radio"
+                id="existingUser"
+                value="Existing"
+                checked={selectedUserType === "Existing"}
+                onChange={handleUserTypeChange}
+              />
+              Existing
+            </label>
+          </div>
           <Button
             type="submit"
             className="purple-button "
-            style={{ width: "332px", height: "62px" }}
+            style={{ width: "332px", height: "62px", marginTop: "26px" }}
             disabled={!selectedUserType}
           >
             Continue

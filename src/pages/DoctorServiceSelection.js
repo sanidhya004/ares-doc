@@ -1,16 +1,29 @@
-import React from "react";
-import DoctorMenu from "../components/layout/DoctorMenu";
+import React, { useEffect } from "react";
 
+import { useDispatch } from "react-redux";
+import HomeLayout from "../components/layout/Components/HomeLayout";
 import DoctorServices from "../components/layout/DoctorServices";
-import DoctorTodayAppointment from "../components/layout/DoctorTodayAppointment";
+import { getAllDoctors } from "../features/apiCall";
 const DoctorServiceSelection = () => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const fetchDoctorData = async () => {
+      try {
+        await getAllDoctors(dispatch);
+      } catch (error) {
+        console.error("Error fetching doctors:", error);
+        // Handle error, perhaps show an error toast
+      }
+    };
+
+    fetchDoctorData();
+  }, []);
+
   return (
-    <DoctorMenu>
-      <div className="d-flex Doctor-home justify-content-around flex-wrap ">
-        <DoctorServices />
-        <DoctorTodayAppointment />
-      </div>
-    </DoctorMenu>
+    <HomeLayout>
+      <DoctorServices />
+    </HomeLayout>
   );
 };
 
