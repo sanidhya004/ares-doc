@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Dropdown, Pagination, Table } from "react-bootstrap";
+import { Col, Container, Pagination, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
 const CompletedRequests = () => {
@@ -13,7 +13,8 @@ const CompletedRequests = () => {
       name: "Mr. Scott Mctominay",
       email: "curtis.weaver@example.com",
       phoneNumber: "(406) 555-0120",
-      status: "PAID",
+      status: "failed",
+      bt: "plan",
     },
     {
       time: "9:23 AM",
@@ -22,7 +23,8 @@ const CompletedRequests = () => {
       name: "Mr. Scott Mctominay",
       email: "curtis.weaver@example.com",
       phoneNumber: "(406) 555-0120",
-      status: "FAILED",
+      status: "pending",
+      bt: "drill",
     },
     {
       time: "9:23 AM",
@@ -31,7 +33,8 @@ const CompletedRequests = () => {
       name: "Mr. Scott Mctominay",
       email: "curtis.weaver@example.com",
       phoneNumber: "(406) 555-0120",
-      status: "PENDING",
+      status: "paid",
+      bt: "drill",
     },
     {
       time: "9:23 AM",
@@ -40,7 +43,8 @@ const CompletedRequests = () => {
       name: "Mr. Scott Mctominay",
       email: "curtis.weaver@example.com",
       phoneNumber: "(406) 555-0120",
-      status: "PAID",
+      status: "paid",
+      bt: "plan",
     },
     {
       time: "9:23 AM",
@@ -49,30 +53,13 @@ const CompletedRequests = () => {
       name: "Mr. Scott Mctominay",
       email: "curtis.weaver@example.com",
       phoneNumber: "(406) 555-0120",
-      status: "PAID",
-    },
-    {
-      time: "9:23 AM",
-      date: "Oct 17, 2023",
-      serviceType: "Sports Vision Performance",
-      name: "Mr. Scott Mctominay",
-      email: "curtis.weaver@example.com",
-      phoneNumber: "(406) 555-0120",
-      status: "PAID",
-    },
-    {
-      time: "9:23 AM",
-      date: "Oct 17, 2023",
-      serviceType: "Sports Vision Performance",
-      name: "Mr. Scott Mctominay",
-      email: "curtis.weaver@example.com",
-      phoneNumber: "(406) 555-0120",
-      status: "PAID",
+      status: "pending",
+      bt: "plan",
     },
 
     // Add more data objects for each booking...
   ];
-  const totalPages = 10;
+  const totalPages = 3;
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
   };
@@ -135,87 +122,29 @@ const CompletedRequests = () => {
   };
   return (
     <>
-      <div className="mt-4 main-wrapper">
-        <div className="frame">
-          <div className="d-flex justify-content-between align-items-center recent-booking-head">
-            <div className="">
-              <h2 className="" style={{ paddingLeft: "15px" }}>
-                Completed Requests
-              </h2>
-            </div>
-            <div
-              className="input-group mb-3 search-bar"
-              style={{ width: "40%" }}
-            >
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Search..."
-                aria-label="Search"
-                aria-describedby="searchIcon"
-                style={{ height: "40px" }}
-              />
-              <div className="input-group-append">
-                <span className="input-group-text" id="searchIcon">
-                  <i class="fas fa-search"></i>
-                </span>
-              </div>
-            </div>
-            <div
-              className=" d-flex flex-row "
-              style={{
-                width: "150px",
-                gap: "10px",
-                marginRight: "15px",
-
-                marginBottom: "18px",
-              }}
-            >
-              <i class="fa-solid fa-calendar m-auto" />
-              <Dropdown>
-                <Dropdown.Toggle id="dropdown-basic">8 of 230</Dropdown.Toggle>
-
-                <Dropdown.Menu>
-                  <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-                  <Dropdown.Item href="#/action-2">
-                    Another action
-                  </Dropdown.Item>
-                  <Dropdown.Item href="#/action-3">
-                    Something else
-                  </Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown>
-            </div>
-          </div>
-          <div className="table-div">
-            <Table className="table" striped variant="light">
-              <thead>
-                <tr>
-                  <th style={{ paddingLeft: "20px" }}>
-                    Name <i className="fa-solid fa-sort" />
-                  </th>
-                  <th>
-                    Mobile Number <i className="fa-solid fa-sort" />
-                  </th>
-                  <th>
-                    Date <i className="fa-solid fa-sort" />
-                  </th>
-                  <th>
-                    Time <i className="fa-solid fa-sort" />
-                  </th>
-                  <th className="text-center">
-                    Actions <i className="fa-solid fa-filter" />
-                  </th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody className="recent-bookings-cont">
-                {bookingsData.map((booking, index) => (
-                  <tr key={index}>
-                    <td
-                      className=" name-email-image-cont"
-                      style={{ paddingLeft: "20px" }}
-                    >
+      <div className="main-wrapper">
+        <div className="table-div">
+          <table className="completed-table ">
+            <thead>
+              <tr>
+                <th style={{ paddingLeft: "20px" }}>Name</th>
+                <th>
+                  Service Type <i className="fa-solid fa-sort" />
+                </th>
+                <th>Mobile Number</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Payment Status</th>
+                <th className="text-center">
+                  Actions <i className="fa-solid fa-filter" />
+                </th>
+              </tr>
+            </thead>
+            <tbody className="recent-bookings-cont">
+              {bookingsData.map((booking, index) => (
+                <tr key={index}>
+                  <td className="" style={{ paddingLeft: "20px" }}>
+                    <div className="h-100 d-flex mt-2">
                       <img
                         src="/images/image3.png"
                         alt={booking.name}
@@ -227,33 +156,51 @@ const CompletedRequests = () => {
                         <br />
                         <small className="email">{booking.email}</small>
                       </div>
-                    </td>
-                    <td className="phoneno">{booking.phoneNumber}</td>
-                    <td className="date">{booking.date}</td>
-                    <td className="time">{booking.time}</td>
-                    <td className="action  ">
-                      <button
-                        className="action-select-plan"
-                        style={{ marginRight: "20px" }}
-                      >
-                        <Link to="/doctor/dashboard/doctor-plans">
+                    </div>
+                  </td>
+                  <td className="service_type">Sports Vision Evaluation</td>
+                  <td className="phoneno">{booking.phoneNumber}</td>
+                  <td className="date">{booking.date}</td>
+                  <td className="time">{booking.time}</td>
+                  <td className="status">
+                    <div className={`${booking?.status} m-auto `}>
+                      <p> {booking.status}</p>
+                    </div>
+                  </td>{" "}
+                  <td className="action ">
+                    <Container>
+                      <Row>
+                        <Col>
+                          <button className="action-select-plan ">
+                            {booking?.bt == "plan" ? (
+                              <>
+                                <Link to="/doctor/dashboard/doctor-plans">
+                                  {" "}
+                                  Select Plan
+                                </Link>
+                              </>
+                            ) : (
+                              <>
+                                <Link to="/drill"> Start Drill </Link>
+                              </>
+                            )}
+                          </button>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col>
                           {" "}
-                          Select Plan
-                        </Link>
-                      </button>
-                      <button className="action-view-eval">
-                        View Evaluation
-                      </button>
-                    </td>{" "}
-                    <td>...</td>
-                  </tr>
-                ))}
-              </tbody>
-            </Table>
-          </div>
-        </div>
-        <div className="pag-cont">
-          <Pagination className="m-auto ">{renderPaginationItems()}</Pagination>
+                          <button className="action-view-eval">
+                            View Evaluation
+                          </button>
+                        </Col>
+                      </Row>
+                    </Container>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
     </>

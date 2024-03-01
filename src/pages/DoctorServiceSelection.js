@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 
 import { useDispatch } from "react-redux";
-import HomeLayout from "../components/layout/Components/HomeLayout";
+import VerifiedLayout from "../components/layout/Components/verifiedLayout";
 import DoctorServices from "../components/layout/DoctorServices";
 import { getAllDoctors } from "../features/apiCall";
 const DoctorServiceSelection = () => {
@@ -21,9 +21,9 @@ const DoctorServiceSelection = () => {
   }, []);
 
   return (
-    <HomeLayout>
+    <VerifiedLayout>
       <DoctorServices />
-    </HomeLayout>
+    </VerifiedLayout>
   );
 };
 

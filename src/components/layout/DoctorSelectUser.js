@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Button, Form, Spinner } from "react-bootstrap";
+import { Button, Form } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { VerifyAthelete } from "../../features/apiCall";
 import "../../styles/modal.css";
-import BootstrapModal from "./Components/BootstrapModal";
 
 const DoctorSelectUser = () => {
   const { isFetching } = useSelector((state) => state.auth);
@@ -12,6 +11,8 @@ const DoctorSelectUser = () => {
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [success, setSuccess] = useState(false); // Track form submission success
+
   useEffect(() => {
     localStorage.removeItem("selectedService");
     localStorage.removeItem("client_id");
@@ -23,7 +24,7 @@ const DoctorSelectUser = () => {
       navigate("/doctor/dashboard/client_form");
     } else if (selectedUserType === "Existing") {
       console.log("modal opened for verification");
-      setShowModal(true);
+      setSuccess(true);
     }
   };
 
@@ -46,132 +47,163 @@ const DoctorSelectUser = () => {
 
   return (
     <>
-      <section
-        className="text-center d-flex flex-column justify-content-center align-items-center select-user"
-        style={{ gap: "3vh", width: "40%" }}
-      >
-        <img src="/images/areseliteLogo.png" width={120} alt="logo" />
-        <h5 style={{ fontWeight: "700" }}>Please select type of User</h5>
-        <Form
-          className="d-flex flex-wrap justify-content-center "
-          style={{ gap: "30px" }}
-          onSubmit={handleSubmit}
-        >
-          {/* <Form.Check
-            type="radio"
-            id="newUser"
-            label="New"
-            checked={selectedUserType === "New"}
-            onChange={handleUserTypeChange}
-            className={`doctor-user ${
-              selectedUserType === "New" ? "checked" : ""
-            }`}
-          />
-
-          <Form.Check
-            type="radio"
-            id="existingUser"
-            label="Existing"
-            value="Existing"
-            checked={selectedUserType === "Existing"}
-            onChange={handleUserTypeChange}
-            className={`doctor-user ${
-              selectedUserType === "Existing" ? "checked" : ""
-            }`}
-          /> */}
-          <div className="radio-container">
-            <label
-              htmlFor="newUser"
-              className={`radio-label ${
-                selectedUserType === "New" ? "checked" : ""
-              }`}
-            >
-              <input
-                type="radio"
-                id="newUser"
-                value="New"
-                checked={selectedUserType === "New"}
-                onChange={handleUserTypeChange}
-              />
-              New
-            </label>
-
-            <label
-              htmlFor="existingUser"
-              className={`radio-label ${
-                selectedUserType === "Existing" ? "checked" : ""
-              }`}
-            >
-              <input
-                type="radio"
-                id="existingUser"
-                value="Existing"
-                checked={selectedUserType === "Existing"}
-                onChange={handleUserTypeChange}
-              />
-              Existing
-            </label>
-          </div>
-          <Button
-            type="submit"
-            className="purple-button "
-            style={{ width: "332px", height: "62px", marginTop: "26px" }}
-            disabled={!selectedUserType}
-          >
-            Continue
-          </Button>
-        </Form>
-      </section>
-      <BootstrapModal
-        showModal={showModal}
-        handleClose={() => setShowModal(false)}
-        modalTitle={"Please enter email to verify"}
-        modalContent={
-          <ModalContent
-            handleClose={() => setShowModal(false)}
+      <section className="text-center d-flex flex-column justify-content-center align-items-center select-user h-100">
+        {success ? (
+          <SucessContent
             handleVerification={handleVerification}
+            className="verification-athelete"
+            success={success}
+            setSuccess={setSuccess}
           />
-        }
-        className="verification-athelete"
-      />
+        ) : (
+          <>
+            <div className="text-left" style={{ width: "400px" }}>
+              <h4 style={{ fontWeight: "700" }}>Select User</h4>
+              <p className="text-muted">
+                Please select Type of user that you want to treat
+              </p>
+            </div>
+
+            <Form
+              className="d-flex flex-wrap justify-content-center "
+              style={{ gap: "30px" }}
+              onSubmit={handleSubmit}
+            >
+              <div className="radio-container">
+                <label
+                  htmlFor="newUser"
+                  className={`radio-label ${
+                    selectedUserType === "New" ? "checked" : ""
+                  }`}
+                >
+                  <input
+                    type="radio"
+                    id="newUser"
+                    value="New"
+                    checked={selectedUserType === "New"}
+                    onChange={handleUserTypeChange}
+                  />
+                  New Users
+                </label>
+
+                <label
+                  htmlFor="existingUser"
+                  className={`radio-label ${
+                    selectedUserType === "Existing" ? "checked" : ""
+                  }`}
+                >
+                  <input
+                    type="radio"
+                    id="existingUser"
+                    value="Existing"
+                    checked={selectedUserType === "Existing"}
+                    onChange={handleUserTypeChange}
+                  />
+                  Existing Users
+                </label>
+              </div>
+              <Button
+                type="submit"
+                className="purple-button "
+                style={{ width: "400px", height: "60px", marginTop: "0px" }}
+                disabled={!selectedUserType}
+              >
+                Continue
+              </Button>
+            </Form>
+          </>
+        )}
+      </section>
     </>
   );
 };
 
 export default DoctorSelectUser;
-const ModalContent = ({ handleClose, handleVerification }) => {
+
+const SucessContent = ({
+  handleClose,
+  handleVerification,
+  className,
+  success,
+  setSuccess,
+}) => {
   const [email, setEmail] = useState("");
+  const navigate = useNavigate();
   const { isFetching } = useSelector((state) => state.auth);
-  const handleSubmit = (e) => {
+  const [verificationStarted, setVerificationStarted] = useState(false);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    handleVerification(email);
+    if (email.trim() !== "") {
+      setVerificationStarted(true);
+      await handleVerification(email);
+    }
+  };
+  const handleGoBack = () => {
+    setSuccess(false);
   };
 
+  const handleCancel = () => {
+    // Handle cancel action, stop verification
+    setVerificationStarted(false);
+  };
   return (
-    <section>
-      <Form onSubmit={handleSubmit}>
-        <Form.Control
-          type="email"
-          name="email"
-          placeholder="Enter Existing Email ID"
-          onChange={(e) => setEmail(e.target.value)}
-          value={email}
-          className="mb-3 "
-        />
-        <button type="button" onClick={handleClose} className="bt-2 w-25">
-          Close
-        </button>
+    <>
+      <button onClick={handleGoBack} className="m-2 p-0 mb-4 " id="back_bt">
+        <img src="/images/icon/back.svg" alt="back" width={30} />
+      </button>
+      <section className={className}>
+        <div className="text-left" style={{ width: "400px" }}>
+          <h4 style={{ fontWeight: "700" }}>Verify User</h4>
+          <p className="text-muted">
+            Please enter email to verify a existing user{" "}
+          </p>
+        </div>
+        <Form
+          onSubmit={handleSubmit}
+          className="m-auto"
+          style={{ width: "400px" }}
+        >
+          <Form.Control
+            type="email"
+            name="email"
+            placeholder="Enter Existing Email ID"
+            onChange={(e) => setEmail(e.target.value)}
+            value={email}
+            className="mb-3 "
+            style={{ height: "60px" }}
+          />
+          {/* <div className="d-flex"> */}
+          {/* <button type="submit" className="bt-4 w-100 bt-5">
+            {isFetching ? (
+              <>
+                <Spinner size="sm" animation="border" />
+              </>
+            ) : (
+              <>Verify</>
+            )}
+          </button>{" "}
+          <button type="button" className="bt-6 w-100">
+            Cancel
+          </button> */}
+          <button
+            type="submit"
+            className="purple-button p-0"
+            style={{ width: "400px", height: "58px", marginTop: "26px" }}
+          >
+            Verify
+          </button>
 
-        <button type="submit" className="bt-2 w-25 bt-3">
-          {isFetching ? (
-            <>
-              <Spinner size="sm" animation="border" />
-            </>
-          ) : (
-            <>Verify</>
-          )}
+          {/* </div> */}
+        </Form>
+        <button
+          onClick={handleCancel}
+          className="purple-button-2 p-0"
+          style={{ width: "400px", height: "58px", marginTop: "15px" }}
+        >
+          Cancel
         </button>
-      </Form>
-    </section>
+      </section>
+    </>
   );
 };

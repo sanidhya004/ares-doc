@@ -35,8 +35,8 @@ const Athedrill = () => {
               <video src="/images/produ.mp4" className=" w-100 " controls />
             </Col>
             <Col>
-              <div className="d-flex  justify-content-between">
-                <h5>Drill Contents</h5>
+              <div className="d-flex justify-content-between">
+                <h5 className="m-0">Drill Contents</h5>
                 <p className="text-success">15% Completed</p>
               </div>
               <ProgressBar

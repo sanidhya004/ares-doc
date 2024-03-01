@@ -9,6 +9,10 @@
   font-weight: 400;
   line-height: 18px; /* 150% */
 }
+.forgot-password label {
+  font-size: 14px;
+  font-weight: 500;
+}
 .profile p,
 button {
   margin-bottom: 0px;
@@ -18,9 +22,16 @@ button {
 }
 .profile .prof-cont {
   margin: 20px 0px;
+  background-color: #f4f4f4;
+  padding: 10px 20px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 .profile section {
-  width: 80%;
+  width: 100%;
+  border-radius: 20px;
 }
 .Doctor-Consul section {
   margin-left: 100px;
@@ -63,6 +74,7 @@ button {
   }
   .profile .prof-cont {
     margin: 20px 0px;
+    background-color: #f4f4f4;
   }
   .profile section {
     width: 100vw;

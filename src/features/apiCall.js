@@ -26,6 +26,7 @@ const successToastOptions = {
   draggable: true,
   theme: "light",
 };
+
 export const login = async (dispatch, user) => {
   dispatch(loginStart());
 
@@ -84,6 +85,27 @@ export const VerifyOtp = async (dispatch, { email, code }) => {
   }
 };
 export const ResetPassword = async (
+  dispatch,
+  { email, newPassword, confirmPassword }
+) => {
+  dispatch(Start());
+  try {
+    const { data } = await axios.put("/api/doctor/reset-password", {
+      email,
+      newPassword,
+      confirmPassword,
+    });
+    toast.success("Password changed successfully", successToastOptions);
+    dispatch(Success(data));
+    return true;
+  } catch (error) {
+    // console.log(error);
+    const errorMessage = parseError(error);
+    toast.error(errorMessage, ErrorToastOptions);
+    dispatch(Failure(errorMessage));
+  }
+};
+export const UpdatePassword = async (
   dispatch,
   { email, newPassword, confirmPassword }
 ) => {

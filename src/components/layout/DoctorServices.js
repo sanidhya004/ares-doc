@@ -3,21 +3,81 @@ import { Button, Form, Spinner } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
+const ServiceOption = ({ service, label, description, price, time }) => {
+  const { selectedService, handleServiceChange } = service;
+  return (
+    <label
+      htmlFor={label}
+      className={`radio-label ${selectedService === label ? "checked" : ""}`}
+    >
+      <div className="d-flex flex-row justify-content-between w-100 p-2">
+        <div className="d-flex flex-column text-left">
+          <h6>{description}</h6>
+          <span>
+            <i class="fa-solid fa-clock" /> {time} Meeting
+          </span>
+        </div>
+        <h4>{price}</h4>
+      </div>
+      <input
+        type="radio"
+        name={label}
+        id={label}
+        onChange={() => handleServiceChange(label)}
+        checked={selectedService === label}
+      />
+    </label>
+  );
+};
+
 const DoctorServices = () => {
   const [selectedService, setSelectedService] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const services = [
+    {
+      label: "SportsVision",
+      description: "Sports Vision Performance Evaluation",
+      price: "$349",
+      time: "90 Min",
+    },
+    {
+      label: "ConcussionEval ",
+      description: "Post Concussion Evaluation",
+      price: "$199",
+      time: "60 min",
+    },
+    {
+      label: "MedicalOfficeVisit",
+      description: "Medical/Office Visit",
+      price: " $50",
+      time: "30 min",
+    },
+    {
+      label: "Consultation",
+      description: "Consultation Call",
+      price: " Free",
+      time: "15 min",
+    },
+    {
+      label: "TrainingSessions",
+      description: "Add Training Sessions",
+      price: " $199",
+      time: "90 min",
+    },
+  ];
+
+  // Function to handle service change
   const handleServiceChange = (service) => {
     setSelectedService(service);
   };
+
   const { isFetching } = useSelector((state) => state.auth);
 
-  // after checking new and existing athelete selection ,this client_id is athelete_id basically
   useEffect(() => {
     const clientId = localStorage.getItem("client_id");
     if (!clientId) {
-      // Redirect to a different page (e.g., login page)
-      navigate("/doctor/dashboard"); // Change the route as needed
+      navigate("/doctor/dashboard");
     }
   }, [navigate]);
 
@@ -26,6 +86,7 @@ const DoctorServices = () => {
       alert("Please select a service.");
       return;
     }
+
     localStorage.setItem("selectedService", selectedService);
     switch (selectedService) {
       case "SportsVision":
@@ -35,10 +96,10 @@ const DoctorServices = () => {
         break;
 
       case "TrainingSessions":
-        // alert("hi");
         // Logic for TrainingSessions service
         // You can navigate or perform other actions specific to this service
         navigate("/doctor/dashboard/doctor-service-selection/training");
+
         break;
 
       case "ConcussionEval":
@@ -66,152 +127,39 @@ const DoctorServices = () => {
         // Handle any other cases or provide a default action
         break;
     }
-
-    // Add any common logic needed after handling specific service cases
-    console.log("Selected Service:", selectedService);
   };
 
+  const handleGoBack = () => {
+    navigate(-1);
+  };
   return (
     <>
+      <button onClick={handleGoBack} className="m-2 p-0 mb-4 " id="back_bt">
+        <img src="/images/icons/backdark.svg" alt="back" width={30} />
+      </button>
+
       <section
-        className="text-center d-flex flex-column justify-content-center align-items-center doctor-service-container "
-        style={{ gap: "3vh", width: "40%" }}
+        className="text-center d-flex flex-column justify-content-center align-items-center doctor-service-container"
+        // style={{ gap: "3vh" }}
       >
-        <img src="/images/areseliteLogo.png" width={100} alt="logo" />
-        <h5>Select type of Service</h5>
-
-        <Form className="d-flex flex-wrap justify-content-center ">
-          <label
-            htmlFor="sportsVision"
-            className={`radio-label ${
-              selectedService === "SportsVision" ? "checked" : ""
-            }`}
-          >
-            Sports Vision Performance Evaluation - In Office
-            <input
-              type="radio"
-              name="SportsVision"
-              id="sportsVision"
-              onChange={() => handleServiceChange("SportsVision")}
-              checked={selectedService === "SportsVision"}
+        <div className="text-left mb-3" style={{ width: "400px" }}>
+          <h4 className="mb-0">Select type of Service</h4>
+          <p className="text-muted">
+            Please Select a type of Service for a user
+          </p>
+        </div>
+        <Form className="d-flex flex-wrap justify-content-center">
+          {/* Map through services array to render service options */}
+          {services.map((service, index) => (
+            <ServiceOption
+              key={index}
+              service={{ selectedService, handleServiceChange }}
+              label={service.label}
+              description={service.description}
+              price={service.price}
+              time={service.time}
             />
-          </label>
-          <label
-            htmlFor="trainingSessions"
-            className={`radio-label ${
-              selectedService === "TrainingSessions" ? "checked" : ""
-            }`}
-          >
-            Training Sessions
-            <input
-              type="radio"
-              name="TrainingSessions"
-              id="trainingSessions"
-              onChange={() => handleServiceChange("TrainingSessions")}
-              checked={selectedService === "TrainingSessions"}
-            />
-          </label>
-          <label
-            htmlFor="concussionEval"
-            className={`radio-label ${
-              selectedService === "ConcussionEval" ? "checked" : ""
-            }`}
-          >
-            Post-Concussion Evaluation
-            <input
-              type="radio"
-              name="ConcussionEval"
-              id="concussionEval"
-              onChange={() => handleServiceChange("ConcussionEval")}
-              checked={selectedService === "ConcussionEval"}
-            />
-          </label>
-          <label
-            htmlFor="medicalOfficeVisit "
-            className={`radio-label ${
-              selectedService === "MedicalOfficeVisit" ? "checked" : ""
-            }`}
-          >
-            Medical/Office Visit
-            <input
-              type="radio"
-              name="MedicalOfficeVisit"
-              id="medicalOfficeVisit"
-              onChange={() => handleServiceChange("MedicalOfficeVisit")}
-              checked={selectedService === "MedicalOfficeVisit"}
-            />
-          </label>
-          <label
-            htmlFor="consultation"
-            className={`radio-label  ${
-              selectedService === "Consultation" ? "checked" : ""
-            }`}
-          >
-            Consultation Call
-            <input
-              type="radio"
-              name="Consultation"
-              id="consultation"
-              onChange={() => handleServiceChange("Consultation")}
-              checked={selectedService === "Consultation"}
-            />
-          </label>
-          {/* <Form.Check
-            type="radio"
-            name="SportsVision"
-            id="sportsVision"
-            label="Sports Vision Performance Evaluation - In Office"
-            onChange={() => handleServiceChange("SportsVision")}
-            checked={selectedService === "SportsVision"}
-            className={`doctor-services ${
-              selectedService === "SportsVision" ? "checked" : ""
-            }`}
-          />
-
-          <Form.Check
-            type="radio"
-            name="TrainingSessions"
-            id="trainingSessions"
-            label="Training Sessions"
-            onChange={() => handleServiceChange("TrainingSessions")}
-            checked={selectedService === "TrainingSessions"}
-            className={`doctor-services ${
-              selectedService === "TrainingSessions" ? "checked" : ""
-            }`}
-          />
-          <Form.Check
-            type="radio"
-            name="ConcussionEval"
-            id="concussionEval"
-            label="Post-Concussion Evaluation"
-            onChange={() => handleServiceChange("ConcussionEval")}
-            checked={selectedService === "ConcussionEval"}
-            className={`doctor-services ${
-              selectedService === "ConcussionEval" ? "checked" : ""
-            }`}
-          />
-          <Form.Check
-            type="radio"
-            name="MedicalOfficeVisit"
-            id="medicalOfficeVisit"
-            label="Medical/Office Visit"
-            onChange={() => handleServiceChange("MedicalOfficeVisit")}
-            checked={selectedService === "MedicalOfficeVisit"}
-            className={`doctor-services ${
-              selectedService === "MedicalOfficeVisit" ? "checked" : ""
-            }`}
-          />
-          <Form.Check
-            type="radio"
-            name="Consultation"
-            id="consultation"
-            label="Consultation Call"
-            onChange={() => handleServiceChange("Consultation")}
-            checked={selectedService === "Consultation"}
-            className={`doctor-services ${
-              selectedService === "Consultation" ? "checked" : ""
-            }`}
-          /> */}
+          ))}
         </Form>
         {isFetching ? (
           <button className="purple-button c-b">

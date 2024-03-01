@@ -8,8 +8,8 @@ const DoctorPlansPackages = () => {
     {
       icon: "novide",
       title: "Novice",
-      price: "$10/mth",
-      billing: "Billed annually.",
+      price: "$10",
+      billing: "Per user one time charge",
       features: [
         "Access to all basic features",
         "Basic reporting and analytics",
@@ -22,8 +22,8 @@ const DoctorPlansPackages = () => {
     {
       icon: "novide",
       title: "Novice",
-      price: "$10/mth",
-      billing: "Billed annually.",
+      price: "$10",
+      billing: "Per user one time charge",
       features: [
         "Access to all basic features",
         "Basic reporting and analytics",
@@ -36,8 +36,8 @@ const DoctorPlansPackages = () => {
     {
       icon: "novide",
       title: "Novice",
-      price: "$10/mth",
-      billing: "Billed annually.",
+      price: "$10",
+      billing: "Per user one time charge",
       features: [
         "Access to all basic features",
         "Basic reporting and analytics",
@@ -50,8 +50,8 @@ const DoctorPlansPackages = () => {
     {
       icon: "novide",
       title: "charu",
-      price: "$10/mth",
-      billing: "Billed annually.",
+      price: "$10",
+      billing: "Per user one time charge",
       features: [
         "Access to all basic features",
         "Basic reporting and analytics",
@@ -64,20 +64,17 @@ const DoctorPlansPackages = () => {
   ];
   return (
     <DoctorMenu>
-      <section className="text-center w-100 vh-100 ">
-        <h2 className="font-weight-bold pt-5">
+      <section className="text-center w-100 vh-100 plans-par-cont">
+        <h2 className="font-weight-bold  plan-title">
           <span> Powerful features for</span>
           <br />{" "}
-          <span className="color-purple font-weight-bold text-gradient">
+          <span className="color-purple font-weight-bold text-gradient2">
             Powerful Athletes
           </span>
         </h2>
-        <p className="mt-3 mb-5">Choose a plan that’s right for you</p>
+        <p className=" mb-5">Choose a plan that’s right for you</p>
 
-        <div
-          className="d-flex justify-content-around plan-container "
-          style={{ margin: "20px" }}
-        >
+        <div className="d-flex  plan-container ">
           {plansData.map((plan, index) => (
             <PlanSingle key={index} planData={plan} />
           ))}
@@ -101,12 +98,24 @@ const PlanSingle = ({ planData }) => {
   };
   return (
     <div className="plan-single-cont">
-      <div className="m-auto">
-        <div className={`icon-cont-${icon} m-auto`}>
+      <div className="m-4 ">
+        {/* <div className={`icon-cont-${icon} m-auto`}>
           <img src={`/images/icons/${icon}.svg`} alt={icon} />
-        </div>
-        <h2 className="color-purple">{title}</h2>
-        <h1>{price}</h1>
+        </div> */}
+        <h2 className="text-dark text-start">{title}</h2>
+        <h1 className="color-purple text-start" style={{ fontSize: "60px" }}>
+          {price}
+          <span
+            style={{
+              fontSize: "12px",
+              fontWeight: "300",
+              letterSpacing: "1px",
+              marginLeft: "7px",
+            }}
+          >
+            per Month
+          </span>
+        </h1>
         <p>{billing}</p>
       </div>
 
@@ -124,11 +133,7 @@ const PlanSingle = ({ planData }) => {
       </table>
 
       <div className="m-auto">
-        <button
-          onClick={handleSubmit}
-          className="purple-button"
-          style={{ width: "270px" }}
-        >
+        <button onClick={handleSubmit} className="purple-button plan-bt">
           {buttonText}
         </button>
         <BootstrapModal

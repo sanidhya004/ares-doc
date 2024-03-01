@@ -48,17 +48,20 @@ const DoctorMonthlyPlans = ({ navigate, type }) => {
       id: "2-sessions",
       label: "2 Sessions Per month",
       value: "2SessionsPermonth",
+      price: "$199",
     },
     {
       id: "4-sessions",
       label: "4 Sessions Per month",
       value: "4SessionsPermonth",
+      price: "$349",
     },
 
     {
       id: "8-sessions",
       label: "8 Sessions Per month",
       value: "8SessionsPermonth",
+      price: "$599",
     },
   ];
   const packagePlansOptions = [
@@ -66,32 +69,38 @@ const DoctorMonthlyPlans = ({ navigate, type }) => {
       id: "5-sessions",
       label: "5 Sessions Per month",
       value: "5SessionsPermonth",
+      price: "$599",
     },
 
     {
       id: "10-sessions",
       label: "10 Sessions Per month",
       value: "10SessionsPermonth",
+      price: "$999",
     },
     {
       id: "15-sessions",
       label: "15 Sessions Per month",
       value: "15SessionsPermonth",
+      price: "$1399",
     },
     {
       id: "20-sessions",
       label: "20 Sessions Per month",
       value: "20SessionsPermonth",
+      price: "$1599",
     },
   ];
   return (
     <>
       <section
         className="text-center d-flex flex-column justify-content-center align-items-center select-user"
-        style={{ gap: "3vh", width: "40%" }}
+        style={{ gap: "3vh" }}
       >
-        <img src="/images/areseliteLogo.png" width={100} alt="logo" />
-        <h5>Select Type of Plan</h5>
+        <div className="text-left mb-3" style={{ width: "400px" }}>
+          <h4 className="mb-0">Select type of Plan</h4>
+          <p className="text-muted">Please Select type of Plan</p>
+        </div>
         <Form
           className="d-flex flex-wrap justify-content-center "
           style={{ gap: "24px" }}
@@ -106,31 +115,22 @@ const DoctorMonthlyPlans = ({ navigate, type }) => {
                   selectedMonthlyPlans === option.value ? "checked" : ""
                 }`}
               >
-                <input
-                  type="radio"
-                  id={option.id}
-                  value={option.value}
-                  checked={selectedMonthlyPlans === option.value}
-                  onChange={handleMonthlyPlansChange}
-                />
-                {option.label}
+                <div className="d-flex justify-content-between w-100 p-3">
+                  {" "}
+                  <input
+                    type="radio"
+                    id={option.id}
+                    value={option.value}
+                    checked={selectedMonthlyPlans === option.value}
+                    onChange={handleMonthlyPlansChange}
+                  />
+                  {option.label}
+                  <div>{option.price}</div>
+                </div>
               </label>
             ))}
           </div>
-          {/* {plans.map((option) => ( 
-    // <Form.Check
-            //   key={option.id}
-            //   type="radio"
-            //   id={option.id}
-            //   label={option.label}
-            //   value={option.value}
-            //   checked={selectedMonthlyPlans === option.value}
-            //   onChange={handleMonthlyPlansChange}
-            //   className={`doctor-user ${
-            //     selectedMonthlyPlans === option.value ? "checked" : ""
-            //   }`}
-            // />
-          {/* ))} */}
+
           <Button
             type="submit"
             className="purple-button "

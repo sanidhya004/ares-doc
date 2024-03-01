@@ -184,12 +184,12 @@
 
 import moment from "moment";
 import React, { useState } from "react";
-import { Image, NavLink, Table } from "react-bootstrap";
+import { Image, Table } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
 const DoctorTodayAppointment = () => {
   const [showModal, setShowModal] = useState(false);
-  const [visibleAppointments, setVisibleAppointments] = useState(10);
   const { isFetching } = useSelector((state) => state.fetch_app.isFetching);
   const dispatch = useDispatch();
   const todayDate = moment().format("YYYY-MM-DD");
@@ -332,8 +332,8 @@ const DoctorTodayAppointment = () => {
       client: {
         _id: "65a77a0e93616e8547293875",
         client_id: "029152",
-        first_name: "sd",
-        last_name: "sd",
+        first_name: "Ms.Charu ",
+        last_name: "Patel",
         suffix: "sd",
       },
       doctor_trainer: "Dr. Wilson",
@@ -352,8 +352,8 @@ const DoctorTodayAppointment = () => {
       client: {
         _id: "65a77a0e93616e8547293875",
         client_id: "029152",
-        first_name: "sd",
-        last_name: "sd",
+        first_name: "Mr.Surya",
+        last_name: "Reddy",
         suffix: "sd",
       },
       doctor_trainer: "Dr. Adams",
@@ -367,20 +367,37 @@ const DoctorTodayAppointment = () => {
   return (
     <>
       <section
-        className="today-appoint-container bg-white "
-        style={{ gap: "24px", width: "40vw", margin: "70px 30px" }}
+        style={{
+          background: "white",
+          width: "47%",
+          height: "100%",
+          borderRadius: "20px",
+          overflowY: "hidden",
+        }}
+        className="p-4"
       >
-        <div className="d-flex justify-content-center w-100 mb-4">
-          <h5>Today's Appointments</h5>
-          {appointments && appointments.length > visibleAppointments && (
-            <NavLink className="view-all">View All</NavLink>
-          )}
+        <div className="d-flex justify-content-center w-100 mb-4 ">
+          <div className="w-100 d-flex justify-content-between flex-row">
+            <h5>Today's Appointments</h5>
+            <Link
+              className="purple-text"
+              to="/doctor/dashboard/all-appointments"
+            >
+              <i class="fa fa-expand-alt mr-1" aria-hidden="true" /> Expand
+            </Link>
+          </div>
         </div>
         <Table borderless responsive>
-          <thead>
+          <thead
+            style={{
+              borderTop: "1px solid rgb(178, 170 ,170,0.2)",
+              borderBottom: "1px solid rgb(178 ,170 ,170,0.2)",
+              fontSize: "18px",
+            }}
+          >
             <tr>
               <td>Name</td>
-              <td>
+              <td className="pl-">
                 Service
                 <i className="fa-solid fa-filter m-1" />
               </td>
@@ -391,7 +408,7 @@ const DoctorTodayAppointment = () => {
           <tbody>
             {Object.values(appointments).length > 0 &&
               Object.values(appointments).map((appointment) => (
-                <tr key={appointment.appointment_id}>
+                <tr key={appointment.appointment_id} className="table-row-app">
                   <td>
                     <div className="d-flex ">
                       <Image
@@ -407,17 +424,19 @@ const DoctorTodayAppointment = () => {
                           {appointment.client.first_name}{" "}
                           {appointment.client.last_name}
                         </div>
-                        <div style={{ color: "grey" }}>
+                        <div style={{ color: "grey", fontSize: "14px" }}>
                           {/* {appointment.client.email} */}
                           charupatel@gmail.com
                         </div>
                       </div>
                     </div>
                   </td>
-                  <td className="m-auto">
-                    <p className="p-0 m-0">{appointment.service_type}</p>
+                  <td className="m-auto ">
+                    <p className="pl-3 m-0">{appointment.service_type}</p>
                   </td>
-                  <td>{appointment.app_time}</td>
+                  <td>
+                    <p>{appointment.app_time}</p>
+                  </td>
                 </tr>
               ))}
           </tbody>

@@ -14,6 +14,7 @@ const Step2 = ({
   prev,
   now,
   submit,
+  form_name,
 }) => {
   const isFetching = useSelector((state) => state.fetch_app.isFetching);
 
@@ -23,31 +24,34 @@ const Step2 = ({
 
   return (
     <div className="mt-4 client-form">
-      <h2>Prescription Form</h2>
+      <h2 className="text-center">
+        {form_name == "pres" ? <>Prescription</> : <>Evaluation</>} Form
+      </h2>
       <ProgressBar
         now={now}
         label={`${now}%`}
         visuallyHidden
-        style={{ height: "7px", marginBottom: "40px", marginTop: "20px" }}
+        style={{
+          height: "7px",
+          margin: "auto",
+          marginBottom: "40px",
+          marginTop: "20px",
+          width: "500px",
+        }}
       />{" "}
-      <h5 className="mb-4">Step {step} </h5>
-      <Form onSubmit={(e) => e.preventDefault()} style={{ height: "450px" }}>
+      {/* <h5 className="mb-4">Step {step} </h5> */}
+      <Form onSubmit={(e) => e.preventDefault()} className="form-form">
         {isFetching ? (
           <>
-            <div
-              className="text-center m-auto w-100 h-100 mt-5"
-              //   style={{ height: "450px" }}
-            >
+            <div className="text-center m-auto w-100 h-100 mt-5">
               <Spinner />
             </div>
           </>
         ) : (
           <>
             {formFields.map((field, index) =>
-              // Check if the index is even to start a new row
               index % 2 === 0 ? (
                 <Row key={index}>
-                  {/* First column */}
                   <Col sm={6}>
                     <Form.Group controlId={field.field}>
                       <Form.Label>{field.field}</Form.Label>
@@ -67,7 +71,6 @@ const Step2 = ({
                       </Form.Control>
                     </Form.Group>
                   </Col>
-                  {/* Second column, if available */}
                   {formFields[index + 1] && (
                     <Col sm={6}>
                       <Form.Group controlId={formFields[index + 1].field}>

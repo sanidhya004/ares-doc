@@ -18,7 +18,7 @@
   color: var(--Gray-500, #667085);
   margin-left: 10px;
   font-family: Inter;
-  font-size: 14px;
+  font-size: 12px;
   font-style: normal;
   font-weight: 400;
   line-height: 24px;
@@ -35,7 +35,7 @@
   text-align: center;
   /* Text md/Normal */
   font-family: Inter;
-  font-size: 16px;
+  font-size: 12px;
   font-style: normal;
   font-weight: 400;
   line-height: 24px; /* 150% */
@@ -63,7 +63,7 @@
 .plan-single-cont {
   background-color: white;
   display: flex;
-  padding: 20px 16px 20px 16px;
+  padding: 20px 20px 20px 20px;
   flex-direction: column;
   align-items: flex-start;
   gap: var(--24, 24px);
@@ -77,8 +77,51 @@
 .color-purple {
   color: #7257ff;
 }
-.text-gradient {
-  background: -webkit-linear-gradient(#7257ff, #333);
+.text-gradient2 {
+  background: -webkit-linear-gradient(right, #ff9aba, #7257ff);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+.text-gradient {
+  background: -webkit-linear-gradient(#8770f7, #100259);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.dot {
+  height: 4px;
+  width: 4px;
+  background-color: #010000;
+  margin-bottom: 3px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.plan-bt {
+  width: 200px !important;
+}
+.plan-container {
+  justify-content: space-evenly;
+}
+
+@media screen and (min-width: 1901px) {
+  .plan-single-cont {
+    padding: 20px 25px 20px 25px;
+    height: 65vh;
+  }
+  .plan-bt {
+    width: 300px !important;
+  }
+  .plan-title {
+    margin-top: 50px;
+  }
+  .plan-title {
+  }
+  .plan-title {
+    font-size: 40px;
+  }
+  .plans-par-cont p {
+    font-size: 20px;
+  }
+  .plan-container {
+    margin-top: 100px;
+  }
 }

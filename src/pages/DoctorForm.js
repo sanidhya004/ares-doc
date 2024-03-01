@@ -68,6 +68,7 @@ const DoctorForm = ({ form }) => {
           next={true}
           now={(currentStep / totalSteps) * 100}
           submit={currentStep === totalSteps}
+          form_name={form}
         />
       )}
 
@@ -86,6 +87,7 @@ const DoctorForm = ({ form }) => {
           prev={true}
           now={(currentStep / totalSteps) * 100}
           submit={currentStep === totalSteps}
+          form_name={form}
         />
       )}
     </DoctorMenu>

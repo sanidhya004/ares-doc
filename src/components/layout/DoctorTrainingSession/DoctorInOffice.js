@@ -37,10 +37,12 @@ const DoctorInOffice = ({ navigate }) => {
         <>
           <section
             className="text-center d-flex flex-column justify-content-center align-items-center select-user"
-            style={{ gap: "3vh", width: "40%" }}
+            style={{ gap: "3vh" }}
           >
-            <img src="/images/areseliteLogo.png" width={100} alt="logo" />
-            <h5>Select Type of Plan</h5>
+            <div className="text-left mb-3" style={{ width: "400px" }}>
+              <h4 className="mb-0">Select type of Plan</h4>
+              <p className="text-muted">Please Select type of Plan</p>
+            </div>
             <Form
               className="d-flex flex-wrap justify-content-center "
               style={{ gap: "24px" }}

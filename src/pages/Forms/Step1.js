@@ -12,6 +12,7 @@ const Step1 = ({
   next,
   now,
   submit,
+  form_name,
 }) => {
   const isFetching = useSelector((state) => state.fetch_app.isFetching);
 
@@ -21,15 +22,23 @@ const Step1 = ({
   // const now = 50;
   return (
     <div className="mt-4 client-form">
-      <h2>Prescription Form</h2>
+      <h2 className="text-center">
+        {form_name == "pres" ? <>Prescription</> : <>Evaluation</>} Form
+      </h2>
       <ProgressBar
         now={now}
         label={`${now}%`}
         visuallyHidden
-        style={{ height: "7px", marginBottom: "40px", marginTop: "20px" }}
+        style={{
+          height: "7px",
+          margin: "auto",
+          marginBottom: "40px",
+          marginTop: "20px",
+          width: "500px",
+        }}
       />{" "}
-      <h5 className="mb-4">{submit ? <></> : <>Step 1</>}</h5>
-      <Form onSubmit={(e) => e.preventDefault()} style={{ height: "450px" }}>
+      {/* <h5 className="mb-4">{submit ? <></> : <>Step 1</>}</h5> */}
+      <Form onSubmit={(e) => e.preventDefault()} className="form-form">
         {isFetching ? (
           <>
             <div

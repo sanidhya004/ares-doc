@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Button, Form, FormCheck, Spinner } from "react-bootstrap";
+import { Button, Form, InputGroup, Spinner } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { login } from "../../features/apiCall";
 import AuthLayout from "./AuthLayout";
 
@@ -9,6 +9,8 @@ const SignIn = () => {
   const { isFetching, error, errMsg, token } = useSelector(
     (state) => state.auth
   );
+  const [PasswordError, setPasswordError] = useState("");
+
   const [isLoogedIn, setIsLoogedIn] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -60,53 +62,81 @@ const SignIn = () => {
   // }, [error, isFetching, isLoogedIn, errMsg]);
   return (
     <AuthLayout>
-      <Form onSubmit={handleSubmit} style={{ width: "407px" }}>
-        <h3 className="mb-5 font-weight-bold">Log in for Ares Elite</h3>
-        <Form.Control
-          type="email"
-          name="email"
-          placeholder="Enter your email"
-          onChange={handleChange}
-          value={values.email}
-          className="mb-3"
-        />
-        <Form.Control
-          type={values.showPassword ? "text" : "password"}
-          name="password"
-          placeholder="Enter your password"
-          onChange={handleChange}
-          value={values.password}
-          className="mb-3"
-        />
-        <Button
-          variant="link"
-          className="text-decoration-none"
-          onClick={handleTogglePassword}
-        >
-          {values.showPassword ? "Hide" : "Show"} Password
-        </Button>
-        <NavLink
-          className="d-block w-100 text-right mb-2 text-decoration-none"
-          to="/forgot-password"
-        >
-          Forgot Password ?
-        </NavLink>
-        <FormCheck
+      <div className="background-auth">
+        <section className="illustration-container d-none ">
+          <img
+            src="images/UpdatePassword.png"
+            className="illustration"
+            style={{ width: "auto", height: "200px" }}
+          />
+        </section>
+        <h6 className="text-secondary">Welcome !</h6>
+        <Form onSubmit={handleSubmit} style={{ width: "407px" }}>
+          <h3 className="mb-5 font-weight-bold">Log in for Ares Elite</h3>
+          <Form.Group controlId="formBasicEmail">
+            <Form.Label>Email ID</Form.Label>
+            <Form.Control
+              type="email"
+              name="email"
+              placeholder="Enter your email"
+              onChange={handleChange}
+              value={values.email}
+              className="mb-3 mt-2"
+            />
+          </Form.Group>
+
+          <Form.Group controlId="formBasicPassword">
+            <Form.Label>Password</Form.Label>
+            <InputGroup>
+              <Form.Control
+                type={values.showPassword ? "text" : "password"}
+                name="password"
+                placeholder="Enter your password"
+                onChange={handleChange}
+                value={values.password}
+                className="mb-3 mt-2"
+              />
+
+              <NavLink className="password-eye" onClick={handleTogglePassword}>
+                {values.showPassword ? (
+                  <i className="fa fa-eye-slash " />
+                ) : (
+                  <i className="fa-solid fa-eye" />
+                )}
+              </NavLink>
+            </InputGroup>
+          </Form.Group>
+
+          <NavLink
+            className="d-block w-100 text-right mb-2 text-decoration-none purple-text"
+            to="/forgot-password"
+          >
+            Forgot Password ?
+          </NavLink>
+          {/* <FormCheck
           type="checkbox"
           id="default-checkbox"
-          label="By signing up, you agree to our Terms and have read and acknowledge the Privacy Policies."
+          label={
+            <span style={{ fontSize: "12px" }}>
+              By signing up, you agree to our{" "}
+              <span className="purple-text">Terms</span> and have read and
+              acknowledge the{" "}
+              <span className="purple-text"> Privacy Policies.</span>
+            </span>
+          }
           className="mb-4 mt-4"
-        />
-        {isFetching ? (
-          <Button type="submit" className="purple-button w-100">
-            <Spinner animation="border" variant="light" />
-          </Button>
-        ) : (
-          <Button type="submit" className="purple-button w-100">
-            Login
-          </Button>
-        )}
-        <Link to="/signup">
+        /> */}
+
+          {isFetching ? (
+            <Button type="submit" className="purple-button w-100 mt-4">
+              <Spinner animation="border" variant="light" />
+            </Button>
+          ) : (
+            <Button type="submit" className="purple-button w-100 mt-4">
+              Login
+            </Button>
+          )}
+          {/* <Link to="/signup">
           <p
             className="position-relative bottom text-center"
             style={{ top: "20vh" }}
@@ -114,16 +144,9 @@ const SignIn = () => {
             Don’t have an account?{" "}
             <span className="color-purple font-weight-bold">{"  "}Sign up</span>
           </p>{" "}
-        </Link>
-      </Form>
-
-      <section className="illustration-container">
-        <img
-          src="images/UpdatePassword.png"
-          className="illustration"
-          style={{ width: "auto", height: "200px" }}
-        />
-      </section>
+        </Link> */}
+        </Form>
+      </div>
     </AuthLayout>
   );
 };

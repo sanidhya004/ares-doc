@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Dropdown, Pagination, Table } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 // import { Group } from "./Group";
-import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Link } from "react-router-dom";
 import { GetInQueueRequests } from "../../features/apiCall";
@@ -209,188 +208,131 @@ const InQueueReuests = () => {
   };
   return (
     <>
-      <div className="mt-4  main-wrapper">
-        <div className="frame">
-          <div className="d-flex justify-content-between align-items-center recent-booking-head">
-            <div className="">
-              <h2 className="" style={{ paddingLeft: "15px" }}>
-                In Queue Requests
-              </h2>
-            </div>
-            <div
-              className="input-group mb-3 search-bar"
-              style={{ width: "40%" }}
-            >
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Search..."
-                aria-label="Search"
-                aria-describedby="searchIcon"
-                style={{ height: "40px" }}
-              />
-              <div className="input-group-append">
-                <span className="input-group-text" id="searchIcon">
-                  <i class="fas fa-search"></i>
-                </span>
-              </div>
-            </div>
-            <div
-              className=" d-flex flex-row "
-              style={{
-                width: "150px",
-                gap: "10px",
-                marginRight: "15px",
-                marginBottom: "18px",
-              }}
-            >
-              <i class="fa-solid fa-calendar m-auto"></i>
-              <Dropdown>
-                <Dropdown.Toggle id="dropdown-basic">8 of 230</Dropdown.Toggle>
-
-                <Dropdown.Menu>
-                  <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-                  <Dropdown.Item href="#/action-2">
-                    Another action
-                  </Dropdown.Item>
-                  <Dropdown.Item href="#/action-3">
-                    Something else
-                  </Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown>
-            </div>
-          </div>
-          <div className="table-div">
-            {" "}
-            <Table className="table" striped variant="light">
-              <thead className="table-head">
-                <tr>
-                  <th style={{ paddingLeft: "20px" }}>
-                    <div>Name</div>
-                  </th>
-                  <th>
-                    <Dropdown>
-                      <Dropdown.Toggle variant="light" id="dropdown-basic">
-                        SELECT SERVICE TYPES
-                        <i className="fa-solid fa-filter" />
-                      </Dropdown.Toggle>
-                      <Dropdown.Menu>
-                        {Object.keys(Service_ENUM_values).map((key) => (
-                          <Dropdown.Item key={key}>
-                            <input
-                              type="checkbox"
-                              id={key}
-                              checked={selectedServiceTypes.includes(key)}
-                              onChange={() => handleServiceTypeFilter(key)}
-                            />
-                            <label htmlFor={key}>
-                              {Service_ENUM_values[key]}
-                            </label>
-                          </Dropdown.Item>
-                        ))}
-                      </Dropdown.Menu>
-                    </Dropdown>
-                  </th>{" "}
-                  <th>Mobile Number</th>
-                  <th>
-                    <div className="date-container">
-                      <div
-                        className="date-display "
-                        onClick={() => setShowDateInput(!showDateInput)}
-                      >
-                        {selectedDate === null
-                          ? "Date"
-                          : new Date(selectedDate).toLocaleDateString("en-CA")}
-                        <i className="fa-solid fa-sort" />
-                      </div>
-                      {showDateInput && (
-                        <DatePicker
-                          selected={selectedDate}
-                          onChange={(date) => {
-                            handleDateFilter(date);
-                            setShowDateInput(false);
-                          }}
-                        />
-                      )}
+      <div className=" main-wrapper">
+        {/* <div className="frame"> */}
+        <div className="table-div">
+          {" "}
+          <Table className="table" striped variant="light">
+            <thead className="table-head">
+              <tr>
+                <th style={{ paddingLeft: "20px" }}>
+                  <div>Name</div>
+                </th>
+                <th>
+                  <Dropdown>
+                    <Dropdown.Toggle variant="light" id="dropdown-basic">
+                      SERVICE TYPES
+                      <i className="fa-solid fa-filter" />
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu>
+                      {Object.keys(Service_ENUM_values).map((key) => (
+                        <Dropdown.Item key={key}>
+                          <input
+                            type="checkbox"
+                            id={key}
+                            checked={selectedServiceTypes.includes(key)}
+                            onChange={() => handleServiceTypeFilter(key)}
+                          />
+                          <label htmlFor={key}>
+                            {Service_ENUM_values[key]}
+                          </label>
+                        </Dropdown.Item>
+                      ))}
+                    </Dropdown.Menu>
+                  </Dropdown>
+                </th>{" "}
+                <th>Mobile Number</th>
+                <th>
+                  {/* <div className="date-container">
+                    <div
+                      className="date-display "
+                      onClick={() => setShowDateInput(!showDateInput)}
+                    >
+                      {selectedDate === null
+                        ? "Date"
+                        : new Date(selectedDate).toLocaleDateString("en-CA")}
+                      <i className="fa-solid fa-sort" />
                     </div>
-                  </th>
-                  <th>Time</th>
-                  <th>
-                    Action <i className="fa-solid fa-filter" />
-                  </th>
-                </tr>
-              </thead>
-              {!isFetching ? (
-                <>
-                  <tbody className="recent-bookings-cont">
-                    {bookingsData && bookingsData.length > 0 ? (
-                      <>
-                        {" "}
-                        {bookingsData &&
-                          bookingsData.map((booking, index) => (
-                            //       {inqueue && inqueue.length > 0 ? (
-                            // <>
-                            //   {" "}
-                            //   {inqueue &&
-                            //     inqueue.map((booking, index) => (
-                            <tr key={index}>
-                              <td
-                                className=" name-email-image-cont"
-                                style={{ paddingLeft: "20px" }}
-                              >
-                                <img
-                                  src="/images/image3.png"
-                                  alt={booking.name}
-                                  className="recent-booking-person-image "
-                                  style={{ marginRight: "10px" }}
-                                />
-                                <div>
-                                  <small className="name">
-                                    {booking.name}{" "}
-                                  </small>
-                                  <br />
-                                  <small className="email">
-                                    {booking.email}
-                                  </small>
-                                </div>
-                              </td>
-                              <td className="service_type">
-                                {booking.serviceType}
-                              </td>
-                              <td className="phoneno">{booking.phoneNumber}</td>
-                              <td className="date">{booking.date}</td>
-                              <td className="time">{booking.time}</td>
-
-                              <td className="status ">
-                                <div
-                                  className="StartEvaluation m-auto"
-                                  style={{ width: "fit-content" }}
-                                >
-                                  <Link to="/doctor/dashboard/start-evaluation">
-                                    Start Evaluation
-                                  </Link>
-                                </div>
-                              </td>
-                            </tr>
-                          ))}
-                      </>
-                    ) : (
-                      <>No appointments</>
+                    {showDateInput && (
+                      <DatePicker
+                        selected={selectedDate}
+                        onChange={(date) => {
+                          handleDateFilter(date);
+                          setShowDateInput(false);
+                        }}
+                      />
                     )}
-                  </tbody>
-                </>
-              ) : (
-                <>
-                  <Loader />
-                </>
-              )}
-            </Table>
-          </div>
-        </div>
-        <div className="pag-cont">
-          <Pagination className="m-auto ">{renderPaginationItems()}</Pagination>
+                  </div> */}
+                  Date
+                </th>
+                <th>Time</th>
+                <th>
+                  Action <i className="fa-solid fa-filter" />
+                </th>
+              </tr>
+            </thead>
+            {!isFetching ? (
+              <>
+                <tbody className="recent-bookings-cont">
+                  {bookingsData && bookingsData.length > 0 ? (
+                    <>
+                      {" "}
+                      {bookingsData &&
+                        bookingsData.map((booking, index) => (
+                          <tr key={index}>
+                            <td
+                              className=" name-email-image-cont"
+                              style={{ paddingLeft: "20px" }}
+                            >
+                              <img
+                                src="/images/image3.png"
+                                alt={booking.name}
+                                className="recent-booking-person-image "
+                                style={{ marginRight: "10px" }}
+                              />
+                              <div>
+                                <small className="name">{booking.name} </small>
+                                <br />
+                                <small className="email">{booking.email}</small>
+                              </div>
+                            </td>
+                            <td className="service_type">
+                              {booking.serviceType}
+                            </td>
+                            <td className="phoneno">{booking.phoneNumber}</td>
+                            <td className="date">{booking.date}</td>
+                            <td className="time">{booking.time}</td>
+
+                            <td className="status ">
+                              <div
+                                className="StartEvaluation m-auto"
+                                style={{ width: "fit-content" }}
+                              >
+                                <Link to="/doctor/dashboard/start-evaluation">
+                                  Start Evaluation
+                                </Link>
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                    </>
+                  ) : (
+                    <>No appointments</>
+                  )}
+                </tbody>
+              </>
+            ) : (
+              <>
+                <Loader />
+              </>
+            )}
+          </Table>
         </div>
       </div>
+      {/* <div className="pag-cont">
+        <Pagination className="m-auto ">{renderPaginationItems()}</Pagination>
+      </div> */}
+      {/* </div> */}
     </>
   );
 };

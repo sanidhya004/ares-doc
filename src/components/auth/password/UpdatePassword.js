@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Form } from "react-bootstrap";
+import { Form, FormControl } from "react-bootstrap";
 import { useDispatch } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -65,40 +65,39 @@ const UpdatePassword = () => {
   };
   return (
     <AuthLayout>
-      <section className="forgot-password">
+      <section className="forgot-password background-auth-2">
         <h3 className="mb-4 font-weight-bold">Change Password</h3>
         <p className="mb-1 mt-4 email ml-1">
           Type your new password to continue
         </p>
         <Form onSubmit={handlePwdSubmit}>
-          <Form.Control
-            type="password"
-            onChange={handlePwdChange}
-            name="newPassword"
-            required
-            value={values?.newPassword}
-            className="mb-3"
-          />
-          <Form.Control
-            className="mb-3"
-            type="password"
-            onChange={handlePwdChange}
-            name="confirmPassword"
-            required
-            value={values?.confirmPassword}
-          />
-
+          <label htmlFor="newPassword">New Password</label>
+          <div className="form-group">
+            <label htmlFor="newPassword">New Password</label>
+            <FormControl
+              type="password"
+              onChange={handlePwdChange}
+              name="newPassword"
+              required
+              value={values?.newPassword}
+              className="form-control mb-3"
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="oldPassword">Old Password</label>
+            <Form.Control
+              className="mb-3"
+              type="password"
+              onChange={handlePwdChange}
+              name="confirmPassword"
+              required
+              value={values?.confirmPassword}
+            />
+          </div>
           <button type="submit" className="purple-button w-100">
             Change Password{" "}
           </button>
         </Form>
-      </section>
-      <section className="illustration-container">
-        <img
-          src="images/UpdatePassword.png"
-          className="illustration"
-          style={{ width: "auto", height: "200px" }}
-        />
       </section>
     </AuthLayout>
   );
