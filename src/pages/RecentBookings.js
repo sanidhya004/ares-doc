@@ -230,7 +230,7 @@ const RecentBookings = () => {
                 // variant="dark"
                 // style={{ height: "70vh" }}
               >
-                <thead className="table-head">
+                <thead className="table-head mb-3">
                   <tr>
                     <th style={{ paddingLeft: "20px" }}>
                       <div>Name</div>
@@ -240,7 +240,7 @@ const RecentBookings = () => {
                         <Dropdown.Toggle
                           variant="light"
                           id="dropdown-basic"
-                          style={{ fontWeight: "800" }}
+                          style={{ fontWeight: "600" }}
                         >
                           Select Service Types
                           <i className="fa-solid fa-filter m-1" />
@@ -294,7 +294,7 @@ const RecentBookings = () => {
                         <Dropdown.Toggle
                           variant="light"
                           id="status-dropdown"
-                          style={{ fontWeight: "800" }}
+                          style={{ fontWeight: "600" }}
                         >
                           {selectedStatus
                             ? Status_ENUM_values[selectedStatus]
@@ -312,7 +312,6 @@ const RecentBookings = () => {
                       {/* Payment Status */}
                     </th>
                     <th>Service Status</th>
-                    <th></th>
                   </tr>
                 </thead>
 
@@ -358,9 +357,31 @@ const RecentBookings = () => {
                               <td
                                 className={`${booking?.service_status} m-auto complete service-status`}
                               >
-                                Consultation Completed
+                                {(() => {
+                                  switch (booking.service_status) {
+                                    case "upcomming":
+                                      return (
+                                        <div>Anticipated Consultation</div>
+                                      );
+                                    case "completed":
+                                      return <div>Consultation Completed</div>;
+                                    case "canceled":
+                                      return <div> Cancelled</div>;
+                                    default:
+                                      return <div>N.A</div>;
+                                  }
+                                })()}
+                                <br />
                               </td>
-                              <td>...</td>
+
+                              {/* <i
+                                className="fa fa-ellipsis-v"
+                                style={{
+                                  width: "60px",
+                                  position: "relative",
+                                  bottom: "20px",
+                                }}
+                              /> */}
                             </tr>
                           ))}
                         </>

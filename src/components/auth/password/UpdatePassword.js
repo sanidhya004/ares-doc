@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Form, FormControl } from "react-bootstrap";
+import { Form, FormControl, InputGroup, NavLink } from "react-bootstrap";
 import { useDispatch } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -27,6 +27,8 @@ const UpdatePassword = () => {
   const [values, setValues] = useState({
     newPassword: "",
     confirmPassword: "",
+    showPassword: false,
+    showcnfmPassword: false,
   });
   const handlePwdChange = (e) => {
     setValues({ ...values, [e.target.name]: e.target.value });
@@ -45,7 +47,19 @@ const UpdatePassword = () => {
 
     return true;
   };
+  const handleTogglePassword = () => {
+    setValues((prevValues) => ({
+      ...prevValues,
+      showPassword: !prevValues.showPassword,
+    }));
+  };
+  const handleTogglecnfmPassword = () => {
+    setValues((prevValues) => ({
+      ...prevValues,
 
+      showcnfmPassword: !prevValues.showcnfmPassword,
+    }));
+  };
   const handlePwdSubmit = async (e) => {
     e.preventDefault();
 
@@ -63,36 +77,62 @@ const UpdatePassword = () => {
       }
     }
   };
+  const handleGoBack = () => {
+    navigate(-1);
+  };
   return (
     <AuthLayout>
       <section className="forgot-password background-auth-2">
+        <button onClick={handleGoBack} className=" p-0 mb-4 ">
+          <img src="/images/icon/back.svg" alt="back" width={30} />
+        </button>
         <h3 className="mb-4 font-weight-bold">Change Password</h3>
         <p className="mb-1 mt-4 email ml-1">
-          Type your new password to continue
+          Set your New Password So you can access your data{" "}
         </p>
-        <Form onSubmit={handlePwdSubmit}>
-          <label htmlFor="newPassword">New Password</label>
+        <Form onSubmit={handlePwdSubmit} className="p-1 mt-3">
           <div className="form-group">
             <label htmlFor="newPassword">New Password</label>
-            <FormControl
-              type="password"
-              onChange={handlePwdChange}
-              name="newPassword"
-              required
-              value={values?.newPassword}
-              className="form-control mb-3"
-            />
+            <InputGroup>
+              <FormControl
+                type={values.showPassword ? "text" : "password"}
+                onChange={handlePwdChange}
+                name="newPassword"
+                required
+                value={values?.newPassword}
+                className="form-control mb-3"
+              />
+              <NavLink className="password-eye" onClick={handleTogglePassword}>
+                {values.showPassword ? (
+                  <i className="fa-solid fa-eye" />
+                ) : (
+                  <i className="fa fa-eye-slash " />
+                )}
+              </NavLink>
+            </InputGroup>
           </div>
           <div className="form-group">
-            <label htmlFor="oldPassword">Old Password</label>
-            <Form.Control
-              className="mb-3"
-              type="password"
-              onChange={handlePwdChange}
-              name="confirmPassword"
-              required
-              value={values?.confirmPassword}
-            />
+            <label htmlFor="oldPassword">Confirm Password</label>
+            <InputGroup>
+              <Form.Control
+                className="mb-3"
+                type={values.showcnfmPassword ? "text" : "password"}
+                onChange={handlePwdChange}
+                name="confirmPassword"
+                required
+                value={values?.confirmPassword}
+              />
+              <NavLink
+                className="password-eye"
+                onClick={handleTogglecnfmPassword}
+              >
+                {values.showcnfmPassword ? (
+                  <i className="fa-solid fa-eye" />
+                ) : (
+                  <i className="fa fa-eye-slash " />
+                )}
+              </NavLink>
+            </InputGroup>
           </div>
           <button type="submit" className="purple-button w-100">
             Change Password{" "}

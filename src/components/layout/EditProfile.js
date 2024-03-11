@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from "react";
-import axios from "../../utils/axios";
 
 import { Col, Container, Form, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { GetProfileDetails } from "../../features/apiCall";
+import {
+  GetProfileDetails,
+  UpdateProfileDetails,
+} from "../../features/apiCall";
 import DoctorMenu from "./DoctorMenu";
 
 const EditProfile = () => {
   const dispatch = useDispatch();
-  const [user, setUser] = useState([]);
-
+  const token = localStorage.getItem("userToken");
   const navigate = useNavigate();
   const handleGoBack = () => {
     navigate(-1);
@@ -19,8 +20,19 @@ const EditProfile = () => {
   const fetchData = async () => {
     try {
       const data = await GetProfileDetails(dispatch);
-      setUser(data?.user);
-      console.log(data);
+      setFormData({
+        firstName: data?.user?.firstName || "",
+        lastName: data?.user?.lastName || "",
+        suffix: data?.user?.suffix || "",
+        dob: data?.user?.dob || "",
+        gender: data?.user?.gender || "male",
+        email: data?.user?.email || "",
+        phone: data?.user?.phone || "",
+        address: data?.user?.address || "",
+        city: data?.user?.city || "",
+        state: data?.user?.state || "",
+        zip: data?.user?.zip || "",
+      });
     } catch (error) {
       // Handle any errors that might occur during the data fetching
       console.error("Error fetching profile details:", error);
@@ -32,17 +44,17 @@ const EditProfile = () => {
   }, [dispatch, navigate]);
 
   const [formData, setFormData] = useState({
-    firstname: user?.first_name || "",
-    lastname: user?.last_name || "",
-    suffix: user?.suffix || "",
-    dob: user?.dob || "",
-    gender: user?.gender || "male",
-    email: user?.email || "",
-    phone: user?.phone || "",
-    address: user?.address || "",
-    city: user?.city || "",
-    state: user?.state || "",
-    zipcode: user?.zipcode || "",
+    firstName: "",
+    lastName: "",
+    suffix: "",
+    dob: "",
+    gender: "male",
+    email: "",
+    phone: "",
+    address: "",
+    city: "",
+    state: "",
+    zip: "",
   });
   const [isLoading, setIsLoading] = useState(false);
 
@@ -58,7 +70,8 @@ const EditProfile = () => {
     e.preventDefault();
     setIsLoading(true);
     try {
-      await axios.post("/api/doctor/edit-profile", formData);
+      await UpdateProfileDetails(dispatch, formData);
+
       setIsLoading(false);
       fetchData(); // Fetch updated details
     } catch (error) {
@@ -77,11 +90,17 @@ const EditProfile = () => {
             overflowY: "scroll",
           }}
         >
-          <h4 className="ml-5">Edit Profile</h4>
-          <button onClick={handleGoBack} className="m-2 p-0 mb-4 " id="back_bt">
+          <button onClick={handleGoBack} className="m-2 p-0 mb-4 ">
             <img src="/images/icon/back.svg" alt="back" width={30} />
           </button>
-          <Container className="w-75 mt-5">
+          <h4
+            className="d-inline"
+            style={{ marginLeft: "20px", margin: "20px 10px" }}
+          >
+            Edit Profile
+          </h4>
+
+          <Container className="w-75 mt-2">
             <Form onSubmit={handleSubmit}>
               <Row>
                 <Col>
@@ -89,8 +108,8 @@ const EditProfile = () => {
                     <Form.Label className="text-black">First Name:</Form.Label>
                     <Form.Control
                       type="text"
-                      name="firstname"
-                      value={formData.firstname}
+                      name="firstName"
+                      value={formData.firstName}
                       onChange={handleChange}
                       required
                     />
@@ -101,8 +120,8 @@ const EditProfile = () => {
                     <Form.Label className="text-black">Last Name:</Form.Label>
                     <Form.Control
                       type="text"
-                      name="lastname"
-                      value={formData.lastname}
+                      name="lastName"
+                      value={formData.lastName}
                       onChange={handleChange}
                       required
                     />

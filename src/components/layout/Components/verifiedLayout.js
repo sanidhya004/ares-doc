@@ -6,12 +6,17 @@ import DoctorTodayAppointment from "../DoctorTodayAppointment"; // Importing Doc
 
 const VerifiedLayout = ({ children }) => {
   const navigate = useNavigate();
-
+  const fname = localStorage.getItem("athel-fname");
+  const lname = localStorage.getItem("athel-lname");
+  const email = localStorage.getItem("athel-email");
   const handleGoBack = () => {
     console.log("Going back");
     navigate(-1);
   };
-
+  // if (!fname || !lname || !email) {
+  //   console.error("Required localStorage details are missing.");
+  //   return null;
+  // }
   return (
     <DoctorMenu>
       <>
@@ -42,9 +47,9 @@ const VerifiedLayout = ({ children }) => {
             >
               <img src="/images/sample.png" width={55} height={55} />
               <div className="text-light ml-3">
-                <h5>Luffy</h5>
+                <h5>{`${fname} ${lname}`}</h5>
                 <p style={{ fontSize: "12px" }} className="m-0 p-0">
-                  Luffy@gmail.com
+                  {email}
                 </p>
               </div>
             </div>

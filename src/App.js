@@ -1,6 +1,5 @@
 import { Route, Routes } from "react-router-dom";
 import SignIn from "./components/auth/SignIn";
-import SignUp from "./components/auth/SignUp";
 import UpdatePassword from "./components/auth/password/UpdatePassword";
 import ForgotPassword from "./components/auth/password/forgotPassword";
 import DoctorTrainingServices from "./components/layout/DoctorTrainingSession/DoctorTrainingServices";
@@ -13,10 +12,9 @@ import DoctorPlansPackages from "./pages/DoctorPlansPackages";
 import DoctorProfile from "./pages/DoctorProfile";
 import DoctorServiceSelection from "./pages/DoctorServiceSelection";
 // import Step1 from "./pages/Forms/Client Information/Step1";
+// import "react-datetime/css/react-datetime.css";
 import EditProfile from "./components/layout/EditProfile";
-import Athedrill from "./pages/Athedrill";
 import DoctorExpandAppointments from "./pages/DoctorExpandAppointments";
-import Drill from "./pages/Drill";
 import Client_Form from "./pages/Forms/Client_Form";
 import PageNotFound from "./pages/PageNotFound";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
@@ -27,6 +25,7 @@ import TermsOfUse from "./pages/TermsOfUse";
 import "./styles/doctor.css";
 import "./styles/login.css";
 import "./styles/recent_bookings.css";
+
 import ErrorBoundary from "./utils/ErrorBoundary.js";
 import ProtectedRoute from "./utils/ProtectedRoute";
 
@@ -37,11 +36,9 @@ function App() {
         {/* <Router> */}
         <Routes>
           <Route path="/" element={<SignIn />} />
-          <Route path="/signup" element={<SignUp />} />
 
           <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/drill" element={<Drill />} />
-          <Route path="/drill2" element={<Athedrill />} />
+
           <Route path="/update-password" element={<UpdatePassword />} />
           <Route path="*" element={<PageNotFound />} />
 

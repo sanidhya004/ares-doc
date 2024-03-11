@@ -3,7 +3,8 @@ body {
   font-family: "Plus Jakarta Sans", sans-serif;
 }
 @media only screen and (max-width: 991px) {
-  .purple-button {
+  .purple-button,
+  .purple-button-2 {
     width: 200px !important;
     height: 45px !important;
   }

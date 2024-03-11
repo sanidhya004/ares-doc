@@ -10,6 +10,7 @@ const HomeLayout = ({ children }) => {
         style={{ justifyContent: "space-evenly" }}
       >
         <div
+          className="tablet-child"
           style={{
             backgroundColor: "white",
             height: "100%",

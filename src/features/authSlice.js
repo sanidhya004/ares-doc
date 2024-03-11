@@ -4,6 +4,7 @@ const token = localStorage.getItem("userToken");
 const user = localStorage.getItem("userId");
 const userName = localStorage.getItem("userName");
 const userEmail = localStorage.getItem("userEmail");
+const phone = localStorage.getItem("phone");
 
 const authSlice = createSlice({
   name: "auth",
@@ -11,18 +12,13 @@ const authSlice = createSlice({
     user,
     userName,
     userEmail,
+    phone,
     token: token,
     isFetching: false,
     error: false,
     errMsg: "",
   },
   reducers: {
-    setProfile: (state, action) => {
-      state.userName = action.payload?.name;
-      state.userEmail = action.payload?.email;
-      state.userPhoneNumber = action.payload?.phoneNumber;
-    },
-
     loginStart: (state, action) => {
       state.isFetching = true;
       state.error = false;
@@ -33,14 +29,16 @@ const authSlice = createSlice({
       state.error = false;
       state.isFetching = false;
       state.user = action?.payload?.user_data?._id;
-      state.userName = action?.payload?.user_data?.fullname;
+      state.userName = action?.payload?.user_data?.firstName;
       state.userEmail = action?.payload.user_data?.email;
       state.token = action?.payload?.token;
+      state.phone = action?.payload?.user_data?.phone;
 
       localStorage.setItem("userToken", state.token);
       localStorage.setItem("userId", state.user);
       localStorage.setItem("userName", state.userName);
       localStorage.setItem("userEmail", state.userEmail);
+      localStorage.setItem("phone", state.phone);
     },
 
     loginFailure: (state, action) => {

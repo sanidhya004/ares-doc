@@ -9,7 +9,7 @@ const AppointmentTableComponent = ({
 }) => {
   return (
     <Table className="table" hover>
-      <thead className="table-head">
+      <thead className="table-head expanded-table">
         <tr>
           {tableHeader.map((header, index) => (
             <th key={index}>{header}</th>

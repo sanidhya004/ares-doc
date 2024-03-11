@@ -20,13 +20,14 @@ const fetchSlice = createSlice({
       state.isFetching = true;
       state.error = false;
     },
+
     FetchSuccess: (state, action) => {
       state.errMsg = "";
       state.error = false;
       state.isFetching = false;
       switch (action.payload.type) {
         case "FETCH_APPOINTMENTS_SUCCESS":
-          state.appointments = action.payload.payload;
+          state.appointments = action.payload.payload.appointments;
           break;
         case "FETCH_SLOTS_SUCCESS":
           state.slots = action.payload.payload.slots;

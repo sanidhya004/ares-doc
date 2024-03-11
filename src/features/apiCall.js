@@ -1,16 +1,17 @@
 import { toast } from "react-toastify";
 import axios from "../utils/axios.js";
 import { parseError } from "../utils/parseError.js";
+import { FormFailure, FormStart, FormSuccess } from "./FormSlice.js";
+import { AppFailure, AppStart, AppSuccess } from "./appointSlice.js";
 import {
   Failure,
+  Start,
+  Success,
   loginFailure,
   loginStart,
   loginSuccess,
-  Start,
-  Success,
 } from "./authSlice.js";
 import { FetchFailure, FetchStart, FetchSuccess } from "./fetchSlice.js";
-import { FormFailure, FormStart, FormSuccess } from "./FormSlice.js";
 
 const ErrorToastOptions = {
   position: "bottom-center",
@@ -107,23 +108,34 @@ export const ResetPassword = async (
 };
 export const UpdatePassword = async (
   dispatch,
-  { email, newPassword, confirmPassword }
+  { email, newPassword, oldPassword }
 ) => {
+  const token = localStorage.getItem("userToken");
+
   dispatch(Start());
   try {
-    const { data } = await axios.put("/api/doctor/reset-password", {
-      email,
-      newPassword,
-      confirmPassword,
-    });
-    toast.success("Password changed successfully", successToastOptions);
+    const { data } = await axios.put(
+      "/api/doctor/update-password",
+      {
+        email,
+        newPassword,
+        oldPassword,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    toast.success("Password updated successfully", successToastOptions);
     dispatch(Success(data));
     return true;
   } catch (error) {
-    // console.log(error);
     const errorMessage = parseError(error);
     toast.error(errorMessage, ErrorToastOptions);
     dispatch(Failure(errorMessage));
+    return false;
   }
 };
 export const GetProfileDetails = async (dispatch) => {
@@ -136,6 +148,25 @@ export const GetProfileDetails = async (dispatch) => {
       params: { email }, // Corrected: pass email as an object
       headers: { Authorization: `Bearer ${token}` },
     });
+    dispatch(Success(data));
+    return data;
+  } catch (error) {
+    const errorMessage = parseError(error);
+    toast.error(errorMessage, ErrorToastOptions);
+    dispatch(Failure(errorMessage));
+    return false; // Return false to indicate that the request failed
+  }
+};
+export const UpdateProfileDetails = async (dispatch, formData) => {
+  const email = localStorage.getItem("userEmail");
+  const token = localStorage.getItem("userToken");
+
+  dispatch(Start());
+  try {
+    const { data } = await axios.put("/api/doctor/update-profile", formData, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    toast.success("Profile Updated Successfully!", successToastOptions);
 
     dispatch(Success(data));
     return data;
@@ -246,23 +277,40 @@ export const GetInQueueRequests = async (
     return false; // Return false to indicate that the request failed
   }
 };
-export const getAllDoctors = async (dispatch) => {
-  dispatch(FetchStart());
+export const getAlls = async (dispatch, { selectedDate, doctor } = {}) => {
+  const selectedService = localStorage.getItem("selectedService");
+  console.log(selectedDate);
+  dispatch(AppStart());
   const token = localStorage.getItem("userToken");
   try {
-    const { data } = await axios.get("/api/doctor/get-all-doctors", {
+    const params = {
       headers: { Authorization: `Bearer ${token}` },
-    });
-    console.log(data);
-    dispatch(FetchSuccess({ type: "FETCH_DOCTORS_SUCCESS", payload: data }));
+    };
+
+    if (selectedDate) {
+      params.params = { ...params.params, date: selectedDate };
+    }
+
+    if (doctor) {
+      params.params = { ...params.params, doctor };
+    }
+
+    if (selectedService) {
+      params.params = { ...params.params, service_type: selectedService };
+    }
+
+    const { data } = await axios.get("/api/doctor/get-slots", params);
+
+    dispatch(AppSuccess(data));
     return data;
   } catch (error) {
     const errorMessage = parseError(error);
     toast.error(errorMessage, ErrorToastOptions);
-    dispatch(FetchFailure(errorMessage));
-    return false; // Return false to indicate that the request failed
+    dispatch(AppFailure(errorMessage));
+    return false;
   }
 };
+
 export const fetchAvailableAppointments = async (
   dispatch,
   { selectedDoctor }
@@ -296,19 +344,20 @@ export const appointment = async (dispatch, formData) => {
   const email = localStorage.getItem("userEmail");
   const token = localStorage.getItem("userToken");
   const client_id = localStorage.getItem("client_id");
+
   const selectedService = localStorage.getItem("selectedService");
-  const { date, time, selectedDoctor, selectedLocation } = formData;
-  console.log(formData);
+  const { selectedDate, appTime, doctor, location } = formData;
+  console.log(selectedDate);
   dispatch(Start());
   try {
     const { data } = await axios.post(
       `/api/doctor/book-appointment/${client_id}`,
       {
         service_type: selectedService,
-        app_date: date,
-        app_time: time,
-        doctor_trainer: selectedDoctor,
-        location: selectedLocation,
+        app_date: selectedDate,
+        app_time: appTime,
+        doctor_trainer: doctor,
+        location: location,
       },
       {
         headers: { Authorization: `Bearer ${token}` },
@@ -372,6 +421,9 @@ export const VerifyAthelete = async (dispatch, { email }) => {
     );
     console.log(data);
     localStorage.setItem("client_id", data.client_id);
+    localStorage.setItem("ath-fname", data.user?.firstName);
+    localStorage.setItem("ath-lname", data.user?.lastName);
+    localStorage.setItem("ath-email", data.user?.email);
     dispatch(Success(data));
     toast.success("Your Athelete with this email exits!");
     return true;

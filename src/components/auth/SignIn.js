@@ -99,9 +99,9 @@ const SignIn = () => {
 
               <NavLink className="password-eye" onClick={handleTogglePassword}>
                 {values.showPassword ? (
-                  <i className="fa fa-eye-slash " />
-                ) : (
                   <i className="fa-solid fa-eye" />
+                ) : (
+                  <i className="fa fa-eye-slash " />
                 )}
               </NavLink>
             </InputGroup>

@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { FormControl } from "react-bootstrap";
+import React, { useState } from "react";
+import { FormControl, InputGroup } from "react-bootstrap";
 import ReactPlaceholder from "react-placeholder";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
+import { toast } from "react-toastify";
 import BootstrapModal from "../components/layout/Components/BootstrapModal";
 import DoctorMenu from "../components/layout/DoctorMenu";
-import { GetProfileDetails, UpdatePassword } from "../features/apiCall";
+import { UpdatePassword } from "../features/apiCall";
 import { logOut } from "../features/authSlice";
 import "../styles/profile.css";
 
@@ -20,21 +21,10 @@ const DoctorProfile = () => {
   const handleLogout = async () => {
     await dispatch(logOut());
   };
-  const { isFetching } = useSelector((state) => state.auth);
-  const fetchData = async () => {
-    try {
-      const data = await GetProfileDetails(dispatch);
-      setUser(data?.user);
-      console.log(user?.fullname);
-    } catch (error) {
-      // Handle any errors that might occur during the data fetching
-      console.error("Error fetching profile details:", error);
-    }
-  };
+  const { isFetching, userName, userEmail, phone } = useSelector(
+    (state) => state.auth
+  );
 
-  useEffect(() => {
-    fetchData();
-  }, [dispatch]);
   return (
     <DoctorMenu>
       <div className="m-4 profile">
@@ -67,10 +57,10 @@ const DoctorProfile = () => {
                   style={{ width: "30%" }}
                   ready={!isFetching}
                 >
-                  <h5>{user?.fullname}</h5>
+                  <h5>{userName}</h5>
                   <div style={{ color: "rgb(134 131 131)" }}>
-                    <p>{user?.email}</p>
-                    <p>234326723523</p>
+                    <p>{userEmail}</p>
+                    <p>{phone}</p>
                   </div>
                 </ReactPlaceholder>
               </div>
@@ -158,19 +148,37 @@ const ModalContent = ({ handleClose, email }) => {
   const [values, setValues] = useState({
     newPassword: "",
     oldPassword: "",
+    showNewPassword: false,
+    showOldPassword: false,
   });
+
   const handlePwdChange = (e) => {
     setValues({ ...values, [e.target.name]: e.target.value });
+  };
+
+  const ErrorToastOptions = {
+    position: "bottom-center",
+    autoClose: 3000,
+    pauseOnHover: true,
+    draggable: true,
+    theme: "dark",
+  };
+
+  const handleTogglePassword = (passwordType) => {
+    setValues((prevValues) => ({
+      ...prevValues,
+      [`show${passwordType}`]: !prevValues[`show${passwordType}`],
+    }));
   };
 
   const handleValidation = () => {
     const { newPassword, oldPassword } = values;
 
     if (newPassword.length < 8) {
-      // toast.error("Password must contain 8 characters.", ErrorToastOptions);
+      toast.error("Password must contain 8 characters.", ErrorToastOptions);
       return false;
     } else if (oldPassword !== oldPassword) {
-      // toast.error("Passwords do not match.", ErrorToastOptions);
+      toast.error("Passwords do not match.", ErrorToastOptions);
       return false;
     }
 
@@ -179,7 +187,6 @@ const ModalContent = ({ handleClose, email }) => {
 
   const handlePwdSubmit = async (e) => {
     e.preventDefault();
-
     const { newPassword, oldPassword } = values;
 
     if (handleValidation()) {
@@ -189,11 +196,13 @@ const ModalContent = ({ handleClose, email }) => {
           newPassword,
           oldPassword,
         });
-        setValues({
-          newPassword: "",
-          oldPassword: "",
-        });
-        handleClose();
+        if (data) {
+          setValues({
+            newPassword: "",
+            oldPassword: "",
+          });
+          handleClose();
+        }
       } catch (error) {
         console.error("Error updating password:", error);
         // Handle error logic here if needed
@@ -206,33 +215,54 @@ const ModalContent = ({ handleClose, email }) => {
       <section className="forgot-password p-4">
         <h3 className="mb-4 font-weight-bold">Change Password</h3>
         <p className="mb-1 mt-4 email ml-1">
-          Set your New Password So you can access your data{" "}
+          Set your New Password So you can access your data
         </p>
-        <form onSubmit={handlePwdSubmit} className="p-1 mt-3">
-          <div className="form-group">
-            <label htmlFor="newPassword">New Password</label>
+        <form className="p-1 mt-3">
+          <label htmlFor="newPassword">New Password</label>
+          <InputGroup>
             <FormControl
-              type="password"
+              type={values.showNewPassword ? "text" : "password"}
               onChange={handlePwdChange}
               name="newPassword"
               required
               value={values?.newPassword}
               className="form-control mb-3"
             />
-          </div>
-          <div className="form-group">
-            <label htmlFor="oldPassword">Old Password</label>
+            <NavLink
+              className="password-eye"
+              onClick={() => handleTogglePassword("NewPassword")}
+            >
+              {values.showNewPassword ? (
+                <i className="fa-solid fa-eye" />
+              ) : (
+                <i className="fa fa-eye-slash " />
+              )}
+            </NavLink>
+          </InputGroup>
+          <br />
+          <label htmlFor="oldPassword">Old Password</label>
+          <InputGroup>
             <FormControl
-              type="password"
+              type={values.showOldPassword ? "text" : "password"}
               onChange={handlePwdChange}
               name="oldPassword"
               required
               value={values?.oldPassword}
               className="form-control mb-3"
             />
-          </div>
+            <NavLink
+              className="password-eye"
+              onClick={() => handleTogglePassword("OldPassword")}
+            >
+              {values.showOldPassword ? (
+                <i className="fa-solid fa-eye" />
+              ) : (
+                <i className="fa fa-eye-slash " />
+              )}
+            </NavLink>
+          </InputGroup>
           <button
-            type="submit"
+            onClick={handlePwdSubmit}
             className="purple-button w-100 mt-4"
             style={{ height: "55px" }}
           >

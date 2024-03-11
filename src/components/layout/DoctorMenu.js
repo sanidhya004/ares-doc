@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { Row } from "react-bootstrap";
 import { useDispatch } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { BottomNavigation } from "reactjs-bottom-navigation";
+// import { BottomNavigation } from "reactjs-bottom-navigation";
+import BottomNavigation from "reactjs-bottom-navigation";
 import { logOut } from "../../features/authSlice";
 
 const DoctorMenu = ({ children }) => {

@@ -348,7 +348,5 @@ body {
   font-family: "Workbench", sans-serif;
 }
 .slots-fetch {
-  position: relative !important;
-  width: 100% !important;
-  margin: 0px !important;
+  position: absolute !important;
 }

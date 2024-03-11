@@ -21,6 +21,11 @@ thead th {
   font-weight: 400;
   font-size: 14px !important;
 }
+.time,
+.date {
+  min-width: 100px !important;
+}
+
 .time {
   font-weight: 800;
   color: #6431f1 !important;
@@ -44,12 +49,17 @@ thead th {
   left: 40px;
 }
 .main-wrapper table thead tr th {
-  font-weight: 800;
+  font-weight: 600;
+}
+.table thead th {
+  vertical-align: bottom;
+  border-bottom: 1px solid #dee2e6;
 }
 .recent-booking-head i {
   color: #6174a5;
   font-size: 25px;
 }
+
 .table-row-app p {
   padding: 12px 0px;
   height: 100%;
@@ -212,6 +222,10 @@ tbody {
 }
 /* niranjan laptpo */
 @media screen and (min-width: 1901px) {
+  .table td,
+  .table th {
+    min-width: 200px !important;
+  }
   .pag-cont {
     width: 80% !important;
     margin: auto;

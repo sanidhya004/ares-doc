@@ -5,6 +5,9 @@
   /* padding-right: 20px; */
   box-sizing: content-box;
 }
+.table td {
+  border: 0px;
+}
 .doctor-menu ul {
   margin-top: 40px;
   margin-left: 14px;
@@ -318,16 +321,53 @@ a:hover {
     margin-top: 40px;
   }
 }
+/* .table td,
+.table th {
+  min-width: 120px !important;
+} */
 
 @media only screen and (max-width: 991px) {
   .select-user {
-    width: 100% !important;
-    gap: 15px !important;
-    margin-bottom: 40px !important;
+    margin-top: -40px !important;
+    margin-bottom: 50px !important;
   }
 
+  .table td,
+  .table th {
+    min-width: 140px !important;
+  }
+  .search-bar {
+    width: 100% !important;
+  }
+  .recent-booking-head {
+    padding: 60px 0px 5px 10px;
+  }
+  .today-cont {
+    margin-top: 50px !important;
+    margin-bottom: 50px !important;
+  }
+  .tablet-child {
+    width: 90% !important;
+    margin: auto;
+    /* height: 70vh; */
+    border-radius: 20px !important;
+  }
+  .tablet-child #img-1-home {
+    position: relative;
+    top: 30px;
+  }
+  .select-user form {
+    /* flex-direction: column !important; */
+    box-sizing: border-box;
+    width: 100%;
+    gap: 50px !important;
+  }
   .Doctor-home {
-    flex-direction: row-reverse;
+    overflow-y: scroll;
+  }
+  .today-cont {
+    background: white;
+    width: 90% !important;
   }
   .doctor-user-type,
   .doctor-services,
@@ -352,8 +392,10 @@ a:hover {
   }
   .doctor-service-container,
   .select-user {
-    width: 80% !important;
+    box-sizing: border-box !important;
+    width: 100% !important;
     margin: auto;
+    gap: 20px !important;
   }
   .today-appoint-container {
     width: 90% !important;
@@ -518,12 +560,18 @@ a:hover {
   margin-right: 10px;
   margin-bottom: 15px;
 }
+
+.forgot-password .form-control {
+  border-radius: 12px !important;
+  height: 50px;
+}
 .client-form .form-control,
 .client-form textarea,
 .appointment-cont .form-group input,
-.appointment-cont .form-group select {
+.appointment-cont .form-group select,
+.forgot-password .form-control {
   width: 100% !important;
-  background-color: rgb(217, 217, 217, 0.4);
+  background-color: rgb(217, 217, 217, 0.4) !important;
   border: 0px;
 }
 .appointment-cont .form-group label {
@@ -658,7 +706,7 @@ fieldset:disabled .btn {
   margin-bottom: 10px;
   color: #7257ff;
   border-radius: 10px;
-  font-size: 17px;
+  font-size: 12px;
   border: 1px solid #e3e3e3;
   background: #f4f4f4;
   width: 120px;
@@ -712,9 +760,9 @@ fieldset:disabled .btn {
   margin-bottom: 10px;
   color: #7257ff;
   border-radius: 10px;
-  font-size: 18px;
+  font-size: 13px;
   background: rgba(107, 78, 255, 0.2);
-
+  font-weight: 500;
   border: 1px solid #7257ff;
   /* box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, */
   /* rgba(0, 0, 0, 0.15) 0px 1px 3px 1px; */
@@ -794,6 +842,40 @@ fieldset:disabled .btn {
 
   z-index: -1;
 }
+.form-control:focus {
+  border: 0px;
+  box-shadow: 0px;
+}
+:root {
+  --input-focus-bg: unset;
+  --input-focus-border-color: unset;
+  --input-focus-color: unset;
+  --input-focus-width: unset;
+  --input-focus-box-shadow: unset;
+}
+
+textarea:focus,
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="datetime"]:focus,
+input[type="datetime-local"]:focus,
+input[type="date"]:focus,
+input[type="month"]:focus,
+input[type="time"]:focus,
+input[type="week"]:focus,
+input[type="number"]:focus,
+input[type="email"]:focus,
+input[type="url"]:focus,
+input[type="search"]:focus,
+input[type="tel"]:focus,
+input[type="color"]:focus,
+.uneditable-input:focus {
+  border: 2px #8a74fc solid;
+
+  box-shadow: 0px;
+  outline: 0 none;
+  background-color: white !important;
+}
 
 .sign-in-container {
   background-color: white;
@@ -805,9 +887,13 @@ fieldset:disabled .btn {
 }
 .password-eye i {
   left: -30px !important;
+  color: #6b4eff;
   margin-left: 0 !important;
   position: absolute;
   top: 26px;
+}
+.forgot-password .password-eye {
+  bottom: 10px;
 }
 .sign-in-container .form-label {
   font-weight: 500;

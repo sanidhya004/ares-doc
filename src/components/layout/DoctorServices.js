@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Button, Form, Spinner } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { getAlls } from "../../features/apiCall";
 
 const ServiceOption = ({ service, label, description, price, time }) => {
   const { selectedService, handleServiceChange } = service;
@@ -14,7 +15,7 @@ const ServiceOption = ({ service, label, description, price, time }) => {
         <div className="d-flex flex-column text-left">
           <h6>{description}</h6>
           <span>
-            <i class="fa-solid fa-clock" /> {time} Meeting
+            <i class="fa-solid fa-clock" /> {time} mins Meeting
           </span>
         </div>
         <h4>{price}</h4>
@@ -39,31 +40,31 @@ const DoctorServices = () => {
       label: "SportsVision",
       description: "Sports Vision Performance Evaluation",
       price: "$349",
-      time: "90 Min",
+      time: "90",
     },
     {
-      label: "ConcussionEval ",
+      label: "ConcussionEval",
       description: "Post Concussion Evaluation",
       price: "$199",
-      time: "60 min",
+      time: "60",
     },
     {
       label: "MedicalOfficeVisit",
       description: "Medical/Office Visit",
       price: " $50",
-      time: "30 min",
+      time: "30",
     },
     {
       label: "Consultation",
       description: "Consultation Call",
       price: " Free",
-      time: "15 min",
+      time: "15",
     },
     {
       label: "TrainingSessions",
       description: "Add Training Sessions",
       price: " $199",
-      time: "90 min",
+      time: "90",
     },
   ];
 
@@ -86,11 +87,17 @@ const DoctorServices = () => {
       alert("Please select a service.");
       return;
     }
+    const selectedServiceObject = services.find(
+      (service) => service.label === selectedService
+    );
+
+    localStorage.setItem("selectedServiceTime", selectedServiceObject.time);
 
     localStorage.setItem("selectedService", selectedService);
     switch (selectedService) {
       case "SportsVision":
         // Logic for SportsVision service
+        fetchAvailable();
 
         navigate("/doctor/dashboard/appointment");
         break;
@@ -103,6 +110,8 @@ const DoctorServices = () => {
         break;
 
       case "ConcussionEval":
+        fetchAvailable();
+
         // Logic for ConcussionEval service
         navigate("/doctor/dashboard/appointment");
 
@@ -110,6 +119,8 @@ const DoctorServices = () => {
         break;
 
       case "MedicalOfficeVisit":
+        fetchAvailable();
+
         // Logic for MedicalOfficeVisit service
         navigate("/doctor/dashboard/appointment");
 
@@ -117,6 +128,8 @@ const DoctorServices = () => {
         break;
 
       case "Consultation":
+        fetchAvailable();
+
         // Logic for Consultation service
         navigate("/doctor/dashboard/appointment");
 
@@ -132,6 +145,18 @@ const DoctorServices = () => {
   const handleGoBack = () => {
     navigate(-1);
   };
+
+  const fetchAvailable = async () => {
+    try {
+      await getAlls(dispatch);
+    } catch (error) {
+      console.error("Error fetching doctors:", error);
+      // Handle error, perhaps show an error toast
+    }
+  };
+
+  fetchAvailable();
+
   return (
     <>
       <button onClick={handleGoBack} className="m-2 p-0 mb-4 " id="back_bt">
@@ -149,7 +174,6 @@ const DoctorServices = () => {
           </p>
         </div>
         <Form className="d-flex flex-wrap justify-content-center">
-          {/* Map through services array to render service options */}
           {services.map((service, index) => (
             <ServiceOption
               key={index}
