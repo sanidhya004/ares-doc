@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Form } from "react-bootstrap";
+import { Button, Form, Spinner } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { VerifyAthelete } from "../../features/apiCall";
@@ -191,7 +191,13 @@ const SucessContent = ({
             className="purple-button p-0"
             style={{ width: "400px", height: "58px", marginTop: "26px" }}
           >
-            Verify
+            {isFetching ? (
+              <>
+                <Spinner size="sm" animation="border" />
+              </>
+            ) : (
+              <>Verify</>
+            )}
           </button>
 
           {/* </div> */}

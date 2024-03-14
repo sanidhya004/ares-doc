@@ -6,17 +6,15 @@ import DoctorTodayAppointment from "../DoctorTodayAppointment"; // Importing Doc
 
 const VerifiedLayout = ({ children }) => {
   const navigate = useNavigate();
-  const fname = localStorage.getItem("athel-fname");
-  const lname = localStorage.getItem("athel-lname");
-  const email = localStorage.getItem("athel-email");
+  const fname = localStorage.getItem("ath-fname");
+  const lname = localStorage.getItem("ath-lname");
+  const email = localStorage.getItem("ath-email");
+  console.log(fname, lname, email);
   const handleGoBack = () => {
     console.log("Going back");
     navigate(-1);
   };
-  // if (!fname || !lname || !email) {
-  //   console.error("Required localStorage details are missing.");
-  //   return null;
-  // }
+
   return (
     <DoctorMenu>
       <>
@@ -35,6 +33,7 @@ const VerifiedLayout = ({ children }) => {
               width: "47%",
               borderRadius: "20px",
             }}
+            className="verified-ipad"
           >
             <div
               style={{

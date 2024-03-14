@@ -243,7 +243,7 @@ const DoctorTodayAppointment = () => {
               <td>Name</td>
               <td className="pl-4">
                 Service
-                <i className="fa-solid fa-filter m-1" />
+                {/* <i className="fa-solid fa-filter m-1" /> */}
               </td>
               <td>Time</td>
             </tr>
@@ -268,8 +268,8 @@ const DoctorTodayAppointment = () => {
                           />
                           <div>
                             <div style={{ fontSize: "15px", color: "black" }}>
-                              {appointment?.client?.first_name}{" "}
-                              {appointment?.client?.last_name}
+                              {appointment?.client?.firstName}{" "}
+                              {appointment?.client?.lastName}
                             </div>
                             <div style={{ fontSize: "12px", color: "grey" }}>
                               {appointment?.client?.email}

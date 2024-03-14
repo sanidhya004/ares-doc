@@ -1,5 +1,5 @@
-import React from "react";
-import { Col, Container, Row, Table } from "react-bootstrap";
+// import React from "react";
+import { Col, Row, Table } from "react-bootstrap";
 
 const AppointmentTableComponent = ({
   bookings,
@@ -20,49 +20,89 @@ const AppointmentTableComponent = ({
       <tbody>
         {bookings.map((booking) => (
           <tr key={booking.id}>
-            <td className="" style={{ paddingLeft: "20px" }}>
-              <div className="h-100 d-flex mt-2 text-start">
+            <td style={{ width: "200px" }}>
+              <div style={{ display: "flex", alignItems: "center" }}>
                 <img
                   src="/images/image3.png"
-                  alt={booking.name}
-                  className="recent-booking-person-image "
-                  style={{ marginRight: "10px" }}
+                  alt={booking?.client?.firstName}
+                  className="recent-booking-person-image"
+                  style={{ marginRight: "10px", width: "40px", height: "40px" }}
                 />
                 <div>
-                  <small className="name">{booking.name} </small>
+                  <small className="name">
+                    {booking?.client?.firstName} {booking?.client?.lastName}
+                  </small>
                   <br />
-                  <small className="email">{booking.email}</small>
                 </div>
               </div>
             </td>
-            <td>{booking.email}</td>
-            <td>{booking.mobileNumber}</td>
-            <td>{booking.service}</td>
-            <td>{booking.startTime}</td>
-            <td>{booking.endTime}</td>
-            <td className="action ">
-              <Container>
-                <Row>
-                  <Col>
-                    <button
-                      className="action-select-plan"
-                      onClick={handleCompleteAppointment}
-                    >
-                      Complete
-                    </button>
-                  </Col>
-                </Row>
-                <Row>
-                  <Col>
-                    <button
-                      className="action-view-eval"
-                      onClick={handleCancelAppointment}
-                    >
-                      Cancel
-                    </button>
-                  </Col>
-                </Row>
-              </Container>
+            <td
+              style={{
+                width: "259px",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}
+            >
+              {booking?.client?.email}
+            </td>
+            <td style={{ width: "150px", overflowWrap: "break-word" }}>
+              {booking?.client?.phone}
+            </td>
+            <td style={{ width: "150px", overflowWrap: "break-word" }}>
+              {booking?.service_type}
+            </td>
+            <td style={{ width: "100px", overflowWrap: "break-word" }}>
+              {booking?.app_time}
+            </td>
+            <td style={{ width: "100px", overflowWrap: "break-word" }}>
+              {booking?.end_time}
+            </td>
+            <td className="action service-status complete">
+              {(() => {
+                switch (booking?.service_status) {
+                  case "upcoming":
+                    return (
+                      <>
+                        <Row>
+                          <Col>
+                            {" "}
+                            <button
+                              className="action-select-plan"
+                              onClick={() =>
+                                handleCompleteAppointment(
+                                  booking?._id,
+                                  booking?.client?.firstName
+                                )
+                              }
+                            >
+                              Complete
+                            </button>
+                          </Col>
+                          <Col>
+                            {" "}
+                            <button
+                              className="action-view-eval"
+                              onClick={() =>
+                                handleCancelAppointment(
+                                  booking?._id,
+                                  booking?.client?.firstName
+                                )
+                              }
+                            >
+                              Cancel
+                            </button>
+                          </Col>
+                        </Row>
+                      </>
+                    );
+                  case "completed":
+                    return <div>Completed</div>;
+                  case "cancelled":
+                    return <div className="text-danger">Cancelled</div>;
+                  default:
+                    return <div className="text-info">N.A</div>;
+                }
+              })()}
             </td>
           </tr>
         ))}

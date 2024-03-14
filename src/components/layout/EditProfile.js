@@ -11,6 +11,7 @@ import DoctorMenu from "./DoctorMenu";
 
 const EditProfile = () => {
   const dispatch = useDispatch();
+  const [userId, setUserId] = useState(null);
   const token = localStorage.getItem("userToken");
   const navigate = useNavigate();
   const handleGoBack = () => {
@@ -33,6 +34,8 @@ const EditProfile = () => {
         state: data?.user?.state || "",
         zip: data?.user?.zip || "",
       });
+      setUserId(data?.user?._id);
+      console.log(data?.user?._id);
     } catch (error) {
       // Handle any errors that might occur during the data fetching
       console.error("Error fetching profile details:", error);
@@ -70,10 +73,12 @@ const EditProfile = () => {
     e.preventDefault();
     setIsLoading(true);
     try {
-      await UpdateProfileDetails(dispatch, formData);
+      {
+        userId && (await UpdateProfileDetails(dispatch, { formData, userId }));
 
-      setIsLoading(false);
-      fetchData(); // Fetch updated details
+        setIsLoading(false);
+        fetchData(); // Fetch updated details
+      }
     } catch (error) {
       setIsLoading(false);
       console.error("Error submitting form:", error);
@@ -242,8 +247,8 @@ const EditProfile = () => {
                     <Form.Label className="text-black">Zip Code:</Form.Label>
                     <Form.Control
                       type="text"
-                      name="zipcode"
-                      value={formData.zipcode}
+                      name="zip"
+                      value={formData.zip}
                       onChange={handleChange}
                       required
                     />

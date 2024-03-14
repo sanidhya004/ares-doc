@@ -1,3 +1,4 @@
+import "react-datepicker/dist/react-datepicker.css";
 import { Route, Routes } from "react-router-dom";
 import SignIn from "./components/auth/SignIn";
 import UpdatePassword from "./components/auth/password/UpdatePassword";
@@ -6,6 +7,7 @@ import DoctorTrainingServices from "./components/layout/DoctorTrainingSession/Do
 import DoctorAppointment from "./pages/DoctorAppointment";
 import DoctorConsultationCall from "./pages/DoctorConsultationCall";
 import DoctorForm from "./pages/DoctorForm";
+
 import DoctorSelectUserType from "./pages/DoctorHome";
 import DoctorInOffice from "./pages/DoctorInOffice";
 import DoctorPlansPackages from "./pages/DoctorPlansPackages";
@@ -26,6 +28,7 @@ import "./styles/doctor.css";
 import "./styles/login.css";
 import "./styles/recent_bookings.css";
 
+import Drill from "./pages/Drill";
 import ErrorBoundary from "./utils/ErrorBoundary.js";
 import ProtectedRoute from "./utils/ProtectedRoute";
 
@@ -38,7 +41,7 @@ function App() {
           <Route path="/" element={<SignIn />} />
 
           <Route path="/forgot-password" element={<ForgotPassword />} />
-
+          <Route path="/drill" element={<Drill />} />
           <Route path="/update-password" element={<UpdatePassword />} />
           <Route path="*" element={<PageNotFound />} />
 

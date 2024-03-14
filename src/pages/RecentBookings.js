@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { Dropdown, Pagination, Table } from "react-bootstrap";
-import "react-datepicker/dist/react-datepicker.css";
+import { Dropdown, Table } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "../components/layout/Components/Loader";
 import DoctorMenu from "../components/layout/DoctorMenu";
 import { GetRecentBookings } from "../features/apiCall";
 const RecentBookings = () => {
+  const [searchQuery, setSearchQuery] = useState("");
+
   const bookings = useSelector((state) => state.fetch_app.bookings);
-  const totalPages = 10;
+  const totalPages = useSelector((state) => state.fetch_app.totalPages);
   const isFetching = useSelector((state) => state.fetch_app.isFetching);
   const [showDateInput, setShowDateInput] = useState(null);
   const [selectedServiceTypes, setSelectedServiceTypes] = useState([]);
@@ -19,7 +20,7 @@ const RecentBookings = () => {
 
   let pageSize;
   if (isLargeDesktop) {
-    pageSize = 10;
+    pageSize = 11;
   } else if (isDesktop) {
     pageSize = 8;
   } else {
@@ -33,8 +34,11 @@ const RecentBookings = () => {
       const params = {
         currentPage,
         pageSize,
+        searchQuery, // Include search query parameter
       };
-
+      if (searchQuery) {
+        params.searchQuery = searchQuery;
+      }
       if (selectedStatus) {
         params.selectedStatus = selectedStatus;
       }
@@ -59,7 +63,21 @@ const RecentBookings = () => {
 
   useEffect(() => {
     fetchData();
-  }, [currentPage, selectedDate, selectedStatus, selectedServiceTypes]);
+  }, [
+    currentPage,
+    selectedDate,
+    selectedStatus,
+    selectedServiceTypes,
+    searchQuery,
+  ]);
+  function formatDate(dateString) {
+    const dateObject = new Date(dateString);
+    const day = dateObject.getDate().toString().padStart(2, "0");
+    const month = (dateObject.getMonth() + 1).toString().padStart(2, "0"); // Months are zero-based
+    const year = dateObject.getFullYear();
+
+    return `${day}-${month}-${year}`;
+  }
 
   const startIndex = (currentPage - 1) * pageSize;
   const handlePageChange = (newPage) => {
@@ -73,9 +91,9 @@ const RecentBookings = () => {
     Consultation: "Consultation Call",
   };
   const Status_ENUM_values = {
-    paid: "paid",
-    pending: "pending",
-    failed: "failed",
+    paid: "Paid",
+    pending: "Pending",
+    failed: "Failed",
     All: "All",
   };
   const handleServiceTypeFilter = (selectedServiceType) => {
@@ -99,9 +117,18 @@ const RecentBookings = () => {
       setSelectedStatus(status);
     }
   };
-
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+    setCurrentPage(1); // Reset pagination when search query changes
+  };
   const handleDateFilter = (date) => {
     setSelectedDate(date);
+  };
+
+  const calculatePageRange = () => {
+    const startRange = (currentPage - 1) * pageSize + 1;
+    const endRange = Math.min(currentPage * pageSize, totalPages);
+    return `${startRange}-${endRange}`;
   };
 
   const renderPaginationItems = () => {
@@ -109,9 +136,9 @@ const RecentBookings = () => {
     const range = 1;
 
     items.push(
-      <li class="page-item">
+      <li className="page-item">
         <button
-          class="page-link"
+          className="page-link"
           href="#"
           disabled={currentPage === 1}
           onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
@@ -121,27 +148,17 @@ const RecentBookings = () => {
       </li>
     );
 
-    for (
-      let i = Math.max(1, currentPage - range);
-      i <= Math.min(totalPages, currentPage + range);
-      i++
-    ) {
-      items.push(
-        <Pagination.Item
-          key={i}
-          active={i === currentPage}
-          onClick={() => handlePageChange(i)}
-        >
-          {i}
-        </Pagination.Item>
-      );
-    }
-
-    // Next Page
+    // Display page range instead of page number
     items.push(
-      <li class="page-item">
+      <li className="page-item" key="page-range">
+        <button className="page-link">{calculatePageRange()}</button>
+      </li>
+    );
+
+    items.push(
+      <li className="page-item">
         <button
-          class="page-link"
+          className="page-link"
           href="#"
           onClick={() =>
             handlePageChange(Math.min(currentPage + 1, totalPages))
@@ -188,6 +205,8 @@ const RecentBookings = () => {
                   aria-label="Search"
                   aria-describedby="searchIcon"
                   style={{ height: "40px" }}
+                  value={searchQuery}
+                  onChange={handleSearchChange}
                 />
               </div>
 
@@ -205,7 +224,10 @@ const RecentBookings = () => {
                 </div>
                 <Dropdown>
                   <Dropdown.Toggle id="dropdown-pages">
-                    {currentPage} of {totalPages}
+                    {`${(currentPage - 1) * pageSize + 1}-${Math.min(
+                      currentPage * pageSize,
+                      currentPage * pageSize + 10
+                    )} `}
                   </Dropdown.Toggle>
 
                   <Dropdown.Menu>
@@ -334,8 +356,8 @@ const RecentBookings = () => {
                                 />
                                 <div>
                                   <small className="name">
-                                    {booking?.client?.first_name}{" "}
-                                    {booking?.client?.last_name}
+                                    {booking?.client?.firstName}{" "}
+                                    {booking?.client?.lastName}
                                   </small>
                                   <br />
                                   <small className="email">
@@ -346,7 +368,9 @@ const RecentBookings = () => {
                               <td className="service_type">
                                 {Service_ENUM_values[booking?.service_type]}
                               </td>
-                              <td className="date">{booking?.app_date}</td>
+                              <td className="date">
+                                {formatDate(booking?.app_date)}
+                              </td>
                               <td className="time">{booking?.app_time}</td>
                               <td className="phoneno">98107213755</td>
                               <td className="status">
@@ -359,7 +383,7 @@ const RecentBookings = () => {
                               >
                                 {(() => {
                                   switch (booking.service_status) {
-                                    case "upcomming":
+                                    case "upcoming":
                                       return (
                                         <div>Anticipated Consultation</div>
                                       );

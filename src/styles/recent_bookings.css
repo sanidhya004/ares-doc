@@ -222,6 +222,10 @@ tbody {
 }
 /* niranjan laptpo */
 @media screen and (min-width: 1901px) {
+  .collapse-btn {
+    top: 45px !important;
+    right: 90px !important;
+  }
   .table td,
   .table th {
     min-width: 200px !important;

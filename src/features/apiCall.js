@@ -157,15 +157,21 @@ export const GetProfileDetails = async (dispatch) => {
     return false; // Return false to indicate that the request failed
   }
 };
-export const UpdateProfileDetails = async (dispatch, formData) => {
+export const UpdateProfileDetails = async (dispatch, { formData, userId }) => {
   const email = localStorage.getItem("userEmail");
   const token = localStorage.getItem("userToken");
 
   dispatch(Start());
+  alert(userId);
   try {
-    const { data } = await axios.put("/api/doctor/update-profile", formData, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    const { data } = await axios.put(
+      `/api/doctor/update-profile-doctor`,
+      formData,
+      {
+        params: { userId },
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
     toast.success("Profile Updated Successfully!", successToastOptions);
 
     dispatch(Success(data));
@@ -187,6 +193,25 @@ export const GetTodayAppointmentDetails = async (dispatch, todayDate) => {
     });
     dispatch(
       FetchSuccess({ type: "FETCH_APPOINTMENTS_SUCCESS", payload: data })
+    );
+    return data;
+  } catch (error) {
+    const errorMessage = parseError(error);
+    toast.error(errorMessage, ErrorToastOptions);
+    dispatch(FetchFailure(errorMessage));
+    return false; // Return false to indicate that the request failed
+  }
+};
+export const GetAllAppointmentDetails = async (dispatch) => {
+  const token = localStorage.getItem("userToken");
+  dispatch(FetchStart());
+  try {
+    const { data } = await axios.get(`/api/doctor/get-all-appointments`, {
+      // params: { date: todayDate },
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    dispatch(
+      FetchSuccess({ type: "FETCH_ALL_APPOINTMENTS_SUCCESS", payload: data })
     );
     return data;
   } catch (error) {
@@ -226,7 +251,14 @@ export const GetRecentPrescriptions = async (
 };
 export const GetRecentBookings = async (
   dispatch,
-  { currentPage, pageSize, selectedStatus, selectedServiceTypes, selectedDate }
+  {
+    currentPage,
+    pageSize,
+    searchQuery,
+    selectedStatus,
+    selectedServiceTypes,
+    selectedDate,
+  }
 ) => {
   dispatch(FetchStart());
   const token = localStorage.getItem("userToken");
@@ -238,6 +270,7 @@ export const GetRecentBookings = async (
         status: selectedStatus,
         service_type: selectedServiceTypes,
         date: selectedDate,
+        searchQuery: searchQuery,
       },
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -279,7 +312,6 @@ export const GetInQueueRequests = async (
 };
 export const getAlls = async (dispatch, { selectedDate, doctor } = {}) => {
   const selectedService = localStorage.getItem("selectedService");
-  console.log(selectedDate);
   dispatch(AppStart());
   const token = localStorage.getItem("userToken");
   try {
@@ -315,7 +347,6 @@ export const fetchAvailableAppointments = async (
   dispatch,
   { selectedDoctor }
 ) => {
-  console.log(selectedDoctor);
   dispatch(FetchStart());
   const token = localStorage.getItem("userToken");
   try {
@@ -329,7 +360,6 @@ export const fetchAvailableAppointments = async (
         },
       }
     );
-    console.log(data);
     dispatch(FetchSuccess({ type: "FETCH_SLOTS_SUCCESS", payload: data }));
     return data;
   } catch (error) {
@@ -346,8 +376,7 @@ export const appointment = async (dispatch, formData) => {
   const client_id = localStorage.getItem("client_id");
 
   const selectedService = localStorage.getItem("selectedService");
-  const { selectedDate, appTime, doctor, location } = formData;
-  console.log(selectedDate);
+  const { selectedDate, appTime, endTime, doctor, location } = formData;
   dispatch(Start());
   try {
     const { data } = await axios.post(
@@ -356,6 +385,7 @@ export const appointment = async (dispatch, formData) => {
         service_type: selectedService,
         app_date: selectedDate,
         app_time: appTime,
+        end_time: endTime,
         doctor_trainer: doctor,
         location: location,
       },
@@ -363,7 +393,9 @@ export const appointment = async (dispatch, formData) => {
         headers: { Authorization: `Bearer ${token}` },
       }
     );
+    toast.success(data.message);
     dispatch(Success(data));
+
     return true;
   } catch (error) {
     console.log(error);
@@ -373,24 +405,22 @@ export const appointment = async (dispatch, formData) => {
   }
 };
 export const SubmitClientForm = async (dispatch, { formData }) => {
-  console.log(formData);
-
   const token = localStorage.getItem("userToken");
   dispatch(FormStart());
   try {
     const { data } = await axios.post(
       "/api/doctor/new-client-registration",
       {
-        first_name: formData.firstName,
-        last_name: formData.lastName,
+        firstName: formData.firstName,
+        lastName: formData.lastName,
         suffix: formData.suffix,
-        birthday: formData.dob,
-        gender: formData.gender,
         email: formData.email,
-        phone_number: formData.phone,
-        address: formData.address,
         city: formData.city,
+        phone: formData.phone,
         state: formData.state,
+        dob: formData.dob,
+        gender: formData.gender,
+        address: formData.address,
         zip: formData.zip,
       },
       {
@@ -408,6 +438,7 @@ export const SubmitClientForm = async (dispatch, { formData }) => {
     dispatch(FormFailure(errorMessage));
   }
 };
+
 export const VerifyAthelete = async (dispatch, { email }) => {
   const token = localStorage.getItem("userToken");
   dispatch(Start());
@@ -419,11 +450,12 @@ export const VerifyAthelete = async (dispatch, { email }) => {
         headers: { Authorization: `Bearer ${token}` },
       }
     );
-    console.log(data);
-    localStorage.setItem("client_id", data.client_id);
-    localStorage.setItem("ath-fname", data.user?.firstName);
-    localStorage.setItem("ath-lname", data.user?.lastName);
-    localStorage.setItem("ath-email", data.user?.email);
+
+    localStorage.setItem("client_id", data?.client_details?.client_id);
+    localStorage.setItem("ath-fname", data?.client_details?.first_name);
+    localStorage.setItem("ath-lname", data?.client_details?.last_name);
+    localStorage.setItem("ath-email", data?.client_details?.email);
+    console.log(data?.client_details?.first_name);
     dispatch(Success(data));
     toast.success("Your Athelete with this email exits!");
     return true;
@@ -432,5 +464,22 @@ export const VerifyAthelete = async (dispatch, { email }) => {
     const errorMessage = parseError(error);
     toast.error(errorMessage, ErrorToastOptions);
     dispatch(Failure(errorMessage));
+  }
+};
+export const GetServiceTypes = async (dispatch) => {
+  dispatch(FetchStart());
+  const token = localStorage.getItem("userToken");
+  try {
+    const { data } = await axios.get("/api/doctor/getServiceTypes", {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    console.log(data);
+    dispatch(FetchSuccess({ type: "FETCH_Services_SUCCESS", payload: data }));
+    return data;
+  } catch (error) {
+    const errorMessage = parseError(error);
+    toast.error(errorMessage, ErrorToastOptions);
+    dispatch(FetchFailure(errorMessage));
+    return false; // Return false to indicate that the request failed
   }
 };

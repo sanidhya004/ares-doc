@@ -7,12 +7,13 @@ const fetchSlice = createSlice({
     error: false,
     errMsg: "",
     appointments: [],
+    Allappointments: [],
     inqueue: [],
     slots: [],
     doctors: [],
     completed: [],
     prescriptions: [],
-    totalPages: [],
+    totalPages: "",
     bookings: [],
   },
   reducers: {
@@ -39,6 +40,9 @@ const fetchSlice = createSlice({
           state.prescriptions = action.payload.payload.appointments;
           state.totalPages = action.payload.payload.totalPages;
 
+          break;
+        case "FETCH_ALL_APPOINTMENTS_SUCCESS":
+          state.Allappointments = action.payload.payload;
           break;
         case "FETCH_INQUEUE_SUCCESS":
           state.inqueue = action.payload.payload.data;

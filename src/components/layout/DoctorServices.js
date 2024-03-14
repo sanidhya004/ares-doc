@@ -159,9 +159,9 @@ const DoctorServices = () => {
 
   return (
     <>
-      <button onClick={handleGoBack} className="m-2 p-0 mb-4 " id="back_bt">
+      {/* <button onClick={handleGoBack} className="m-2 p-0 mb-4 " id="back_bt">
         <img src="/images/icons/backdark.svg" alt="back" width={30} />
-      </button>
+      </button> */}
 
       <section
         className="text-center d-flex flex-column justify-content-center align-items-center doctor-service-container"

@@ -44,7 +44,7 @@ const DoctorProfile = () => {
           >
             <div className="d-flex align-items-center">
               <img
-                src="/images/image3.png"
+                src="/images/profile.png"
                 height={150}
                 style={{ borderRadius: "50%", marginRight: "40px" }}
               />

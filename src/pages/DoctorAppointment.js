@@ -33,6 +33,7 @@ const DoctorAppointment = () => {
       location,
       doctor,
       appTime: selectedTimeSlot !== null ? slots[selectedTimeSlot][0] : null,
+      endTime: selectedTimeSlot !== null ? slots[selectedTimeSlot][1] : null,
     });
     const selectedDateFormatted = selectedDate.format(
       "YYYY-MM-DDT00:00:00.000"
@@ -44,6 +45,7 @@ const DoctorAppointment = () => {
         location,
         doctor,
         appTime: selectedTimeSlot !== null ? slots[selectedTimeSlot][0] : null,
+        endTime: selectedTimeSlot !== null ? slots[selectedTimeSlot][1] : null,
       });
 
       if (success) {
@@ -54,28 +56,15 @@ const DoctorAppointment = () => {
       // toast.error("Unexpected Error", ErrorToastOptions);
     }
   };
-  const isValidDate = (current, dates) => {
+  const isValidDate = (date) => {
     // Get the current date and time in UTC
     const now = moment.utc();
-    // Subtract one day from the current UTC date
-    const yesterday = now.clone().subtract(1, "day");
-    // Convert current date string to moment object in UTC
-    const currentWithOffset = moment.utc(current);
-    // Subtract one day from the current date
-    const oneDayBefore = currentWithOffset.clone().subtract(1, "day");
-    // Check if the date is before yesterday (in UTC)
-    if (oneDayBefore.isBefore(yesterday, "day")) {
-      return false;
-    }
-    // Extract the date in YYYY-MM-DD format
-    const currentDate = currentWithOffset.format("YYYY-MM-DD");
-    // Check if the date exists in the provided dates array
-    if (
-      dates &&
-      !dates.find((dat) =>
-        moment.utc(dat.date).isSame(currentWithOffset, "day")
-      )
-    ) {
+
+    // Get today's date in YYYY-MM-DD format
+    const todayDate = now.format("YYYY-MM-DD");
+
+    // Check if the provided date is today or in the future
+    if (!moment.utc(date).isSameOrAfter(now.startOf("day"), "day")) {
       return false;
     }
 
@@ -119,7 +108,6 @@ const DoctorAppointment = () => {
   useEffect(() => {
     const fetchAvailable = async () => {
       try {
-        console.log("inside second");
         const selectedDateFormatted = selectedDate.format(
           "YYYY-MM-DDT00:00:00.000"
         );
@@ -132,7 +120,7 @@ const DoctorAppointment = () => {
       }
     };
 
-    if (selectedDate) {
+    if (selectedDate && doctor != "no") {
       fetchAvailable();
     }
   }, [selectedDate, doctor, dispatch]);
@@ -188,7 +176,6 @@ const DoctorAppointment = () => {
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
                 >
-                  <option value="">Select Location</option>
                   {isFetching ? (
                     <>
                       {" "}
@@ -198,6 +185,7 @@ const DoctorAppointment = () => {
                     <>
                       {locations && locations.length > 0 ? (
                         <>
+                          <option value="">Select Location</option>
                           {locations.map((loc, index) => (
                             <option key={index} value={loc.address}>
                               {loc.address}
@@ -205,7 +193,9 @@ const DoctorAppointment = () => {
                           ))}
                         </>
                       ) : (
-                        <option>NO LOCATIONS AVAILABLE ON THIS DATE</option>
+                        <option value="">
+                          NO LOCATIONS AVAILABLE ON THIS DATE
+                        </option>
                       )}
                     </>
                   )}
@@ -230,7 +220,7 @@ const DoctorAppointment = () => {
                       ))}
                     </>
                   ) : (
-                    <option>NO DOCTORS AVAILABLE</option>
+                    <option value="no">NO DOCTORS AVAILABLE</option>
                   )}
 
                   {/* </>
@@ -325,7 +315,9 @@ const DoctorAppointment = () => {
                       height: "50px",
                       marginTop: "10px",
                     }}
-                    // disabled={!selectedUserType}
+                    disabled={
+                      !selectedDate || !doctor || doctor === "no" || !location
+                    }
                   >
                     Continue
                   </Button>

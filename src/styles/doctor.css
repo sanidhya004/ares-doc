@@ -5,6 +5,29 @@
   /* padding-right: 20px; */
   box-sizing: content-box;
 }
+/*Scroll bar nav*/
+::-webkit-scrollbar {
+  width: auto;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  -webkit-box-shadow: auto;
+  -webkit-border-radius: auto;
+  border-radius: auto;
+  background: auto;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  -webkit-border-radius: auto;
+  border-radius: auto;
+  background: auto;
+  -webkit-box-shadow: auto;
+}
+::-webkit-scrollbar-thumb:window-inactive {
+  background: auto;
+}
 .table td {
   border: 0px;
 }
@@ -326,7 +349,16 @@ a:hover {
   min-width: 120px !important;
 } */
 
+body {
+  scrollbar-width: none;
+}
 @media only screen and (max-width: 991px) {
+  .verified-ipad {
+    width: 90% !important;
+    margin: auto;
+    /* height: 70vh; */
+    border-radius: 20px !important;
+  }
   .select-user {
     margin-top: -40px !important;
     margin-bottom: 50px !important;
@@ -355,6 +387,11 @@ a:hover {
   .tablet-child #img-1-home {
     position: relative;
     top: 30px;
+  }
+  #back_bt {
+    position: absolute;
+    top: 5vh !important;
+    left: 35vw !important;
   }
   .select-user form {
     /* flex-direction: column !important; */
