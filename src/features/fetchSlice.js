@@ -45,7 +45,7 @@ const fetchSlice = createSlice({
           state.Allappointments = action.payload.payload;
           break;
         case "FETCH_INQUEUE_SUCCESS":
-          state.inqueue = action.payload.payload.data;
+          state.inqueue = action.payload.payload.appointments;
           state.totalPages = action.payload.payload.totalPages;
 
           break;

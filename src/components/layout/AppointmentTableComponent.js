@@ -7,6 +7,13 @@ const AppointmentTableComponent = ({
   handleCompleteAppointment,
   handleCancelAppointment,
 }) => {
+  const Service_ENUM_values = {
+    SportsVision: "Sports Vision Evaluation",
+    TrainingSessions: "Training Sessions",
+    ConcussionEval: "Concussion Evaluation",
+    MedicalOfficeVisit: "Medical Office Visit",
+    Consultation: "Consultation Call",
+  };
   return (
     <Table className="table" hover>
       <thead className="table-head expanded-table">
@@ -49,7 +56,7 @@ const AppointmentTableComponent = ({
               {booking?.client?.phone}
             </td>
             <td style={{ width: "150px", overflowWrap: "break-word" }}>
-              {booking?.service_type}
+              {Service_ENUM_values[booking?.service_type]}
             </td>
             <td style={{ width: "100px", overflowWrap: "break-word" }}>
               {booking?.app_time}

@@ -9,8 +9,7 @@ import Loader from "./Components/Loader";
 
 const InQueueReuests = () => {
   const inqueue = useSelector((state) => state.fetch_app.inqueue);
-  // const totalPages = useSelector((state) => state.fetch_app.totalPages);
-  const totalPages = 10;
+  const totalPages = useSelector((state) => state.fetch_app.totalPages);
   const isFetching = useSelector((state) => state.fetch_app.isFetching);
   const [showDateInput, setShowDateInput] = useState(null);
   const [selectedServiceTypes, setSelectedServiceTypes] = useState([]);
@@ -19,6 +18,14 @@ const InQueueReuests = () => {
   const isDesktop = window.matchMedia("(min-width: 768px)").matches;
   const pageSize = isDesktop ? 8 : 9;
   const dispatch = useDispatch();
+  function formatDate(dateString) {
+    const dateObject = new Date(dateString);
+    const day = dateObject.getDate().toString().padStart(2, "0");
+    const month = (dateObject.getMonth() + 1).toString().padStart(2, "0"); // Months are zero-based
+    const year = dateObject.getFullYear();
+
+    return `${month}-${day}-${year}`;
+  }
   const fetchData = async () => {
     try {
       // Create an object to hold the parameters
@@ -54,12 +61,14 @@ const InQueueReuests = () => {
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
   };
+
   const Service_ENUM_values = {
     SportsVision: "Sports Vision Evaluation",
-
+    TrainingSessions: "Training Sessions",
     ConcussionEval: "Concussion Evaluation",
+    MedicalOfficeVisit: "Medical Office Visit",
+    Consultation: "Consultation Call",
   };
-
   const handleServiceTypeFilter = (selectedServiceType) => {
     setSelectedServiceTypes((prevSelectedServiceTypes) => {
       const updatedServiceTypes = prevSelectedServiceTypes.includes(
@@ -75,7 +84,7 @@ const InQueueReuests = () => {
       // Update state before calling fetchData
       setSelectedServiceTypes(updatedServiceTypes);
 
-      // fetchData(); // Call fetchData after state has been updated
+      fetchData(); // Call fetchData after state has been updated
 
       return updatedServiceTypes;
     });
@@ -84,71 +93,7 @@ const InQueueReuests = () => {
   const handleDateFilter = (date) => {
     setSelectedDate(date);
   };
-  const bookingsData = [
-    {
-      time: "9:23 AM",
-      date: "Oct 17, 2023",
-      serviceType: "Sports Vision Performance",
-      name: "Mr. Scott Mctominay",
-      email: "curtis.weaver@example.com",
-      phoneNumber: "(406) 555-0120",
-      status: "PAID",
-    },
-    {
-      time: "9:23 AM",
-      date: "Oct 17, 2023",
-      serviceType: "Sports Vision Performance",
-      name: "Mr. Scott Mctominay",
-      email: "curtis.weaver@example.com",
-      phoneNumber: "(406) 555-0120",
-      status: "FAILED",
-    },
-    {
-      time: "9:23 AM",
-      date: "Oct 17, 2023",
-      serviceType: "Sports Vision Performance",
-      name: "Mr. Scott Mctominay",
-      email: "curtis.weaver@example.com",
-      phoneNumber: "(406) 555-0120",
-      status: "PENDING",
-    },
-    {
-      time: "9:23 AM",
-      date: "Oct 17, 2023",
-      serviceType: "Sports Vision Performance",
-      name: "Mr. Scott Mctominay",
-      email: "curtis.weaver@example.com",
-      phoneNumber: "(406) 555-0120",
-      status: "PAID",
-    },
-    {
-      time: "9:23 AM",
-      date: "Oct 17, 2023",
-      serviceType: "Sports Vision Performance",
-      name: "Mr. Scott Mctominay",
-      email: "curtis.weaver@example.com",
-      phoneNumber: "(406) 555-0120",
-      status: "PAID",
-    },
-    {
-      time: "9:23 AM",
-      date: "Oct 17, 2023",
-      serviceType: "Sports Vision Performance",
-      name: "Mr. Scott Mctominay",
-      email: "curtis.weaver@example.com",
-      phoneNumber: "(406) 555-0120",
-      status: "PAID",
-    },
-    {
-      time: "9:23 AM",
-      date: "Oct 17, 2023",
-      serviceType: "Sports Vision Performance",
-      name: "Mr. Scott Mctominay",
-      email: "curtis.weaver@example.com",
-      phoneNumber: "(406) 555-0120",
-      status: "PAID",
-    },
-  ];
+  //
   const renderPaginationItems = () => {
     const items = [];
     const range = 1; // Number of pages to show before and after current page
@@ -187,8 +132,6 @@ const InQueueReuests = () => {
         </Pagination.Item>
       );
     }
-
-    // Next Page
     items.push(
       <li class="page-item">
         <button
@@ -206,6 +149,7 @@ const InQueueReuests = () => {
 
     return items;
   };
+
   return (
     <>
       <div className=" main-wrapper">
@@ -220,8 +164,12 @@ const InQueueReuests = () => {
                 </th>
                 <th>
                   <Dropdown>
-                    <Dropdown.Toggle variant="light" id="dropdown-basic">
-                      SERVICE TYPES
+                    <Dropdown.Toggle
+                      variant="light"
+                      id="dropdown-basic"
+                      style={{ fontWeight: "600" }}
+                    >
+                      Service Types
                       <i className="fa-solid fa-filter" />
                     </Dropdown.Toggle>
                     <Dropdown.Menu>
@@ -232,7 +180,8 @@ const InQueueReuests = () => {
                             id={key}
                             checked={selectedServiceTypes.includes(key)}
                             onChange={() => handleServiceTypeFilter(key)}
-                          />
+                          />{" "}
+                          {"  "}
                           <label htmlFor={key}>
                             {Service_ENUM_values[key]}
                           </label>
@@ -266,19 +215,17 @@ const InQueueReuests = () => {
                   Date
                 </th>
                 <th>Time</th>
-                <th>
-                  Action <i className="fa-solid fa-filter" />
-                </th>
+                <th>Action</th>
               </tr>
             </thead>
             {!isFetching ? (
               <>
                 <tbody className="recent-bookings-cont">
-                  {bookingsData && bookingsData.length > 0 ? (
+                  {inqueue && inqueue.length > 0 ? (
                     <>
                       {" "}
-                      {bookingsData &&
-                        bookingsData.map((booking, index) => (
+                      {inqueue &&
+                        inqueue.map((booking, index) => (
                           <tr key={index}>
                             <td
                               className=" name-email-image-cont"
@@ -286,22 +233,31 @@ const InQueueReuests = () => {
                             >
                               <img
                                 src="/images/image3.png"
-                                alt={booking.name}
+                                alt={booking?.client?.firstName}
                                 className="recent-booking-person-image "
                                 style={{ marginRight: "10px" }}
                               />
                               <div>
-                                <small className="name">{booking.name} </small>
+                                <small className="name">
+                                  {booking?.client?.firstName}{" "}
+                                  {booking?.client?.lastName}{" "}
+                                </small>
                                 <br />
-                                <small className="email">{booking.email}</small>
+                                <small className="email">
+                                  {booking?.client?.email}
+                                </small>
                               </div>
                             </td>
                             <td className="service_type">
-                              {booking.serviceType}
+                              {Service_ENUM_values[booking?.service_type]}
                             </td>
-                            <td className="phoneno">{booking.phoneNumber}</td>
-                            <td className="date">{booking.date}</td>
-                            <td className="time">{booking.time}</td>
+                            <td className="phoneno">
+                              {booking?.client?.phone}
+                            </td>
+                            <td className="date">
+                              {formatDate(booking?.app_date)}
+                            </td>
+                            <td className="time">{booking?.app_time}</td>
 
                             <td className="status ">
                               <div

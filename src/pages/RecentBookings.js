@@ -76,7 +76,7 @@ const RecentBookings = () => {
     const month = (dateObject.getMonth() + 1).toString().padStart(2, "0"); // Months are zero-based
     const year = dateObject.getFullYear();
 
-    return `${day}-${month}-${year}`;
+    return `${month}-${day}-${year}`;
   }
 
   const startIndex = (currentPage - 1) * pageSize;
