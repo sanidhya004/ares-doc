@@ -8,6 +8,9 @@ import DoctorMenu from "../components/layout/DoctorMenu";
 import { GetRecentPrescriptions } from "../features/apiCall";
 
 const RecentPrescriptions = () => {
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const [selectedServiceTypes, setSelectedServiceTypes] = useState([]);
   const prescriptions = useSelector((state) => state.fetch_app.prescriptions);
   const totalPages = useSelector((state) => state.fetch_app.totalPages);
   const isFetching = useSelector((state) => state.fetch_app.isFetching);
@@ -24,32 +27,54 @@ const RecentPrescriptions = () => {
 
     return `${month}-${day}-${year}`;
   }
-  useEffect(() => {
-    // Fetch data from your API here
-    const fetchData = async () => {
-      if (selectedDate) {
-        // Format the date to 'yyyy-MM-dd'
-        const formattedDate = new Date(selectedDate).toLocaleDateString(
-          "en-CA"
-        );
-
-        setSelectedDate(formattedDate);
-      }
-      try {
-        await GetRecentPrescriptions(dispatch, {
-          currentPage,
-          pageSize,
-          selectedDate,
-        });
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+    setCurrentPage(1); // Reset pagination when search query changes
+  };
+  const handleServiceTypeFilter = (selectedServiceType) => {
+    setSelectedServiceTypes((prevSelectedServiceTypes) => {
+      const updatedServiceTypes = prevSelectedServiceTypes.includes(
+        selectedServiceType
+      )
+        ? prevSelectedServiceTypes.filter(
+            (type) => type !== selectedServiceType
+          )
+        : [...prevSelectedServiceTypes, selectedServiceType];
+      console.log(updatedServiceTypes);
+      setSelectedServiceTypes(updatedServiceTypes);
+      return updatedServiceTypes;
+    });
+  };
+  const Service_ENUM_values = {
+    MedicalOfficeVisit: "Medical Office Visit",
+    Consultation: "Consultation Call",
+  };
+  const fetchData = async () => {
+    const params = {
+      currentPage,
+      pageSize,
     };
+    if (searchQuery) {
+      params.searchQuery = searchQuery;
+    }
+    if (selectedServiceTypes.length > 0) {
+      params.selectedServiceTypes = selectedServiceTypes.toString();
+    }
+    if (selectedDate) {
+      const formattedDate = new Date(selectedDate).toLocaleDateString("en-CA");
+      params.selectedDate = formattedDate;
+    }
+    try {
+      await GetRecentPrescriptions(dispatch, params);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
+  useEffect(() => {
     fetchData();
-  }, [currentPage, selectedDate]);
+  }, [currentPage, selectedDate, selectedServiceTypes, searchQuery]);
   const startIndex = (currentPage - 1) * pageSize;
-  console.log(prescriptions);
 
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
@@ -150,6 +175,8 @@ const RecentPrescriptions = () => {
                   aria-label="Search"
                   aria-describedby="searchIcon"
                   style={{ height: "40px" }}
+                  value={searchQuery}
+                  onChange={handleSearchChange}
                 />
               </div>
 
@@ -189,6 +216,33 @@ const RecentPrescriptions = () => {
                 <thead>
                   <tr>
                     <th style={{ paddingLeft: "20px" }}>Name</th>
+                    <th>
+                      <Dropdown>
+                        <Dropdown.Toggle
+                          variant="light"
+                          id="dropdown-basic"
+                          style={{ fontWeight: "600" }}
+                        >
+                          Select Service Types
+                          <i className="fa-solid fa-filter m-1" />
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu>
+                          {Object.keys(Service_ENUM_values).map((key) => (
+                            <Dropdown.Item key={key}>
+                              <input
+                                type="checkbox"
+                                id={key}
+                                checked={selectedServiceTypes.includes(key)}
+                                onChange={() => handleServiceTypeFilter(key)}
+                              />{" "}
+                              <label htmlFor={key}>
+                                {Service_ENUM_values[key]}
+                              </label>
+                            </Dropdown.Item>
+                          ))}
+                        </Dropdown.Menu>
+                      </Dropdown>
+                    </th>{" "}
                     <th>Mobile Number</th>
                     <th>
                       {/* <div className="date-container">
@@ -250,6 +304,7 @@ const RecentPrescriptions = () => {
                                   </small>
                                 </div>
                               </td>
+                              <td>{booking?.service_type}</td>
                               <td className="phoneno">
                                 {booking?.client?.phone}
                               </td>
@@ -259,14 +314,29 @@ const RecentPrescriptions = () => {
                               <td className="time">{booking?.app_time}</td>
                               <td></td>
                               <td className="status ">
-                                <div className="StartPrescription m-auto">
-                                  <Link
-                                    to={`/doctor/dashboard/start-prescription/${booking?.client?.client_id}`}
-                                    className=" "
-                                  >
-                                    <p> Start Prescription</p>
-                                  </Link>
-                                </div>
+                                {booking?.isFilled ? (
+                                  <div className="StartPrescription m-auto">
+                                    <Link
+                                      to={`/doctor/dashboard/start-prescription/${booking?._id}`}
+                                      className=" "
+                                    >
+                                      <p> Start Prescription</p>
+                                    </Link>
+                                  </div>
+                                ) : (
+                                  <>
+                                    <div
+                                      className="action-view-eval m-auto "
+                                      style={{
+                                        width: "fit-content",
+                                        padding: "6px 10px",
+                                        fontWeight: "500",
+                                      }}
+                                    >
+                                      View Prescription
+                                    </div>
+                                  </>
+                                )}
                               </td>
                             </tr>
                           ))}

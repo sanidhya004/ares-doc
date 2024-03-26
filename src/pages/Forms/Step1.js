@@ -1,8 +1,8 @@
-// StepOne.jsx
 import React from "react";
 import { Col, Form, Row, Spinner } from "react-bootstrap";
 import ProgressBar from "react-bootstrap/ProgressBar";
 import { useSelector } from "react-redux";
+import Select from "react-select";
 
 const Step1 = ({
   formData,
@@ -13,17 +13,26 @@ const Step1 = ({
   now,
   submit,
   form_name,
+  isFetching,
 }) => {
-  const isFetching = useSelector((state) => state.fetch_app.isFetching);
+  const isFormFetching = useSelector((state) => state.forms.isFormFetching);
 
   const handleChange = (fieldName, value) => {
     onChange(fieldName, value);
   };
-  // const now = 50;
+
   return (
     <div className="mt-4 client-form">
       <h2 className="text-center">
-        {form_name == "pres" ? <>Prescription</> : <>Evaluation</>} Form
+        <>
+          {form_name === "Prescription" ? (
+            <>Prescription Form</>
+          ) : form_name === "Evaluation" ? (
+            <>Evaluation Form</>
+          ) : (
+            <>Daignosis Form</>
+          )}
+        </>
       </h2>
       <ProgressBar
         now={now}
@@ -36,78 +45,131 @@ const Step1 = ({
           marginTop: "20px",
           width: "500px",
         }}
-      />{" "}
-      {/* <h5 className="mb-4">{submit ? <></> : <>Step 1</>}</h5> */}
+      />
       <Form onSubmit={(e) => e.preventDefault()} className="form-form">
         {isFetching ? (
-          <>
-            <div
-              className="text-center m-auto w-100 h-100 mt-5"
-              //   style={{ height: "450px" }}
-            >
-              <Spinner />
-            </div>
-          </>
+          <div className="text-center m-auto w-100 h-100 mt-5">
+            <Spinner />
+          </div>
         ) : (
           <>
-            {formFields.map((field, index) =>
-              // Check if the index is even to start a new row
-              index % 2 === 0 ? (
-                <Row key={index}>
-                  {/* First column */}
-                  <Col sm={6}>
-                    <Form.Group controlId={field.field}>
-                      <Form.Label>{field.field}</Form.Label>
-                      <Form.Control
-                        as="select"
-                        value={formData[field.field] || ""}
-                        onChange={(e) =>
-                          handleChange(field.field, e.target.value)
-                        }
-                      >
-                        <option value="">Select an option</option>
-                        {field.enumValues.map((option) => (
-                          <option key={option} value={option}>
-                            {option}
-                          </option>
-                        ))}
-                      </Form.Control>
-                    </Form.Group>
-                  </Col>
-                  {/* Second column, if available */}
-                  {formFields[index + 1] && (
-                    <Col sm={6}>
-                      <Form.Group controlId={formFields[index + 1].field}>
-                        <Form.Label>{formFields[index + 1].field}</Form.Label>
-                        <Form.Control
-                          as="select"
-                          value={formData[formFields[index + 1].field] || ""}
-                          onChange={(e) =>
-                            handleChange(
-                              formFields[index + 1].field,
-                              e.target.value
-                            )
-                          }
-                        >
-                          <option value="">Select an option</option>
-                          {formFields[index + 1].enumValues.map((option) => (
-                            <option key={option} value={option}>
-                              {option}
-                            </option>
-                          ))}
-                        </Form.Control>
+            {formFields.map(
+              (field, index) =>
+                index % 2 === 0 && (
+                  <Row key={index} className="mb-4" style={{ gap: "30px" }}>
+                    <Col style={{ borderRight: "2px" }}>
+                      <Form.Group controlId={field.key}>
+                        <Form.Label className="forms-label">
+                          {field.label}
+                        </Form.Label>
+                        {field.type === "multipleChoice" ? (
+                          <Form.Control
+                            as="select"
+                            value={formData[field.key] || ""}
+                            onChange={(e) =>
+                              handleChange(field.key, e.target.value)
+                            }
+                          >
+                            <option value="">Select an option</option>
+                            {field.options.map((option, optionIndex) => (
+                              <option key={optionIndex} value={option}>
+                                {option}
+                              </option>
+                            ))}
+                          </Form.Control>
+                        ) : field.type === "checkBox" ? (
+                          <Select
+                            isMulti
+                            options={field.options.map((option, index) => ({
+                              value: option,
+                              label: option,
+                            }))}
+                            onChange={(selectedOptions) => {
+                              const selectedValues = selectedOptions.map(
+                                (option) => option.value
+                              );
+                              handleChange(field.key, selectedValues);
+                            }}
+                          />
+                        ) : field.type === "text" ? (
+                          <Form.Control
+                            type="text"
+                            value={formData[field.key] || ""}
+                            onChange={(e) =>
+                              handleChange(field.key, e.target.value)
+                            }
+                          />
+                        ) : null}
                       </Form.Group>
                     </Col>
-                  )}
-                </Row>
-              ) : null
+                    {formFields[index + 1] && (
+                      <Col style={{ borderRight: "2px" }}>
+                        <Form.Group controlId={formFields[index + 1].key}>
+                          <Form.Label className="forms-label">
+                            {formFields[index + 1].label}
+                          </Form.Label>
+                          {formFields[index + 1].type === "multipleChoice" ? (
+                            <Form.Control
+                              as="select"
+                              value={formData[formFields[index + 1].key] || ""}
+                              onChange={(e) =>
+                                handleChange(
+                                  formFields[index + 1].key,
+                                  e.target.value
+                                )
+                              }
+                            >
+                              <option value="">Select an option</option>
+                              {formFields[index + 1].options.map(
+                                (option, optionIndex) => (
+                                  <option key={optionIndex} value={option}>
+                                    {option}
+                                  </option>
+                                )
+                              )}
+                            </Form.Control>
+                          ) : formFields[index + 1].type === "checkBox" ? (
+                            <Select
+                              isMulti
+                              options={field.options.map((option, index) => ({
+                                value: option,
+                                label: option,
+                              }))}
+                              onChange={(selectedOptions) => {
+                                const selectedValues = selectedOptions.map(
+                                  (option) => option.value
+                                );
+                                handleChange(field.key, selectedValues);
+                              }}
+                            />
+                          ) : formFields[index + 1].type === "text" ? (
+                            <Form.Control
+                              type="text"
+                              value={formData[formFields[index + 1].key] || ""}
+                              onChange={(e) =>
+                                handleChange(
+                                  formFields[index + 1].key,
+                                  e.target.value
+                                )
+                              }
+                            />
+                          ) : null}
+                        </Form.Group>
+                      </Col>
+                    )}
+                  </Row>
+                )
             )}
           </>
         )}
       </Form>
       <div className="w-100 mt-4" style={{ display: "ruby-text" }}>
         <button onClick={onNextStep} className="purple-button w-25">
-          {submit ? <>SUBMIT</> : <>NEXT</>}
+          {submit ? (
+            <>{isFormFetching ? <Spinner /> : <>SUBMIT</>}</>
+          ) : (
+            <>NEXT</>
+          )}
         </button>
       </div>
     </div>

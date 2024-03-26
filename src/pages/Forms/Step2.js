@@ -15,8 +15,9 @@ const Step2 = ({
   now,
   submit,
   form_name,
+  isFetching,
 }) => {
-  const isFetching = useSelector((state) => state.fetch_app.isFetching);
+  const isFormFetching = useSelector((state) => state.forms.isFormFetching);
 
   const handleChange = (fieldName, value) => {
     onChange(fieldName, value);
@@ -42,61 +43,169 @@ const Step2 = ({
       {/* <h5 className="mb-4">Step {step} </h5> */}
       <Form onSubmit={(e) => e.preventDefault()} className="form-form">
         {isFetching ? (
-          <>
-            <div className="text-center m-auto w-100 h-100 mt-5">
-              <Spinner />
-            </div>
-          </>
+          <div className="text-center m-auto w-100 h-100 mt-5">
+            <Spinner />
+          </div>
         ) : (
           <>
-            {formFields.map((field, index) =>
-              index % 2 === 0 ? (
-                <Row key={index}>
-                  <Col sm={6}>
-                    <Form.Group controlId={field.field}>
-                      <Form.Label>{field.field}</Form.Label>
-                      <Form.Control
-                        as="select"
-                        value={formData[field.field] || ""}
-                        onChange={(e) =>
-                          handleChange(field.field, e.target.value)
-                        }
-                      >
-                        <option value="">Select an option</option>
-                        {field.enumValues.map((option) => (
-                          <option key={option} value={option}>
-                            {option}
-                          </option>
-                        ))}
-                      </Form.Control>
-                    </Form.Group>
-                  </Col>
-                  {formFields[index + 1] && (
-                    <Col sm={6}>
-                      <Form.Group controlId={formFields[index + 1].field}>
-                        <Form.Label>{formFields[index + 1].field}</Form.Label>
-                        <Form.Control
-                          as="select"
-                          value={formData[formFields[index + 1].field] || ""}
-                          onChange={(e) =>
-                            handleChange(
-                              formFields[index + 1].field,
-                              e.target.value
-                            )
-                          }
-                        >
-                          <option value="">Select an option</option>
-                          {formFields[index + 1].enumValues.map((option) => (
-                            <option key={option} value={option}>
-                              {option}
-                            </option>
-                          ))}
-                        </Form.Control>
+            {formFields.map(
+              (field, index) =>
+                index % 2 === 0 && (
+                  <Row key={index} className="mb-4">
+                    <Col style={{ borderRight: "2px" }}>
+                      <Form.Group controlId={field.key}>
+                        <Form.Label className="forms-label">
+                          {field.label}
+                        </Form.Label>
+                        {field.type === "multipleChoice" ? (
+                          <Form.Control
+                            as="select"
+                            value={formData[field.key] || ""}
+                            onChange={(e) =>
+                              handleChange(field.key, e.target.value)
+                            }
+                          >
+                            <option value="">Select an option</option>
+                            {field.options.map((option, optionIndex) => (
+                              <option key={optionIndex} value={option}>
+                                {option}
+                              </option>
+                            ))}
+                          </Form.Control>
+                        ) : field.type === "checkBox" ? (
+                          <div className="d-flex " style={{ gap: "20px" }}>
+                            {field.options &&
+                              field.options.map((option, optionIndex) => (
+                                <Form.Check
+                                  key={optionIndex}
+                                  type="checkbox"
+                                  label={option}
+                                  id={`${field.key}-${optionIndex}`}
+                                  checked={formData[field.key]?.includes(
+                                    option
+                                  )}
+                                  onChange={(e) => {
+                                    const isChecked = e.target.checked;
+                                    let updatedOptions;
+                                    if (Array.isArray(formData[field.key])) {
+                                      updatedOptions = [...formData[field.key]];
+                                      if (isChecked) {
+                                        updatedOptions.push(option);
+                                      } else {
+                                        updatedOptions = updatedOptions.filter(
+                                          (item) => item !== option
+                                        );
+                                      }
+                                    } else {
+                                      updatedOptions = [option];
+                                    }
+                                    handleChange(field.key, updatedOptions);
+                                  }}
+                                />
+                              ))}
+                          </div>
+                        ) : field.type === "text" ? (
+                          <Form.Control
+                            type="text"
+                            value={formData[field.key] || ""}
+                            onChange={(e) =>
+                              handleChange(field.key, e.target.value)
+                            }
+                          />
+                        ) : null}
                       </Form.Group>
                     </Col>
-                  )}
-                </Row>
-              ) : null
+                    {formFields[index + 1] && (
+                      <Col md={6}>
+                        <Form.Group controlId={formFields[index + 1].key}>
+                          <Form.Label className="forms-label">
+                            {formFields[index + 1].label}
+                          </Form.Label>
+                          {formFields[index + 1].type === "multipleChoice" ? (
+                            <Form.Control
+                              as="select"
+                              value={formData[formFields[index + 1].key] || ""}
+                              onChange={(e) =>
+                                handleChange(
+                                  formFields[index + 1].key,
+                                  e.target.value
+                                )
+                              }
+                            >
+                              <option value="">Select an option</option>
+                              {formFields[index + 1].options.map(
+                                (option, optionIndex) => (
+                                  <option key={optionIndex} value={option}>
+                                    {option}
+                                  </option>
+                                )
+                              )}
+                            </Form.Control>
+                          ) : formFields[index + 1].type === "checkBox" ? (
+                            <div>
+                              {formFields[index + 1].options &&
+                                formFields[index + 1].options.map(
+                                  (option, optionIndex) => (
+                                    <Form.Check
+                                      key={optionIndex}
+                                      type="checkbox"
+                                      label={option}
+                                      id={`${
+                                        formFields[index + 1].key
+                                      }-${optionIndex}`}
+                                      checked={formData[
+                                        formFields[index + 1].key
+                                      ]?.includes(option)}
+                                      onChange={(e) => {
+                                        const isChecked = e.target.checked;
+                                        let updatedOptions;
+                                        if (
+                                          Array.isArray(
+                                            formData[formFields[index + 1].key]
+                                          )
+                                        ) {
+                                          updatedOptions = [
+                                            ...formData[
+                                              formFields[index + 1].key
+                                            ],
+                                          ];
+                                          if (isChecked) {
+                                            updatedOptions.push(option);
+                                          } else {
+                                            updatedOptions =
+                                              updatedOptions.filter(
+                                                (item) => item !== option
+                                              );
+                                          }
+                                        } else {
+                                          updatedOptions = [option];
+                                        }
+                                        handleChange(
+                                          formFields[index + 1].key,
+                                          updatedOptions
+                                        );
+                                      }}
+                                    />
+                                  )
+                                )}
+                            </div>
+                          ) : formFields[index + 1].type === "text" ? (
+                            <Form.Control
+                              type="text"
+                              value={formData[formFields[index + 1].key] || ""}
+                              onChange={(e) =>
+                                handleChange(
+                                  formFields[index + 1].key,
+                                  e.target.value
+                                )
+                              }
+                            />
+                          ) : null}
+                        </Form.Group>
+                      </Col>
+                    )}
+                  </Row>
+                )
             )}
           </>
         )}
@@ -109,7 +218,11 @@ const Step2 = ({
         )}
         {next && (
           <button onClick={onNextStep} className="purple-button w-25">
-            {submit ? <>SUBMIT</> : <>NEXT</>}
+            {submit ? (
+              <>{isFormFetching ? <Spinner /> : <>SUBMIT</>}</>
+            ) : (
+              <>NEXT</>
+            )}
           </button>
         )}
       </div>

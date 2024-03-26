@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom"; // Assuming you're using React Router
+import { toast } from "react-toastify";
 import DoctorMenu from "../components/layout/DoctorMenu";
+import { SubmitForm } from "../features/apiCall";
 import { FetchFailure, FetchStart, FetchSuccess } from "../features/fetchSlice";
 import axios from "../utils/axios";
 import { parseError } from "../utils/parseError";
@@ -11,26 +14,33 @@ const DoctorForm = ({ form }) => {
   const [formData, setFormData] = useState({});
   const [currentStep, setCurrentStep] = useState(1);
   const [formFields, setFormFields] = useState([]);
-
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const isFetching = useSelector((state) => state.fetch_app.isFetching);
 
+  const { appointmentId } = useParams();
+  console.log(appointmentId);
+  const fetchFormData = async () => {
+    const token = localStorage.getItem("userToken");
+    dispatch(FetchStart());
+    try {
+      const { data } = await axios.get(`/api/doctor/get-form`, {
+        params: {
+          name: form,
+        },
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      console.log(data?.doc[0]?.obj);
+      setFormFields(data?.doc[0]?.obj);
+      dispatch(FetchSuccess(data));
+    } catch (error) {
+      const errorMessage = parseError(error);
+      toast.error(errorMessage);
+
+      dispatch(FetchFailure(errorMessage));
+    }
+  };
   useEffect(() => {
-    const fetchFormData = async () => {
-      const token = localStorage.getItem("userToken");
-      dispatch(FetchStart());
-      try {
-        const { data } = await axios.get(`/api/doctor/get-${form}-form`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        console.log(data);
-        setFormFields(data);
-        dispatch(FetchSuccess(data));
-      } catch (error) {
-        const errorMessage = parseError(error);
-        dispatch(FetchFailure(errorMessage));
-      }
-    };
-
     fetchFormData();
   }, []);
 
@@ -50,25 +60,49 @@ const DoctorForm = ({ form }) => {
     setFormData({ ...formData, [fieldName]: value });
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     console.log("Form submitted:", formData);
-    setFormData({});
+    try {
+      const bool = await SubmitForm(dispatch, { appointmentId, formData });
+      if (bool == true) {
+        console.log("filledd");
+        toast.success("Form Submitted Successfully !");
+        navigate(-1);
+        setFormData({});
+        fetchFormData();
+      }
+    } catch (error) {
+      toast.error("Unexpected Error !");
+    }
   };
 
-  const totalSteps = Math.ceil(formFields.length / 10);
+  const isDesktop = window.matchMedia("(min-width: 768px)").matches;
+  const isLargeDesktop = window.matchMedia("(min-width: 1900px)").matches;
+
+  let formSize;
+  if (isLargeDesktop) {
+    formSize = 12;
+  } else if (isDesktop) {
+    formSize = 8;
+  } else {
+    formSize = 8;
+  }
+  const totalSteps = Math.ceil(formFields.length / formSize);
 
   return (
     <DoctorMenu>
       {currentStep === 1 && (
         <Step1
           formData={formData}
-          formFields={formFields.slice(0, 10)}
+          setFormData={setFormData}
+          formFields={formFields.slice(0, formSize)}
           onNextStep={handleNextStep}
           onChange={handleFormChange}
           next={true}
           now={(currentStep / totalSteps) * 100}
           submit={currentStep === totalSteps}
           form_name={form}
+          isFetching={isFetching}
         />
       )}
 
@@ -77,8 +111,8 @@ const DoctorForm = ({ form }) => {
           formData={formData}
           step={currentStep}
           formFields={formFields.slice(
-            (currentStep - 1) * 10,
-            currentStep * 10
+            (currentStep - 1) * formSize,
+            currentStep * formSize
           )}
           onPrevStep={handlePrevStep}
           onNextStep={handleNextStep}
@@ -88,6 +122,7 @@ const DoctorForm = ({ form }) => {
           now={(currentStep / totalSteps) * 100}
           submit={currentStep === totalSteps}
           form_name={form}
+          isFetching={isFetching}
         />
       )}
     </DoctorMenu>

@@ -87,13 +87,25 @@ function App() {
               path="dashboard/recent-prescription"
               element={<RecentPrescriptions />}
             />{" "}
-            <Route
+            {/* <Route
               path="dashboard/start-prescription/:client_id"
               element={<DoctorForm form="pres" />}
             />{" "}
             <Route
               path="dashboard/start-evaluation"
               element={<DoctorForm form="eval" />}
+            /> */}
+            <Route
+              path="dashboard/start-prescription/:appointmentId"
+              element={<DoctorForm form="Prescription" />}
+            />{" "}
+            <Route
+              path="dashboard/start-evaluation/:appointmentId"
+              element={<DoctorForm form="Evaluation" />}
+            />{" "}
+            <Route
+              path="dashboard/start-diagnosis/:appointmentId"
+              element={<DoctorForm form="diagnosis" />}
             />
             <Route
               path="dashboard/recent-bookings"

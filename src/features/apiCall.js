@@ -224,20 +224,24 @@ export const GetAllAppointmentDetails = async (dispatch) => {
 
 export const GetRecentPrescriptions = async (
   dispatch,
-  { currentPage, pageSize, selectedDate }
+  { currentPage, pageSize, searchQuery, selectedServiceTypes, selectedDate }
 ) => {
+  console.log(searchQuery, currentPage);
   const token = localStorage.getItem("userToken");
   dispatch(FetchStart());
   try {
+    console.log(searchQuery, currentPage);
+
     const { data } = await axios.get("/api/doctor/recent-prescriptions", {
       params: {
         page_no: currentPage,
         per_page_count: pageSize,
+        service_type: selectedServiceTypes,
         date: selectedDate,
+        searchQuery: searchQuery,
       },
       headers: { Authorization: `Bearer ${token}` },
     });
-    console.log(data);
     dispatch(
       FetchSuccess({ type: "FETCH_PRESCRIPTIONS_SUCCESS", payload: data })
     );
@@ -436,6 +440,26 @@ export const SubmitClientForm = async (dispatch, { formData }) => {
     const errorMessage = parseError(error);
     toast.error(errorMessage, ErrorToastOptions);
     dispatch(FormFailure(errorMessage));
+  }
+};
+export const SubmitForm = async (dispatch, { appointmentId, formData }) => {
+  const token = localStorage.getItem("userToken");
+  dispatch(FormStart());
+  try {
+    const { data } = await axios.post(
+      "/api/doctor/submit-eval-form",
+      { form: [formData], appointmentId: appointmentId },
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+    dispatch(FormSuccess(data));
+    return true;
+  } catch (error) {
+    const errorMessage = parseError(error);
+    toast.error(errorMessage, ErrorToastOptions);
+    dispatch(FormFailure(errorMessage));
+    return false;
   }
 };
 

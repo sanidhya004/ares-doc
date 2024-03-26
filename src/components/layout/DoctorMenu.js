@@ -3,7 +3,6 @@ import { Row } from "react-bootstrap";
 import { useDispatch } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 // import { BottomNavigation } from "reactjs-bottom-navigation";
-import BottomNavigation from "reactjs-bottom-navigation";
 import { logOut } from "../../features/authSlice";
 
 const DoctorMenu = ({ children }) => {
@@ -87,12 +86,10 @@ const DoctorMenu = ({ children }) => {
   const BottomMenu = [
     {
       title: "Home",
-
       to: "/doctor/dashboard",
     },
     {
       title: "Bookings",
-
       to: "/doctor/dashboard/recent-bookings",
     },
     {
@@ -134,15 +131,15 @@ const DoctorMenu = ({ children }) => {
             backgroundColor: "#F2F8FD",
           }}
         >
-          <BottomNavigation
+          {/* <BottomNavigation
             items={bottomNavItems}
             selected={1}
             activeBgColor="slateBlue"
             activeTextColor="white"
-          />
+          /> */}
           <div className="doctor-menu-cont">
             <main className="w-100 h-100 doctor-menu text-center text-secondary">
-              <div style={{ height: "130px" }}>
+              <div style={{ height: "130px" }} className=" ">
                 <img
                   src="/images/DoctorMenuLogo.png"
                   alt="logo"
@@ -210,7 +207,7 @@ const DoctorMenu = ({ children }) => {
 
               <div>
                 <div
-                  className="list-group-item"
+                  className="list-group-item logout-icon"
                   onClick={handleLogout}
                   style={{ position: "absolute", bottom: "0px", left: "15px" }}
                 >

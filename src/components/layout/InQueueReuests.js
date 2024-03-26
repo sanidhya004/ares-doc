@@ -191,29 +191,7 @@ const InQueueReuests = () => {
                   </Dropdown>
                 </th>{" "}
                 <th>Mobile Number</th>
-                <th>
-                  {/* <div className="date-container">
-                    <div
-                      className="date-display "
-                      onClick={() => setShowDateInput(!showDateInput)}
-                    >
-                      {selectedDate === null
-                        ? "Date"
-                        : new Date(selectedDate).toLocaleDateString("en-CA")}
-                      <i className="fa-solid fa-sort" />
-                    </div>
-                    {showDateInput && (
-                      <DatePicker
-                        selected={selectedDate}
-                        onChange={(date) => {
-                          handleDateFilter(date);
-                          setShowDateInput(false);
-                        }}
-                      />
-                    )}
-                  </div> */}
-                  Date
-                </th>
+                <th>Date</th>
                 <th>Time</th>
                 <th>Action</th>
               </tr>
@@ -260,14 +238,30 @@ const InQueueReuests = () => {
                             <td className="time">{booking?.app_time}</td>
 
                             <td className="status ">
-                              <div
-                                className="StartEvaluation m-auto"
-                                style={{ width: "fit-content" }}
-                              >
-                                <Link to="/doctor/dashboard/start-evaluation">
-                                  Start Evaluation
-                                </Link>
-                              </div>
+                              {booking?.isFilledPrescription &&
+                              !booking?.isFilledDiagnosis ? (
+                                <div
+                                  className="daignosis m-auto"
+                                  style={{ width: "fit-content" }}
+                                >
+                                  <Link
+                                    to={`/doctor/dashboard/start-diagnosis/${booking?._id}`}
+                                  >
+                                    Diagnosis
+                                  </Link>
+                                </div>
+                              ) : (
+                                <div
+                                  className="StartEvaluation m-auto"
+                                  style={{ width: "fit-content" }}
+                                >
+                                  <Link
+                                    to={`/doctor/dashboard/start-evaluation/${booking?._id}`}
+                                  >
+                                    Start Evaluation
+                                  </Link>
+                                </div>
+                              )}
                             </td>
                           </tr>
                         ))}

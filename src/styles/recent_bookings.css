@@ -106,7 +106,8 @@ thead th {
 .StartEvaluation,
 .action-select-plan,
 .StartPrescription,
-.action-view-eval {
+.action-view-eval,
+.daignosis {
   border-radius: 20px;
   width: 120px;
   height: 30px;
@@ -382,6 +383,9 @@ tbody {
   background-color: #d8ccf6;
 }
 .form-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   background-color: white;
   padding: 20px 100px;
   height: 70vh;
