@@ -644,6 +644,53 @@ body {
   border-radius: 50%;
 }
 @media only screen and (max-width: 600px) {
+  #img-1-home {
+    position: absolute;
+    top: 30px !important;
+    left: 80vw !important;
+    width: 40px;
+  }
+  #back_bt {
+    position: absolute;
+    top: 5vh !important;
+    left: 10vw !important;
+  }
+  .appointment-cont form {
+    width: 84vw !important;
+  }
+  .radio-container {
+    justify-content: space-evenly !important;
+  }
+  .tablet-child #img-1-home {
+    position: relative;
+    top: 0px;
+    left: 80%;
+    right: 0px;
+    width: 50px;
+  }
+  .verified-ipad {
+    margin-top: 20px;
+  }
+  .timeline-steps .timeline-step {
+    margin: 0rem 0rem !important;
+  }
+  .timeline-steps .timeline-content {
+    width: 8rem !important;
+    text-align: center;
+  }
+  .select-user > div,
+  .verification-athelete > div,
+  .doctor-service-container > div {
+    width: fit-content !important;
+    margin: auto;
+  }
+  .verification-athelete > div h4 {
+    margin-left: 50px;
+  }
+  .verification-athelete input {
+    width: 280px !important;
+    margin: auto;
+  }
   .parent-of-all {
     margin: 0px !important;
     padding: 0px !important;
@@ -651,19 +698,28 @@ body {
   .tablet-child {
     width: 90% !important;
     margin: auto;
+    margin-top: 20px;
     height: fit-content !important;
     border-radius: 20px !important;
+  }
+  .today-cont {
+    height: fit-content !important;
   }
   .radio-label {
     width: 300px !important;
   }
-
+  #img-2-home {
+    display: none;
+  }
   .doctor-service-container h5,
   .select-user h5 {
     font-size: 1.25rem !important;
   }
   .bt-2 {
     margin-right: 10px !important;
+  }
+  .menu-logo-cont {
+    display: none;
   }
   .doctor-menu-cont-mobile {
     background-color: #1c0d44;

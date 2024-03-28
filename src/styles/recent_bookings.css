@@ -306,6 +306,21 @@ tbody {
   min-height: 30px;
 }
 @media only screen and (max-width: 600px) {
+  .table td,
+  .table th {
+    min-width: 20px !important;
+  }
+  .plan-single-cont > div {
+    margin: 0px !important;
+  }
+  .plan-single-cont {
+    display: block !important;
+  }
+  .plan-container {
+    gap: 50px !important;
+    padding: 10px 30px 10px 30px;
+    overflow-y: scroll !important;
+  }
   .frame {
     width: 90vw !important;
     margin: auto;
@@ -324,7 +339,14 @@ tbody {
     height: 80vh !important;
   }
   .search-bar {
-    display: none;
+    flex-wrap: nowrap !important;
+    width: 160px !important;
+  }
+  .client-form .container {
+    width: 100% !important;
+  }
+  .client-form .container section {
+    width: 80% !important;
   }
   .recent-bookings-cont {
     /* height: 90vh !important; */
@@ -332,14 +354,21 @@ tbody {
     overflow-x: scroll !important;
     font-size: 12px;
   }
-  .StartEvaluation {
+  .action-view-eval {
+    height: fit-content !important;
+  }
+  .StartEvaluation,
+  .daignosis {
     height: fit-content !important;
     width: fit-content !important;
     text-align: center;
     text-transform: uppercase !important;
     font-weight: 800;
   }
-
+  .bt-5,
+  .bt-6 {
+    /* width: 120px !important; */
+  }
   /* .recent-booking-head {
     position: fixed;
     width: 90vw;

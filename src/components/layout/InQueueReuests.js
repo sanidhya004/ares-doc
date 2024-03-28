@@ -18,6 +18,7 @@ const InQueueReuests = () => {
   const isDesktop = window.matchMedia("(min-width: 768px)").matches;
   const pageSize = isDesktop ? 8 : 9;
   const dispatch = useDispatch();
+  const [searchQuery, setSearchQuery] = useState("");
   function formatDate(dateString) {
     const dateObject = new Date(dateString);
     const day = dateObject.getDate().toString().padStart(2, "0");
@@ -26,6 +27,11 @@ const InQueueReuests = () => {
 
     return `${month}-${day}-${year}`;
   }
+
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+    setCurrentPage(1); // Reset pagination when search query changes
+  };
   const fetchData = async () => {
     try {
       // Create an object to hold the parameters
@@ -33,6 +39,9 @@ const InQueueReuests = () => {
         currentPage,
         pageSize,
       };
+      if (searchQuery) {
+        params.searchQuery = searchQuery;
+      }
 
       if (selectedServiceTypes.length > 0) {
         params.selectedServiceTypes = selectedServiceTypes.toString();
@@ -55,7 +64,7 @@ const InQueueReuests = () => {
 
   useEffect(() => {
     fetchData(); // Fetch data whenever currentPage changes
-  }, [currentPage, selectedDate, selectedServiceTypes]);
+  }, [currentPage, selectedDate, selectedServiceTypes, searchQuery]);
 
   const startIndex = (currentPage - 1) * pageSize;
   const handlePageChange = (newPage) => {
@@ -152,6 +161,65 @@ const InQueueReuests = () => {
 
   return (
     <>
+      <div
+        className="d-flex align-items-center mt-3"
+        style={{ paddingLeft: "15px" }}
+      >
+        <div
+          className="input-group mb-3 search-bar"
+          style={{ width: "40%", marginRight: "25px" }}
+        >
+          <div className="input-group-append ">
+            <span
+              className="input-group-text"
+              id="searchIcon"
+              style={{ borderRadius: "5px 0px 0px 5px" }}
+            >
+              <i class="fas fa-search"></i>
+            </span>
+          </div>
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Search..."
+            aria-label="Search"
+            aria-describedby="searchIcon"
+            style={{ height: "40px" }}
+            value={searchQuery}
+            onChange={handleSearchChange}
+          />
+        </div>
+
+        <div
+          className=" d-flex flex-row  justify-content-center "
+          style={{
+            width: "150px",
+            gap: "10px",
+            marginRight: "15px",
+            marginBottom: "18px",
+          }}
+        >
+          <div className="calender-icon">
+            <i className="fa-regular fa-calendar m-auto" />
+          </div>
+          <Dropdown>
+            <Dropdown.Toggle id="dropdown-pages">
+              {currentPage} of {totalPages}
+            </Dropdown.Toggle>
+
+            <Dropdown.Menu>
+              {[...Array(totalPages).keys()].map((page) => (
+                <Dropdown.Item
+                  key={page + 1}
+                  onClick={() => handlePageChange(page + 1)}
+                >
+                  {page + 1}
+                </Dropdown.Item>
+              ))}
+            </Dropdown.Menu>
+          </Dropdown>
+        </div>
+      </div>
       <div className=" main-wrapper">
         {/* <div className="frame"> */}
         <div className="table-div">

@@ -1,9 +1,29 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
 import BootstrapModal from "../components/layout/Components/BootstrapModal";
 import DoctorMenu from "../components/layout/DoctorMenu";
+import { GetPlans } from "../features/apiCall";
 import "../styles/doctorplans.css";
 const DoctorPlansPackages = () => {
+  const Get_Plans = useSelector((state) => state.fetch_app.Get_Plans);
+  const isFetching = useSelector((state) => state.fetch_app.isFetching);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { ClientId } = useParams();
+
+  const fetchData = async () => {
+    try {
+      await GetPlans(dispatch);
+    } catch (error) {
+      console.error("Error fetching profile details:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [dispatch, navigate]);
+
   const plansData = [
     {
       icon: "novide",
@@ -75,7 +95,7 @@ const DoctorPlansPackages = () => {
         <p className=" mb-5">Choose a plan that’s right for you</p>
 
         <div className="d-flex  plan-container ">
-          {plansData.map((plan, index) => (
+          {Get_Plans.map((plan, index) => (
             <PlanSingle key={index} planData={plan} />
           ))}
         </div>
@@ -86,7 +106,7 @@ const DoctorPlansPackages = () => {
 
 export default DoctorPlansPackages;
 const PlanSingle = ({ planData }) => {
-  const { icon, title, price, billing, features, buttonText } = planData;
+  const { name, billing, features, buttonText, phases } = planData;
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
   const handleClose = () => {
@@ -102,8 +122,8 @@ const PlanSingle = ({ planData }) => {
         {/* <div className={`icon-cont-${icon} m-auto`}>
           <img src={`/images/icons/${icon}.svg`} alt={icon} />
         </div> */}
-        <h2 className="text-dark text-start">{title}</h2>
-        <h1 className="color-purple text-start" style={{ fontSize: "60px" }}>
+        <h2 className="text-dark text-start">{name}</h2>
+        {/* <h1 className="color-purple text-start" style={{ fontSize: "60px" }}>
           {price}
           <span
             style={{
@@ -115,11 +135,11 @@ const PlanSingle = ({ planData }) => {
           >
             per Month
           </span>
-        </h1>
-        <p>{billing}</p>
+        </h1> */}
+        {/* <p>{billing}</p> */}
       </div>
 
-      <table className="table table-borderless">
+      {/* <table className="table table-borderless">
         <tbody>
           {features.map((feature, index) => (
             <tr key={index}>
@@ -130,23 +150,42 @@ const PlanSingle = ({ planData }) => {
             </tr>
           ))}
         </tbody>
-      </table>
+      </table> */}
 
       <div className="m-auto">
         <button onClick={handleSubmit} className="purple-button plan-bt">
-          {buttonText}
+          START PLAN{" "}
         </button>
         <BootstrapModal
           showModal={showModal}
           handleClose={handleClose}
           modalTitle={""}
-          modalContent={<ModalContent />}
+          modalContent={<ModalContent phases={phases} />}
         />
       </div>
     </div>
   );
 };
-const ModalContent = () => {
+const ModalContent = ({ phases }) => {
+  const navigate = useNavigate();
+  const handleGoBack = () => {
+    console.log("Going back");
+    navigate(-1);
+  };
+  return (
+    <section className="text-center">
+      <button onClick={handleGoBack} className="m-2 p-0 mb-4" id="back_bt">
+        <img src="/images/icons/backdark.svg" alt="back" width={30} />
+      </button>
+
+      <div
+        className="d-flex Doctor-home  flex-wrap "
+        style={{ justifyContent: "space-evenly" }}
+      ></div>
+    </section>
+  );
+};
+const SubmitPlan = () => {
   return (
     <section className="text-center">
       <img

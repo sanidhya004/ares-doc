@@ -69,6 +69,7 @@ button {
   .profile {
     margin: auto !important;
     margin-top: 20px !important;
+    margin-bottom: 100px !important;
   }
   .profile .prof-cont:hover {
   }
@@ -80,6 +81,7 @@ button {
     width: 100vw;
     margin: auto;
   }
+
   .Doctor-Consul section {
     margin-left: 0px;
     margin: auto;

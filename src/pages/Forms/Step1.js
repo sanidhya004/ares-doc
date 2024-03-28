@@ -30,7 +30,7 @@ const Step1 = ({
           ) : form_name === "Evaluation" ? (
             <>Evaluation Form</>
           ) : (
-            <>Daignosis Form</>
+            <>Diagnosis Form</>
           )}
         </>
       </h2>

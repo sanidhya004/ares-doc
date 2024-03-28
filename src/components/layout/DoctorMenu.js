@@ -139,7 +139,7 @@ const DoctorMenu = ({ children }) => {
           /> */}
           <div className="doctor-menu-cont">
             <main className="w-100 h-100 doctor-menu text-center text-secondary">
-              <div style={{ height: "130px" }} className=" ">
+              <div style={{ height: "130px" }} className="menu-logo-cont ">
                 <img
                   src="/images/DoctorMenuLogo.png"
                   alt="logo"

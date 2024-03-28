@@ -30,8 +30,8 @@ const DoctorForm = ({ form }) => {
         },
         headers: { Authorization: `Bearer ${token}` },
       });
-      console.log(data?.doc[0]?.obj);
-      setFormFields(data?.doc[0]?.obj);
+      console.log(data?.doc?.obj);
+      setFormFields(data?.doc?.obj);
       dispatch(FetchSuccess(data));
     } catch (error) {
       const errorMessage = parseError(error);
@@ -63,8 +63,12 @@ const DoctorForm = ({ form }) => {
   const handleSubmit = async () => {
     console.log("Form submitted:", formData);
     try {
-      const bool = await SubmitForm(dispatch, { appointmentId, formData });
-      if (bool == true) {
+      const bool = await SubmitForm(dispatch, {
+        form,
+        appointmentId,
+        formData,
+      });
+      if (bool) {
         console.log("filledd");
         toast.success("Form Submitted Successfully !");
         navigate(-1);
@@ -87,6 +91,7 @@ const DoctorForm = ({ form }) => {
   } else {
     formSize = 8;
   }
+
   const totalSteps = Math.ceil(formFields.length / formSize);
 
   return (

@@ -8,6 +8,8 @@ const fetchSlice = createSlice({
     errMsg: "",
     appointments: [],
     Allappointments: [],
+    Presform: [],
+    Eval_Dia_form: [],
     inqueue: [],
     slots: [],
     doctors: [],
@@ -15,6 +17,7 @@ const fetchSlice = createSlice({
     prescriptions: [],
     totalPages: "",
     bookings: [],
+    Get_Plans: [],
   },
   reducers: {
     FetchStart: (state, action) => {
@@ -50,13 +53,25 @@ const fetchSlice = createSlice({
 
           break;
         case "FETCH_COMPLETED_REQUESTS_SUCCESS":
-          state.prescriptions = action.payload.payload.data;
+          state.completed = action.payload.payload?.appointments;
           state.totalPages = action.payload.payload.totalPages;
 
           break;
         case "FETCH_BOOKINGS_SUCCESS":
           state.bookings = action.payload.payload.appointments;
           state.totalPages = action.payload.payload.totalPages;
+
+          break;
+        case "FETCH_PRESCRIPTION_FORM":
+          state.Presform = action.payload.payload.form;
+
+          break;
+        case "FETCH_PLANS_SUCCESS":
+          state.Get_Plans = action.payload.payload.plans;
+
+          break;
+        case "FETCH_EVAL_DIAG_FORM":
+          state.Eval_Dia_form = action.payload.payload.form;
 
           break;
 

@@ -29,6 +29,8 @@ import "./styles/login.css";
 import "./styles/recent_bookings.css";
 
 import Drill from "./pages/Drill";
+import ViewEval_Dai from "./pages/ViewEval_Dia";
+import ViewPrescriptionForm from "./pages/ViewPrescriptionForm";
 import ErrorBoundary from "./utils/ErrorBoundary.js";
 import ProtectedRoute from "./utils/ProtectedRoute";
 
@@ -67,7 +69,7 @@ function App() {
               element={<DoctorInOffice />}
             />
             <Route
-              path="dashboard/doctor-plans"
+              path="dashboard/doctor-plans/:ClientId"
               element={<DoctorPlansPackages />}
             />
             <Route
@@ -87,17 +89,17 @@ function App() {
               path="dashboard/recent-prescription"
               element={<RecentPrescriptions />}
             />{" "}
-            {/* <Route
-              path="dashboard/start-prescription/:client_id"
-              element={<DoctorForm form="pres" />}
-            />{" "}
-            <Route
-              path="dashboard/start-evaluation"
-              element={<DoctorForm form="eval" />}
-            /> */}
             <Route
               path="dashboard/start-prescription/:appointmentId"
               element={<DoctorForm form="Prescription" />}
+            />{" "}
+            <Route
+              path="dashboard/view-pres-form/:appointmentId"
+              element={<ViewPrescriptionForm />}
+            />{" "}
+            <Route
+              path="dashboard/view-eval-form/:appointmentId"
+              element={<ViewEval_Dai />}
             />{" "}
             <Route
               path="dashboard/start-evaluation/:appointmentId"
@@ -105,7 +107,7 @@ function App() {
             />{" "}
             <Route
               path="dashboard/start-diagnosis/:appointmentId"
-              element={<DoctorForm form="diagnosis" />}
+              element={<DoctorForm form="Diagnosis" />}
             />
             <Route
               path="dashboard/recent-bookings"

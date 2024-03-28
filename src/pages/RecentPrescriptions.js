@@ -9,7 +9,6 @@ import { GetRecentPrescriptions } from "../features/apiCall";
 
 const RecentPrescriptions = () => {
   const [searchQuery, setSearchQuery] = useState("");
-
   const [selectedServiceTypes, setSelectedServiceTypes] = useState([]);
   const prescriptions = useSelector((state) => state.fetch_app.prescriptions);
   const totalPages = useSelector((state) => state.fetch_app.totalPages);
@@ -315,25 +314,30 @@ const RecentPrescriptions = () => {
                               <td></td>
                               <td className="status ">
                                 {booking?.isFilled ? (
-                                  <div className="StartPrescription m-auto">
+                                  <div
+                                    className="action-view-eval m-auto "
+                                    style={{
+                                      width: "fit-content",
+                                      padding: "6px 10px",
+                                      fontWeight: "500",
+                                    }}
+                                  >
                                     <Link
-                                      to={`/doctor/dashboard/start-prescription/${booking?._id}`}
-                                      className=" "
+                                      to={`/doctor/dashboard/view-pres-form/${booking?.presId}`}
                                     >
-                                      <p> Start Prescription</p>
+                                      {" "}
+                                      View Prescription
                                     </Link>
                                   </div>
                                 ) : (
                                   <>
-                                    <div
-                                      className="action-view-eval m-auto "
-                                      style={{
-                                        width: "fit-content",
-                                        padding: "6px 10px",
-                                        fontWeight: "500",
-                                      }}
-                                    >
-                                      View Prescription
+                                    <div className="StartPrescription m-auto">
+                                      <Link
+                                        to={`/doctor/dashboard/start-prescription/${booking?._id}`}
+                                        className=" "
+                                      >
+                                        <p> Start Prescription</p>
+                                      </Link>
                                     </div>
                                   </>
                                 )}

@@ -287,7 +287,7 @@ const DoctorTodayAppointment = () => {
               <div
                 style={{
                   backgroundColor: "",
-                  textAlign: "right",
+                  textAlign: "center",
                   position: "relative",
                   left: "80px",
                   fontWeight: "700",

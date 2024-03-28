@@ -26,7 +26,13 @@ const Step2 = ({
   return (
     <div className="mt-4 client-form">
       <h2 className="text-center">
-        {form_name == "pres" ? <>Prescription</> : <>Evaluation</>} Form
+        {form_name === "Prescription" ? (
+          <>Prescription Form</>
+        ) : form_name === "Evaluation" ? (
+          <>Evaluation Form</>
+        ) : (
+          <>Diagnosis Form</>
+        )}
       </h2>
       <ProgressBar
         now={now}

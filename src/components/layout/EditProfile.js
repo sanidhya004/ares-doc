@@ -105,7 +105,7 @@ const EditProfile = () => {
             Edit Profile
           </h4>
 
-          <Container className="w-75 mt-2">
+          <Container className="w-75 mt-2 ">
             <Form onSubmit={handleSubmit}>
               <Row>
                 <Col>
@@ -255,7 +255,7 @@ const EditProfile = () => {
                   </Form.Group>
                 </Col>
               </Row>
-              <div className="d-flex w-50 m-auto mt-4">
+              <section className="d-flex w-50 m-auto mt-4">
                 <button type="submit" className="bt-4 w-50 bt-5">
                   {/* {isFetching ? (
                     <>
@@ -268,7 +268,7 @@ const EditProfile = () => {
                 <button type="button" className="bt-6 w-50">
                   Cancel
                 </button>
-              </div>
+              </section>
             </Form>
           </Container>
         </section>
