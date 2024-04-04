@@ -53,7 +53,6 @@ export const SendOtp = async (dispatch, email) => {
       "/api/doctor/send-forgot-password-code",
       email
     );
-    // console.log(data);
     toast.success("OTP Sent!", successToastOptions);
     dispatch(Success(data));
     return true;

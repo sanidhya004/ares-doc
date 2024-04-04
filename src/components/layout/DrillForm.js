@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Container, Form } from "react-bootstrap";
 import { useDispatch } from "react-redux";
 import Select from "react-select";
@@ -6,10 +6,18 @@ import { toast } from "react-toastify";
 import { SubmitDrillForm } from "../../features/apiCall";
 
 const DrillForm = ({ activity, index, total }) => {
-  // State to store the form data
-  const [formData, setFormData] = useState(
-    activity?.form?.map((item) => ({ ...item, value: "" })) || []
-  ); // Function to handle input changes
+  const [formData, setFormData] = useState([]);
+
+  useEffect(() => {
+    if (activity?.form) {
+      const updatedFormData = activity.form.map((item) => ({
+        ...item,
+        value: item.value || "", // Set value to existing value or empty string
+      }));
+      setFormData(updatedFormData);
+    }
+  }, [activity]);
+
   const handleInputChange = (e, key) => {
     const updatedFormData = formData.map((item) =>
       item.key === key ? { ...item, value: e.target.value } : item
@@ -18,7 +26,7 @@ const DrillForm = ({ activity, index, total }) => {
   };
 
   const dispatch = useDispatch();
-  // Function to handle form submission
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {

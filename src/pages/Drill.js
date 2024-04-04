@@ -194,7 +194,6 @@ const Drill = (props) => {
                                   type="checkbox"
                                   id={activity._id}
                                   checked={activity.isComplete}
-                                  onChange={() => handleChange(activity._id)}
                                 />
                                 <label
                                   htmlFor={activity._id}

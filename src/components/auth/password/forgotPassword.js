@@ -180,7 +180,7 @@ const ModalContent = ({ email }) => {
           style={{ fontSize: "13px" }}
           onClick={() => handleSendOtp()}
         >
-          Resend (60s)
+          Resend
         </Link>
       </div>
       <button
