@@ -3,6 +3,7 @@ import {
   Col,
   Container,
   Dropdown,
+  NavLink,
   Pagination,
   Row,
   Table,
@@ -10,6 +11,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { GetCompletedRequests } from "../../features/apiCall";
+import BootstrapModal from "./Components/BootstrapModal";
 import Loader from "./Components/Loader";
 
 const CompletedRequests = () => {
@@ -21,6 +23,7 @@ const CompletedRequests = () => {
   const pageSize = isDesktop ? 8 : 9;
   const totalPages = useSelector((state) => state.fetch_app.totalPages);
   const completed = useSelector((state) => state.fetch_app.completed);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
 
   const dispatch = useDispatch();
   const [searchQuery, setSearchQuery] = useState("");
@@ -131,10 +134,9 @@ const CompletedRequests = () => {
 
     return items;
   };
-  // const data = {
-  //   firstName: booking?.client?.firstName,
-  //   lastName: booking?.client?.lastName,
-  // };
+  const handleModalClose = () => {
+    setShowPaymentModal(false);
+  };
   return (
     <>
       <div
@@ -278,19 +280,35 @@ const CompletedRequests = () => {
                                         </>
                                       ) : (
                                         <>
-                                          <Link
-                                            to={`/doctor/dashboard/drill/${booking?.client?._id}/${booking._id}`}
-                                            state={{
-                                              data: {
-                                                firstName:
-                                                  booking?.client?.firstName,
-                                                lastName:
-                                                  booking?.client?.lastName,
-                                              },
-                                            }}
-                                          >
-                                            Start Drill
-                                          </Link>
+                                          {booking?.client?.plan_payment ===
+                                          "paid" ? (
+                                            <>
+                                              <Link
+                                                to={`/doctor/dashboard/drill/${booking?.client?._id}/${booking._id}`}
+                                                state={{
+                                                  data: {
+                                                    firstName:
+                                                      booking?.client
+                                                        ?.firstName,
+                                                    lastName:
+                                                      booking?.client?.lastName,
+                                                  },
+                                                }}
+                                              >
+                                                Start Drill
+                                              </Link>
+                                            </>
+                                          ) : (
+                                            <>
+                                              <NavLink
+                                                onClick={() => {
+                                                  setShowPaymentModal(true);
+                                                }}
+                                              >
+                                                Wait !
+                                              </NavLink>
+                                            </>
+                                          )}
                                         </>
                                       )}
                                     </button>
@@ -324,6 +342,12 @@ const CompletedRequests = () => {
               </>
             )}
           </Table>
+          <BootstrapModal
+            showModal={showPaymentModal}
+            handleClose={handleModalClose}
+            modalTitle="Payment Required - START DRILL"
+            modalContent={<ModalContent />}
+          />
         </div>
       </div>
     </>
@@ -331,3 +355,12 @@ const CompletedRequests = () => {
 };
 
 export default CompletedRequests;
+const ModalContent = () => {
+  return (
+    <section className="forgot-password p-4">
+      <h6 className="m-auto font-weight-bold text-center">
+        Wait for athelete to pay for the plan !
+      </h6>
+    </section>
+  );
+};
