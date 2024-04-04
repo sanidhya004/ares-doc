@@ -269,7 +269,6 @@ const RecentPrescriptions = () => {
                       Date
                     </th>
                     <th>Time</th>
-                    <th></th>
                     <th>Action</th>
                   </tr>
                 </thead>
@@ -311,7 +310,7 @@ const RecentPrescriptions = () => {
                                 {formatDate(booking?.app_date)}
                               </td>
                               <td className="time">{booking?.app_time}</td>
-                              <td></td>
+
                               <td className="status ">
                                 {booking?.isFilled ? (
                                   <div

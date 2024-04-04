@@ -16,7 +16,7 @@ const InQueueReuests = () => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const isDesktop = window.matchMedia("(min-width: 768px)").matches;
-  const pageSize = isDesktop ? 8 : 9;
+  const pageSize = isDesktop ? 9 : 10;
   const dispatch = useDispatch();
   const [searchQuery, setSearchQuery] = useState("");
   function formatDate(dateString) {

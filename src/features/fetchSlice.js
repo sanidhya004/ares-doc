@@ -7,9 +7,12 @@ const fetchSlice = createSlice({
     error: false,
     errMsg: "",
     appointments: [],
+    totalWeeks: "",
+    completePercentage: "",
     Allappointments: [],
     Presform: [],
     Eval_Dia_form: [],
+    drill_week_details: [],
     inqueue: [],
     slots: [],
     doctors: [],
@@ -60,7 +63,6 @@ const fetchSlice = createSlice({
         case "FETCH_BOOKINGS_SUCCESS":
           state.bookings = action.payload.payload.appointments;
           state.totalPages = action.payload.payload.totalPages;
-
           break;
         case "FETCH_PRESCRIPTION_FORM":
           state.Presform = action.payload.payload.form;
@@ -71,9 +73,10 @@ const fetchSlice = createSlice({
 
           break;
         case "FETCH_EVAL_DIAG_FORM":
-          state.Eval_Dia_form = action.payload.payload.form;
+          state.Eval_Dia_form = action.payload.payload;
 
           break;
+        case "FETCH_DRILL_WEEKS":
 
         default:
           // Handle default case if necessary

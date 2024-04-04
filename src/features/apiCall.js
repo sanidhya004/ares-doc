@@ -327,8 +327,8 @@ export const GetEvalDiaForm = async (dispatch, { appointmentId }) => {
   dispatch(FetchStart());
   const token = localStorage.getItem("userToken");
   try {
-    const { data } = await axios.get("/api/doctor/get-eval", {
-      params: { prescriptionId: appointmentId },
+    const { data } = await axios.get("/api/doctor/get-evaluations", {
+      params: { evaluationId: appointmentId },
       headers: { Authorization: `Bearer ${token}` },
     });
     dispatch(FetchSuccess({ type: "FETCH_EVAL_DIAG_FORM", payload: data }));
@@ -435,6 +435,52 @@ export const getAlls = async (dispatch, { selectedDate, doctor } = {}) => {
   }
 };
 
+export const Plans = async (dispatch, { name, phase, ClientId }) => {
+  dispatch(AppStart());
+  const token = localStorage.getItem("userToken");
+  try {
+    console.log(ClientId);
+
+    const data = await axios.put(
+      `/api/doctor/select-plan?userId=${ClientId}&plan=${name}&planPhase=${phase.name}`,
+      {},
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+
+    dispatch(AppSuccess(data));
+    return data;
+  } catch (error) {
+    const errorMessage = parseError(error);
+    toast.error(errorMessage, ErrorToastOptions);
+    dispatch(AppFailure(errorMessage));
+    return false;
+  }
+};
+export const GetDrillDetails = async (
+  dispatch,
+  { selectedWeek, appointmentId, clientId }
+) => {
+  dispatch(FetchStart());
+  const token = localStorage.getItem("userToken");
+  try {
+    const data = await axios.get(
+      `/api/doctor/get-Drills?clientId=${clientId}&week=${selectedWeek}&appointmentId=${appointmentId}`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+    dispatch(FetchSuccess({ type: "FETCH_DRILL_WEEKS", payload: data.data }));
+    return data;
+  } catch (error) {
+    const errorMessage = parseError(error);
+    toast.error(errorMessage, ErrorToastOptions);
+    dispatch(FetchFailure(errorMessage));
+    return false;
+  }
+};
+
 export const fetchAvailableAppointments = async (
   dispatch,
   { selectedDoctor }
@@ -530,6 +576,35 @@ export const SubmitClientForm = async (dispatch, { formData }) => {
     dispatch(FormFailure(errorMessage));
   }
 };
+export const SubmitDrillForm = async (dispatch, { activityId, formData }) => {
+  const token = localStorage.getItem("userToken");
+  dispatch(FormStart());
+  try {
+    const config = {
+      headers: { Authorization: `Bearer ${token}` },
+    };
+
+    let url = `/api/doctor/update-drill?id=${activityId}`;
+    if (activityId) {
+      if (formData) {
+        // If formData is present, include it in the request body
+        const { data } = await axios.put(url, { form: formData }, config);
+        dispatch(FormSuccess(data));
+      } else {
+        // If formData is not present, make a GET request with only query parameters
+        const { data } = await axios.put(url, "", config);
+        dispatch(FormSuccess(data));
+      }
+    }
+    return true;
+  } catch (error) {
+    console.log(error);
+    const errorMessage = parseError(error);
+    toast.error(errorMessage, ErrorToastOptions);
+    dispatch(FormFailure(errorMessage));
+  }
+};
+
 export const SubmitForm = async (
   dispatch,
   { form, appointmentId, formData }

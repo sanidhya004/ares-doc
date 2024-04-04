@@ -1,42 +1,87 @@
 import React, { useEffect, useState } from "react";
-import { Accordion, Col, ProgressBar, Row } from "react-bootstrap";
-// import { ProgressBar } from "react-toastify/dist/components";
+import { Accordion, Col, ProgressBar, Row, Spinner } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import { useLocation, useParams } from "react-router-dom";
 import DoctorMenu from "../components/layout/DoctorMenu";
 import DrillForm from "../components/layout/DrillForm";
+import { GetDrillDetails, SubmitDrillForm } from "../features/apiCall";
 
-const Drill = () => {
-  // State to keep track of the selected week
+const Drill = (props) => {
+  const [drill_week_details, setDrillWeekDetails] = useState(null);
+  const { clientId, appointmentId } = useParams();
+  const location = useLocation();
+  const { firstName, lastName } = location.state.data;
+  const [totalWeeks, setTotalWeeks] = useState("");
+  const [completePercentage, setCompletePercentage] = useState("");
+  const isFetching = useSelector((state) => state.fetch_app.isFetching);
+  const dispatch = useDispatch();
   const [selectedWeek, setSelectedWeek] = useState(1);
-  // State to store total weeks
-  const [totalWeeks, setTotalWeeks] = useState(6);
+  const [selectedActivity, setSelectedActivity] = useState(null);
+  const [ActivityId, setActivityId] = useState("");
+  const [selectedIndex, setIndex] = useState(null);
+  const [totalActivities, setTotal] = useState(null);
 
-  // Function to handle week selection
   const handleWeekSelect = (weekNumber) => {
     setSelectedWeek(weekNumber);
-    // Fetch data from the API based on the selected week
-    // Implement your API fetching logic here
-    // For simplicity, let's just log the selected week for now
-    console.log("Fetching data for Week", weekNumber);
+  };
+  const fetchData = async () => {
+    try {
+      const params = { appointmentId, clientId, selectedWeek };
+      const data = await GetDrillDetails(dispatch, params);
+      if (data) {
+        setDrillWeekDetails(data?.data?.weeks?.[0]);
+        setCompletePercentage(data?.data?.completePercentage);
+        setTotalWeeks(data?.data?.totalWeeks);
+        setSelectedActivity(
+          data?.data?.weeks?.[0]?.drills?.[0]?.activities?.[0]
+        );
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+  useEffect(() => {
+    fetchData();
+  }, [selectedWeek, dispatch]);
+
+  const handleLabelClick = (activity, index, total) => {
+    console.log(activity);
+    setSelectedActivity(activity);
+    setIndex(index);
+    setTotal(total);
+    setActivityId(activity?._id);
+    Update(activity?._id);
   };
 
-  useEffect(() => {
-    // Fetch total weeks and other week data from the API
-    // For demonstration purposes, I'm assuming an endpoint that returns the total weeks
-    fetch("your_api_endpoint_for_total_weeks")
-      .then((response) => response.json())
-      .then((data) => {
-        // Update the state with the total weeks
-        setTotalWeeks(data.totalWeeks);
-      })
-      .catch((error) => {
-        console.error("Error fetching total weeks:", error);
+  const Update = async () => {
+    try {
+      const success = await SubmitDrillForm(dispatch, {
+        activityId: ActivityId,
       });
-  }, []);
+    } catch (error) {}
+  };
+
+  const handleChange = async (activityId) => {
+    const updatedActivities = drill_week_details?.drills.map((day) => ({
+      ...day,
+      activities: day.activities.map((activity) =>
+        activity._id === activityId
+          ? { ...activity, isComplete: !activity.isComplete }
+          : activity
+      ),
+    }));
+    setDrillWeekDetails((prevDetails) => ({
+      ...prevDetails,
+      drills: updatedActivities,
+    }));
+    setActivityId(activityId);
+    Update();
+  };
 
   return (
     <DoctorMenu>
       <div
-        className="d-flex Doctor-home  flex-wrap "
+        className="d-flex Doctor-home  flex-wrap Drill"
         style={{
           justifyContent: "space-evenly",
           fontFamily: "Plus Jakarta Sans, sans-serif",
@@ -57,7 +102,11 @@ const Drill = () => {
             <div style={{ fontSize: "20px" }}>
               <p className="font-weight-bold d-inline m-0"> Drills</p>{" "}
               <span class="dot"></span>
-              <span> Mr. Scott Mctominay</span>
+              {firstName && lastName && (
+                <span className="name-drill">
+                  {firstName} {lastName}
+                </span>
+              )}
             </div>
           </Row>
 
@@ -86,8 +135,13 @@ const Drill = () => {
           <Row>
             <Col className="">
               <p className="font-weight-bold d-inline m-0">
-                {" "}
-                Elite (P1)- Week 1/Day1/NeuroTrainer(Calibration)
+                {drill_week_details && (
+                  <>
+                    {drill_week_details?.drills?.[0]?.plan}(
+                    {drill_week_details?.drills?.[0]?.phase})- Week{" "}
+                    {drill_week_details?.week}
+                  </>
+                )}
               </p>
               {/* <video src="/images/produ.mp4" className=" w-100 " controls /> */}
             </Col>
@@ -100,406 +154,81 @@ const Drill = () => {
                   style={{ fontWeight: "400", fontSize: "12px" }}
                   className="text-success"
                 >
-                  15% Completed
+                  {completePercentage}% Completed
                 </p>
               </div>
               <ProgressBar
-                now={20}
+                now={completePercentage}
                 variant="success"
                 animated
                 style={{ height: "5px" }}
                 className="mb-2"
               />{" "}
               <section className="mt-4">
-                <Accordion defaultActiveKey={["0"]} alwaysOpen>
-                  <Accordion.Item eventKey="0">
-                    <Accordion.Header>
-                      <h6 className="w-25">Day 1</h6>
-                      <div className="d-flex acc-head-cont">
-                        <div>
-                          <img src="/images/icon/playcircle.svg" />
-                          <p> 4 Drills</p>
-                        </div>
-                        <div>
-                          <img src="/images/icon/clock.svg" />
-                          <p> 51m</p>
-                        </div>
-                        <div>
-                          <img src="/images/icon/checks.svg" />
-                          <p> 25% finish (1/4)</p>
-                        </div>
-                      </div>
-                    </Accordion.Header>
-                    <Accordion.Body>
-                      <div className="days-cont">
-                        <div class="checkbox-wrapper-43">
-                          <input type="checkbox" id="1" />
-                          <label for="1" class="check d-inline">
-                            <svg width="18px" height="18px" viewBox="0 0 18 18">
-                              <path d="M1,9 L1,3.5 C1,2 2,1 3.5,1 L14.5,1 C16,1 17,2 17,3.5 L17,14.5 C17,16 16,17 14.5,17 L3.5,17 C2,17 1,16 1,14.5 L1,9 Z"></path>
-                              <polyline points="1 9 7 14 15 4"></polyline>
-                            </svg>
-
-                            <p className="d-inline">
-                              1. Welcome to Ares Elite Academy
-                            </p>
-                          </label>
-                        </div>
-                      </div>{" "}
-                      <div className="days-cont">
-                        <div class="checkbox-wrapper-43">
-                          <input type="checkbox" id="2" />
-                          <label for="2" class="check d-inline">
-                            <svg width="18px" height="18px" viewBox="0 0 18 18">
-                              <path d="M1,9 L1,3.5 C1,2 2,1 3.5,1 L14.5,1 C16,1 17,2 17,3.5 L17,14.5 C17,16 16,17 14.5,17 L3.5,17 C2,17 1,16 1,14.5 L1,9 Z"></path>
-                              <polyline points="1 9 7 14 15 4"></polyline>
-                            </svg>
-
-                            <p className="d-inline">
-                              2. NeuroTrainer (Calibration)
-                            </p>
-                          </label>
-                        </div>
-                      </div>{" "}
-                      <div className="days-cont">
-                        <div class="checkbox-wrapper-43">
-                          <input type="checkbox" id="3" />
-                          <label for="3" class="check d-inline">
-                            <svg width="18px" height="18px" viewBox="0 0 18 18">
-                              <path d="M1,9 L1,3.5 C1,2 2,1 3.5,1 L14.5,1 C16,1 17,2 17,3.5 L17,14.5 C17,16 16,17 14.5,17 L3.5,17 C2,17 1,16 1,14.5 L1,9 Z"></path>
-                              <polyline points="1 9 7 14 15 4"></polyline>
-                            </svg>
-
-                            <p className="d-inline">
-                              3. Senaptec (Eye Hand Coordination)
-                            </p>
-                          </label>
-                        </div>
-                      </div>{" "}
-                      <div className="days-cont">
-                        <div class="checkbox-wrapper-43">
-                          <input type="checkbox" id="4" />
-                          <label for="4" class="check d-inline">
-                            <svg width="18px" height="18px" viewBox="0 0 18 18">
-                              <path d="M1,9 L1,3.5 C1,2 2,1 3.5,1 L14.5,1 C16,1 17,2 17,3.5 L17,14.5 C17,16 16,17 14.5,17 L3.5,17 C2,17 1,16 1,14.5 L1,9 Z"></path>
-                              <polyline points="1 9 7 14 15 4"></polyline>
-                            </svg>
-
-                            <p className="d-inline">
-                              1. Welcome to Ares Elite Academy
-                            </p>
-                          </label>
-                        </div>
-                      </div>{" "}
-                      <div className="days-cont">
-                        <div class="checkbox-wrapper-43">
-                          <input type="checkbox" id="5" />
-                          <label for="5" class="check d-inline">
-                            <svg width="18px" height="18px" viewBox="0 0 18 18">
-                              <path d="M1,9 L1,3.5 C1,2 2,1 3.5,1 L14.5,1 C16,1 17,2 17,3.5 L17,14.5 C17,16 16,17 14.5,17 L3.5,17 C2,17 1,16 1,14.5 L1,9 Z"></path>
-                              <polyline points="1 9 7 14 15 4"></polyline>
-                            </svg>
-
-                            <p className="d-inline">
-                              4. Senaptec Eye Hand Coordination Recordings (3x)
-                            </p>
-                          </label>
-                        </div>
-                      </div>{" "}
-                    </Accordion.Body>
-                  </Accordion.Item>
-                  <Accordion.Item eventKey="1">
-                    <Accordion.Header>
-                      {" "}
-                      <h6 className="w-25">Day 2</h6>
-                      <div className="d-flex acc-head-cont">
-                        <div>
-                          <img src="/images/icon/playcircle.svg" />
-                          <p> 4 Drills</p>
-                        </div>
-                        <div>
-                          <img src="/images/icon/clock.svg" />
-                          <p> 51m</p>
-                        </div>
-                        <div>
-                          <img src="/images/icon/checks.svg" />
-                          <p> 25% finish (1/4)</p>
-                        </div>
-                      </div>
-                    </Accordion.Header>
-                    <Accordion.Body>
-                      <div className="days-cont">
-                        <div class="checkbox-wrapper-43">
-                          <input type="checkbox" id="1" />
-                          <label for="1" class="check d-inline">
-                            <svg width="18px" height="18px" viewBox="0 0 18 18">
-                              <path d="M1,9 L1,3.5 C1,2 2,1 3.5,1 L14.5,1 C16,1 17,2 17,3.5 L17,14.5 C17,16 16,17 14.5,17 L3.5,17 C2,17 1,16 1,14.5 L1,9 Z"></path>
-                              <polyline points="1 9 7 14 15 4"></polyline>
-                            </svg>
-
-                            <p className="d-inline">
-                              1. Welcome to Ares Elite Academy
-                            </p>
-                          </label>
-                        </div>
-                      </div>{" "}
-                      <div className="days-cont">
-                        <div class="checkbox-wrapper-43">
-                          <input type="checkbox" id="2" />
-                          <label for="2" class="check d-inline">
-                            <svg width="18px" height="18px" viewBox="0 0 18 18">
-                              <path d="M1,9 L1,3.5 C1,2 2,1 3.5,1 L14.5,1 C16,1 17,2 17,3.5 L17,14.5 C17,16 16,17 14.5,17 L3.5,17 C2,17 1,16 1,14.5 L1,9 Z"></path>
-                              <polyline points="1 9 7 14 15 4"></polyline>
-                            </svg>
-
-                            <p className="d-inline">
-                              2. NeuroTrainer (Calibration)
-                            </p>
-                          </label>
-                        </div>
-                      </div>{" "}
-                      <div className="days-cont">
-                        <div class="checkbox-wrapper-43">
-                          <input type="checkbox" id="3" />
-                          <label for="3" class="check d-inline">
-                            <svg width="18px" height="18px" viewBox="0 0 18 18">
-                              <path d="M1,9 L1,3.5 C1,2 2,1 3.5,1 L14.5,1 C16,1 17,2 17,3.5 L17,14.5 C17,16 16,17 14.5,17 L3.5,17 C2,17 1,16 1,14.5 L1,9 Z"></path>
-                              <polyline points="1 9 7 14 15 4"></polyline>
-                            </svg>
-
-                            <p className="d-inline">
-                              3. Senaptec (Eye Hand Coordination)
-                            </p>
-                          </label>
-                        </div>
-                      </div>{" "}
-                      <div className="days-cont">
-                        <div class="checkbox-wrapper-43">
-                          <input type="checkbox" id="4" />
-                          <label for="4" class="check d-inline">
-                            <svg width="18px" height="18px" viewBox="0 0 18 18">
-                              <path d="M1,9 L1,3.5 C1,2 2,1 3.5,1 L14.5,1 C16,1 17,2 17,3.5 L17,14.5 C17,16 16,17 14.5,17 L3.5,17 C2,17 1,16 1,14.5 L1,9 Z"></path>
-                              <polyline points="1 9 7 14 15 4"></polyline>
-                            </svg>
-
-                            <p className="d-inline">
-                              1. Welcome to Ares Elite Academy
-                            </p>
-                          </label>
-                        </div>
-                      </div>{" "}
-                      <div className="days-cont">
-                        <div class="checkbox-wrapper-43">
-                          <input type="checkbox" id="5" />
-                          <label for="5" class="check d-inline">
-                            <svg width="18px" height="18px" viewBox="0 0 18 18">
-                              <path d="M1,9 L1,3.5 C1,2 2,1 3.5,1 L14.5,1 C16,1 17,2 17,3.5 L17,14.5 C17,16 16,17 14.5,17 L3.5,17 C2,17 1,16 1,14.5 L1,9 Z"></path>
-                              <polyline points="1 9 7 14 15 4"></polyline>
-                            </svg>
-
-                            <p className="d-inline">
-                              4. Senaptec Eye Hand Coordination Recordings (3x)
-                            </p>
-                          </label>
-                        </div>
-                      </div>{" "}
-                    </Accordion.Body>
-                  </Accordion.Item>{" "}
-                  <Accordion.Item eventKey="2">
-                    <Accordion.Header>
-                      {" "}
-                      <h6 className="w-25">Day 3</h6>
-                      <div className="d-flex acc-head-cont">
-                        <div>
-                          <img src="/images/icon/playcircle.svg" />
-                          <p> 4 Drills</p>
-                        </div>
-                        <div>
-                          <img src="/images/icon/clock.svg" />
-                          <p> 51m</p>
-                        </div>
-                        <div>
-                          <img src="/images/icon/checks.svg" />
-                          <p> 25% finish (1/4)</p>
-                        </div>
-                      </div>
-                    </Accordion.Header>
-                    <Accordion.Body>
-                      <div className="days-cont">
-                        <div class="checkbox-wrapper-43">
-                          <input type="checkbox" id="1" />
-                          <label for="1" class="check d-inline">
-                            <svg width="18px" height="18px" viewBox="0 0 18 18">
-                              <path d="M1,9 L1,3.5 C1,2 2,1 3.5,1 L14.5,1 C16,1 17,2 17,3.5 L17,14.5 C17,16 16,17 14.5,17 L3.5,17 C2,17 1,16 1,14.5 L1,9 Z"></path>
-                              <polyline points="1 9 7 14 15 4"></polyline>
-                            </svg>
-
-                            <p className="d-inline">
-                              1. Welcome to Ares Elite Academy
-                            </p>
-                          </label>
-                        </div>
-                      </div>{" "}
-                      <div className="days-cont">
-                        <div class="checkbox-wrapper-43">
-                          <input type="checkbox" id="2" />
-                          <label for="2" class="check d-inline">
-                            <svg width="18px" height="18px" viewBox="0 0 18 18">
-                              <path d="M1,9 L1,3.5 C1,2 2,1 3.5,1 L14.5,1 C16,1 17,2 17,3.5 L17,14.5 C17,16 16,17 14.5,17 L3.5,17 C2,17 1,16 1,14.5 L1,9 Z"></path>
-                              <polyline points="1 9 7 14 15 4"></polyline>
-                            </svg>
-
-                            <p className="d-inline">
-                              2. NeuroTrainer (Calibration)
-                            </p>
-                          </label>
-                        </div>
-                      </div>{" "}
-                      <div className="days-cont">
-                        <div class="checkbox-wrapper-43">
-                          <input type="checkbox" id="3" />
-                          <label for="3" class="check d-inline">
-                            <svg width="18px" height="18px" viewBox="0 0 18 18">
-                              <path d="M1,9 L1,3.5 C1,2 2,1 3.5,1 L14.5,1 C16,1 17,2 17,3.5 L17,14.5 C17,16 16,17 14.5,17 L3.5,17 C2,17 1,16 1,14.5 L1,9 Z"></path>
-                              <polyline points="1 9 7 14 15 4"></polyline>
-                            </svg>
-
-                            <p className="d-inline">
-                              3. Senaptec (Eye Hand Coordination)
-                            </p>
-                          </label>
-                        </div>
-                      </div>{" "}
-                      <div className="days-cont">
-                        <div class="checkbox-wrapper-43">
-                          <input type="checkbox" id="4" />
-                          <label for="4" class="check d-inline">
-                            <svg width="18px" height="18px" viewBox="0 0 18 18">
-                              <path d="M1,9 L1,3.5 C1,2 2,1 3.5,1 L14.5,1 C16,1 17,2 17,3.5 L17,14.5 C17,16 16,17 14.5,17 L3.5,17 C2,17 1,16 1,14.5 L1,9 Z"></path>
-                              <polyline points="1 9 7 14 15 4"></polyline>
-                            </svg>
-
-                            <p className="d-inline">
-                              1. Welcome to Ares Elite Academy
-                            </p>
-                          </label>
-                        </div>
-                      </div>{" "}
-                      <div className="days-cont">
-                        <div class="checkbox-wrapper-43">
-                          <input type="checkbox" id="5" />
-                          <label for="5" class="check d-inline">
-                            <svg width="18px" height="18px" viewBox="0 0 18 18">
-                              <path d="M1,9 L1,3.5 C1,2 2,1 3.5,1 L14.5,1 C16,1 17,2 17,3.5 L17,14.5 C17,16 16,17 14.5,17 L3.5,17 C2,17 1,16 1,14.5 L1,9 Z"></path>
-                              <polyline points="1 9 7 14 15 4"></polyline>
-                            </svg>
-
-                            <p className="d-inline">
-                              4. Senaptec Eye Hand Coordination Recordings (3x)
-                            </p>
-                          </label>
-                        </div>
-                      </div>{" "}
-                    </Accordion.Body>
-                  </Accordion.Item>{" "}
-                  <Accordion.Item eventKey="3">
-                    <Accordion.Header>
-                      {" "}
-                      <h6 className="w-25">Day 4</h6>
-                      <div className="d-flex acc-head-cont">
-                        <div>
-                          <img src="/images/icon/playcircle.svg" />
-                          <p> 4 Drills</p>
-                        </div>
-                        <div>
-                          <img src="/images/icon/clock.svg" />
-                          <p> 51m</p>
-                        </div>
-                        <div>
-                          <img src="/images/icon/checks.svg" />
-                          <p> 25% finish (1/4)</p>
-                        </div>
-                      </div>
-                    </Accordion.Header>
-                    <Accordion.Body>
-                      <div className="days-cont">
-                        <div class="checkbox-wrapper-43">
-                          <input type="checkbox" id="1" />
-                          <label for="1" class="check d-inline">
-                            <svg width="18px" height="18px" viewBox="0 0 18 18">
-                              <path d="M1,9 L1,3.5 C1,2 2,1 3.5,1 L14.5,1 C16,1 17,2 17,3.5 L17,14.5 C17,16 16,17 14.5,17 L3.5,17 C2,17 1,16 1,14.5 L1,9 Z"></path>
-                              <polyline points="1 9 7 14 15 4"></polyline>
-                            </svg>
-
-                            <p className="d-inline">
-                              1. Welcome to Ares Elite Academy
-                            </p>
-                          </label>
-                        </div>
-                      </div>{" "}
-                      <div className="days-cont">
-                        <div class="checkbox-wrapper-43">
-                          <input type="checkbox" id="2" />
-                          <label for="2" class="check d-inline">
-                            <svg width="18px" height="18px" viewBox="0 0 18 18">
-                              <path d="M1,9 L1,3.5 C1,2 2,1 3.5,1 L14.5,1 C16,1 17,2 17,3.5 L17,14.5 C17,16 16,17 14.5,17 L3.5,17 C2,17 1,16 1,14.5 L1,9 Z"></path>
-                              <polyline points="1 9 7 14 15 4"></polyline>
-                            </svg>
-
-                            <p className="d-inline">
-                              2. NeuroTrainer (Calibration)
-                            </p>
-                          </label>
-                        </div>
-                      </div>{" "}
-                      <div className="days-cont">
-                        <div class="checkbox-wrapper-43">
-                          <input type="checkbox" id="3" />
-                          <label for="3" class="check d-inline">
-                            <svg width="18px" height="18px" viewBox="0 0 18 18">
-                              <path d="M1,9 L1,3.5 C1,2 2,1 3.5,1 L14.5,1 C16,1 17,2 17,3.5 L17,14.5 C17,16 16,17 14.5,17 L3.5,17 C2,17 1,16 1,14.5 L1,9 Z"></path>
-                              <polyline points="1 9 7 14 15 4"></polyline>
-                            </svg>
-
-                            <p className="d-inline">
-                              3. Senaptec (Eye Hand Coordination)
-                            </p>
-                          </label>
-                        </div>
-                      </div>{" "}
-                      <div className="days-cont">
-                        <div class="checkbox-wrapper-43">
-                          <input type="checkbox" id="4" />
-                          <label for="4" class="check d-inline">
-                            <svg width="18px" height="18px" viewBox="0 0 18 18">
-                              <path d="M1,9 L1,3.5 C1,2 2,1 3.5,1 L14.5,1 C16,1 17,2 17,3.5 L17,14.5 C17,16 16,17 14.5,17 L3.5,17 C2,17 1,16 1,14.5 L1,9 Z"></path>
-                              <polyline points="1 9 7 14 15 4"></polyline>
-                            </svg>
-
-                            <p className="d-inline">
-                              1. Welcome to Ares Elite Academy
-                            </p>
-                          </label>
-                        </div>
-                      </div>{" "}
-                      <div className="days-cont">
-                        <div class="checkbox-wrapper-43">
-                          <input type="checkbox" id="5" />
-                          <label for="5" class="check d-inline">
-                            <svg width="18px" height="18px" viewBox="0 0 18 18">
-                              <path d="M1,9 L1,3.5 C1,2 2,1 3.5,1 L14.5,1 C16,1 17,2 17,3.5 L17,14.5 C17,16 16,17 14.5,17 L3.5,17 C2,17 1,16 1,14.5 L1,9 Z"></path>
-                              <polyline points="1 9 7 14 15 4"></polyline>
-                            </svg>
-
-                            <p className="d-inline">
-                              4. Senaptec Eye Hand Coordination Recordings (3x)
-                            </p>
-                          </label>
-                        </div>
-                      </div>{" "}
-                    </Accordion.Body>
-                  </Accordion.Item>
-                </Accordion>
+                {isFetching ? (
+                  <div className="text-center">
+                    <p>Loading...</p>
+                    <p>
+                      <Spinner />
+                    </p>
+                  </div>
+                ) : drill_week_details &&
+                  drill_week_details.drills.length > 0 ? (
+                  <Accordion defaultActiveKey={["0"]} alwaysOpen>
+                    {drill_week_details.drills.map((day, index) => (
+                      <Accordion.Item key={index} eventKey={index.toString()}>
+                        <Accordion.Header>
+                          <h6 className="w-25">Day {day.day}</h6>
+                          <div className="d-flex acc-head-cont">
+                            <div>
+                              <img src="/images/icon/playcircle.svg" />
+                              <p> {day.activities.length} Drills</p>
+                            </div>
+                          </div>
+                        </Accordion.Header>
+                        <Accordion.Body>
+                          {day.activities.map((activity, activityIndex) => (
+                            <div className="days-cont" key={activity._id}>
+                              <div className="checkbox-wrapper-43">
+                                <input
+                                  type="checkbox"
+                                  id={activity._id}
+                                  checked={activity.isComplete}
+                                  onChange={() => handleChange(activity._id)}
+                                />
+                                <label
+                                  htmlFor={activity._id}
+                                  className="check d-inline"
+                                  onClick={() =>
+                                    handleLabelClick(
+                                      activity,
+                                      activityIndex,
+                                      day.activities.length
+                                    )
+                                  }
+                                >
+                                  <svg
+                                    width="18px"
+                                    height="18px"
+                                    viewBox="0 0 18 18"
+                                  >
+                                    <path d="M1,9 L1,3.5 C1,2 2,1 3.5,1 L14.5,1 C16,1 17,2 17,3.5 L17,14.5 C17,16 16,17 14.5,17 L3.5,17 C2,17 1,16 1,14.5 L1,9 Z"></path>
+                                    <polyline points="1 9 7 14 15 4"></polyline>
+                                  </svg>
+                                  <p className="d-inline">
+                                    {activity.activityName}
+                                  </p>
+                                </label>
+                              </div>
+                            </div>
+                          ))}
+                        </Accordion.Body>
+                      </Accordion.Item>
+                    ))}
+                  </Accordion>
+                ) : (
+                  <p>No data available</p>
+                )}
               </section>
             </Col>
           </Row>
@@ -514,7 +243,16 @@ const Drill = () => {
             padding: "20px",
           }}
         >
-          <DrillForm />
+          {selectedActivity && (
+            <DrillForm
+              activity={
+                selectedActivity ||
+                drill_week_details?.drills?.[0]?.activities?.[0]
+              }
+              index={selectedIndex + 1 || 1}
+              total={totalActivities || 6}
+            />
+          )}
         </div>
       </div>
     </DoctorMenu>

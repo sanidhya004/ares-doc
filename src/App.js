@@ -13,8 +13,7 @@ import DoctorInOffice from "./pages/DoctorInOffice";
 import DoctorPlansPackages from "./pages/DoctorPlansPackages";
 import DoctorProfile from "./pages/DoctorProfile";
 import DoctorServiceSelection from "./pages/DoctorServiceSelection";
-// import Step1 from "./pages/Forms/Client Information/Step1";
-// import "react-datetime/css/react-datetime.css";
+
 import EditProfile from "./components/layout/EditProfile";
 import DoctorExpandAppointments from "./pages/DoctorExpandAppointments";
 import Client_Form from "./pages/Forms/Client_Form";
@@ -43,7 +42,7 @@ function App() {
           <Route path="/" element={<SignIn />} />
 
           <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/drill" element={<Drill />} />
+
           <Route path="/update-password" element={<UpdatePassword />} />
           <Route path="*" element={<PageNotFound />} />
 
@@ -56,6 +55,10 @@ function App() {
             <Route path="dashboard/client_form" element={<Client_Form />} />
             <Route path="dashboard/profile" element={<DoctorProfile />} />
             <Route path="dashboard/edit-profile" element={<EditProfile />} />
+            <Route
+              path="dashboard/drill/:clientId/:appointmentId"
+              element={<Drill />}
+            />
             <Route
               path="dashboard/doctor-service-selection"
               element={<DoctorServiceSelection />}

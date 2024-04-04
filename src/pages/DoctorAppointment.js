@@ -355,10 +355,10 @@ const SucessContent = () => {
         height={200}
       />
       <div className="d-flex check-your-box-texts">
-        <h5>Account created successfully!!</h5>
+        <h5>Payment request sent!!</h5>
         <p>
-          Account has been created and the credentials has
-          <br /> been sent to the Client on his registered email.
+          Payment request bas been sent successfully to the client,
+          <br /> Please ask client to complete the payment process.
         </p>
       </div>
       <Button

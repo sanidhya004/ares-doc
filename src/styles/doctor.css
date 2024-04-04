@@ -1,7 +1,8 @@
 .doctor-menu {
   background-color: #1c0d44;
   background-color: #7257ff;
-
+  z-index: 2;
+  position: relative;
   /* padding-right: 20px; */
   box-sizing: content-box;
 }
@@ -346,6 +347,12 @@ a:hover {
 body {
   scrollbar-width: none;
 }
+.Drill > div {
+  overflow-y: scroll !important;
+}
+.name-drill {
+  text-transform: capitalize !important;
+}
 @media only screen and (max-width: 991px) {
   .verified-ipad {
     width: 90% !important;
@@ -644,6 +651,23 @@ body {
   border-radius: 50%;
 }
 @media only screen and (max-width: 600px) {
+  .Drill > div {
+    width: 95vw !important;
+    margin: 20px 0px;
+    height: fit-content !important;
+    overflow-x: hidden;
+  }
+  .Drill {
+    display: flex;
+    flex-direction: row !important;
+  }
+  .StartPrescription,
+  .action-view-eval {
+    height: fit-content !important;
+  }
+  .collapse-btn {
+    top: 30px !important;
+  }
   #img-1-home {
     position: absolute;
     top: 30px !important;
@@ -818,8 +842,12 @@ body {
     display: none;
   }
   .sign-in-container {
-    margin: 30px;
     text-align: center;
+    width: 95vw !important;
+    padding: 20px !important;
+  }
+  .sign-in-container form {
+    width: 100% !important;
   }
   .illustration {
     width: auto !important;
@@ -834,6 +862,31 @@ fieldset:disabled .btn {
   background-color: grey;
   border-color: grey;
   opacity: var(--bs-btn-disabled-opacity);
+}
+
+.phase-container .radio-label {
+  margin: auto;
+  font-family: "Mukta", sans-serif !important;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  margin-bottom: 10px;
+  color: #646465;
+  border-radius: 10px;
+  font-size: 15px;
+  border: 1px solid #e3e3e3;
+  width: 400px;
+  height: 120px;
+  justify-content: center;
+  margin-bottom: 20px !important;
+}
+
+.phase-container .radio-label.selected {
+  border-radius: 10px;
+  background: rgba(107, 78, 255, 0.1);
+  width: 400px;
+  height: 120px;
+  border: 1px solid #7257ff;
 }
 
 .doctor-service-container .radio-label {
@@ -1166,6 +1219,11 @@ input[type="color"]:focus,
   position: absolute;
   top: 5vh;
   left: 19vw;
+}
+#back_bt_plan {
+  position: absolute;
+  top: 25px !important;
+  left: 2vw !important;
 }
 .bt-4 {
   width: 160px;

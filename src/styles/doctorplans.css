@@ -1,3 +1,7 @@
+.phase-container + .selected {
+  background-color: #eae6ff !important;
+}
+
 .icon-cont-2 {
   width: var(--24, 24px);
   height: var(--24, 24px);
@@ -48,7 +52,8 @@
   text-align: center;
   /* Text xl/Semibold */
   font-family: Inter;
-  font-size: 20px;
+  font-size: 30px;
+  text-transform: capitalize;
   font-style: normal;
   font-weight: 600;
   line-height: 30px;
@@ -65,8 +70,9 @@
   display: flex;
   padding: 20px 20px 20px 20px;
   flex-direction: column;
-  align-items: flex-start;
-  gap: var(--24, 24px);
+  justify-content: space-between;
+  /* align-items: flex-start; */
+  /* gap: var(--24, 24px); */
   align-self: stretch;
   border-radius: 16px;
   border: 1px solid var(--Gray-200, #eaecf0);
@@ -123,5 +129,73 @@
   }
   .plan-container {
     margin-top: 100px;
+  }
+}
+.plans-phases-modal .modal-dialog {
+  width: 80%;
+  margin: auto;
+  margin-top: 50px;
+}
+.plans-phases-modal .modal-header {
+  display: none;
+}
+.plans-phases-modal .modal-body {
+  padding: 0px;
+}
+.plans-phases-modal .modal-body h3 {
+  padding: 30px 100px 30px 100px;
+  background-color: #7056ef;
+  color: white;
+}
+.plans-phases-modal .phase-container div {
+  /* background-color: #f4f4f4; */
+  border-radius: 20px;
+  text-align: start;
+  padding: 10px 20px;
+}
+.plans-par-cont {
+  margin-top: 30px;
+}
+.price-phase {
+  color: #7056ef !important;
+  font-size: 17px !important;
+}
+.StartPrescription p {
+  margin-bottom: 0px !important;
+}
+@media (max-width: 768px) {
+  .StartPrescription,
+  .action-view-eval {
+    height: fit-content !important;
+  }
+
+  .plan-container {
+    width: 80%;
+    margin: auto;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .plans-par-cont {
+    overflow-y: scroll !important;
+  }
+  .plan-single-cont {
+    width: 100%;
+  }
+  .plan-single-cont > div {
+    margin: 0px !important;
+    padding: 0px !important;
+  }
+  .plan-single-cont > div h2 {
+    font-size: 20px !important;
+    margin: 0px 0px 20px 0px !important;
+    padding: 0px !important;
+  }
+  .table td,
+  .table th {
+    min-width: 80px !important;
+  }
+  .purple-button {
+    font-size: 12px;
+    width: 150px !important;
   }
 }

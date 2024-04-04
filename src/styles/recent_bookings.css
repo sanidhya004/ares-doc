@@ -106,7 +106,6 @@ thead th {
 .StartEvaluation,
 .action-select-plan,
 .StartPrescription,
-.action-view-eval,
 .daignosis {
   border-radius: 20px;
   width: 120px;
@@ -153,7 +152,7 @@ tbody {
   text-align: center;
 }
 .StartPrescription {
-  height: 38px !important;
+  height: 38px;
   width: fit-content !important;
 }
 .complete {
@@ -166,7 +165,7 @@ tbody {
 .StartEvaluation,
 .StartPrescription {
   border-radius: 10px;
-  height: fit-content;
+
   padding: 6px 10px;
   background-color: #7257ff;
 
@@ -306,9 +305,19 @@ tbody {
   min-height: 30px;
 }
 @media only screen and (max-width: 600px) {
+  .form-form {
+    padding: 20px !important;
+  }
+  .recent-booking-head {
+    height: fit-content !important;
+  }
   .table td,
   .table th {
-    min-width: 20px !important;
+    min-width: 120px !important;
+  }
+  .table td,
+  .table th {
+    min-width: 120px !important;
   }
   .plan-single-cont > div {
     margin: 0px !important;
@@ -329,6 +338,7 @@ tbody {
   }
   .buttons-cont {
     height: 60px !important;
+    overflow-x: scroll !important;
   }
   .table-div {
     overflow-x: scroll;
@@ -381,10 +391,29 @@ tbody {
     margin-top: 10px !important;
   }
 
-  .recent-booking-head h2 {
+  .recent-booking-head h2,
+  .recent-booking-head h3 {
     font-size: 20px;
     font-weight: 900;
   }
+  .form-container .table td {
+    max-width: 120px !important;
+    word-break: break-all;
+  }
+
+  .form-container {
+    padding: 0px !important;
+    margin: 20px auto 0px auto !important;
+  }
+  .form-cont {
+    padding-right: 10px !important;
+    padding-left: 0px !important;
+  }
+  .recent-booking-head h3 {
+    margin-left: 20px;
+    font-size: 27px;
+  }
+
   .recent-booking-person-image {
     display: none;
   }

@@ -131,6 +131,10 @@ const CompletedRequests = () => {
 
     return items;
   };
+  // const data = {
+  //   firstName: booking?.client?.firstName,
+  //   lastName: booking?.client?.lastName,
+  // };
   return (
     <>
       <div
@@ -213,7 +217,7 @@ const CompletedRequests = () => {
             {!isFetching ? (
               <>
                 <tbody className="recent-bookings-cont">
-                  {completed && completed.length > 0 ? (
+                  {completed && completed.length >= 0 ? (
                     <>
                       {completed &&
                         completed.map((booking, index) => (
@@ -246,8 +250,10 @@ const CompletedRequests = () => {
                               {formatDate(booking?.app_date)}
                             </td>
                             <td className="time">{booking?.app_time}</td>
-                            <td className="status">
-                              <div className={`${booking?.status} m-auto `}>
+                            <td className={`status`}>
+                              <div
+                                className={`${booking?.client?.plan_payment} m-auto `}
+                              >
                                 <p>
                                   {!booking?.client?.plan ? (
                                     <>N.A</>
@@ -272,7 +278,19 @@ const CompletedRequests = () => {
                                         </>
                                       ) : (
                                         <>
-                                          <Link to="/drill"> Start Drill </Link>
+                                          <Link
+                                            to={`/doctor/dashboard/drill/${booking?.client?._id}/${booking._id}`}
+                                            state={{
+                                              data: {
+                                                firstName:
+                                                  booking?.client?.firstName,
+                                                lastName:
+                                                  booking?.client?.lastName,
+                                              },
+                                            }}
+                                          >
+                                            Start Drill
+                                          </Link>
                                         </>
                                       )}
                                     </button>
@@ -283,9 +301,8 @@ const CompletedRequests = () => {
                                     {" "}
                                     <button className="action-view-eval">
                                       <Link
-                                        to={`/doctor/dashboard/view-eval-form/${booking?._id}`}
+                                        to={`/doctor/dashboard/view-eval-form/${booking?.evaluationId}`}
                                       >
-                                        {" "}
                                         View Evaluation
                                       </Link>
                                     </button>
