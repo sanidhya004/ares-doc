@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { VerifyAthelete } from "../../features/apiCall";
 import "../../styles/modal.css";
+import {toast} from "react-toastify"
 
 const DoctorSelectUser = () => {
   const { isFetching } = useSelector((state) => state.auth);
@@ -138,6 +139,9 @@ const SucessContent = ({
       setVerificationStarted(true);
       await handleVerification(email);
     }
+    else{
+       toast.error("Please enter an email")
+    }
   };
   const handleGoBack = () => {
     setSuccess(false);
@@ -203,7 +207,7 @@ const SucessContent = ({
           {/* </div> */}
         </Form>
         <button
-          onClick={handleCancel}
+          onClick={handleGoBack}
           className="purple-button-2 p-0"
           style={{ width: "400px", height: "58px", marginTop: "15px" }}
         >

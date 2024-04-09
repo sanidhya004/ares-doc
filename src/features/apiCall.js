@@ -201,12 +201,12 @@ export const GetTodayAppointmentDetails = async (dispatch, todayDate) => {
     return false; // Return false to indicate that the request failed
   }
 };
-export const GetAllAppointmentDetails = async (dispatch) => {
+export const GetAllAppointmentDetails = async (dispatch,params) => {
   const token = localStorage.getItem("userToken");
   dispatch(FetchStart());
   try {
     const { data } = await axios.get(`/api/doctor/get-all-appointments`, {
-      // params: { date: todayDate },
+      params: params,
       headers: { Authorization: `Bearer ${token}` },
     });
     dispatch(

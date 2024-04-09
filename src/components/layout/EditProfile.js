@@ -7,6 +7,7 @@ import {
   GetProfileDetails,
   UpdateProfileDetails,
 } from "../../features/apiCall";
+import Loader from "./Components/Loader";
 import DoctorMenu from "./DoctorMenu";
 
 const EditProfile = () => {
@@ -104,7 +105,7 @@ const EditProfile = () => {
           >
             Edit Profile
           </h4>
-
+          {isFetching ?<><Loader/></>:
           <Container className="w-75 mt-2 ">
             <Form onSubmit={handleSubmit}>
               <Row>
@@ -271,6 +272,7 @@ const EditProfile = () => {
               </section>
             </Form>
           </Container>
+         }
         </section>
       </div>
     </DoctorMenu>

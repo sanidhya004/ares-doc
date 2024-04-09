@@ -350,3 +350,16 @@ body {
 .slots-fetch {
   position: absolute !important;
 }
+
+.square {
+	width: 200px;
+	height: 200px;
+	background: grey;
+	transform: rotateY(45deg);
+	animation: rotateAnimation 1s linear infinite;
+}
+
+@keyframes rotateAnimation {
+	from {transform: rotateY(45deg);}
+	to {transform: rotateY(225deg);}
+}

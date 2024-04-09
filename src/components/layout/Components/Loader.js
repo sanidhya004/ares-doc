@@ -15,6 +15,7 @@ const Loader = ({ className, title }) => {
         <div className="book__pg book__pg--4" />
         <div className="book__pg book__pg--5" />
       </div>
+      
       <h4 className="text-secondary text-center">
         {title ? (
           <>{title}</>

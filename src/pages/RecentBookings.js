@@ -17,6 +17,7 @@ const RecentBookings = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const isDesktop = window.matchMedia("(min-width: 768px)").matches;
   const isLargeDesktop = window.matchMedia("(min-width: 1900px)").matches;
+  console.log(bookings)
 
   let pageSize;
   if (isLargeDesktop) {
@@ -30,6 +31,7 @@ const RecentBookings = () => {
   const dispatch = useDispatch();
   console.log(bookings);
   const fetchData = async () => {
+  
     try {
       const params = {
         currentPage,

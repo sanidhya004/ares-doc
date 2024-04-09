@@ -2,7 +2,9 @@ import React, { useEffect, useState } from "react";
 import { Button, Form, Spinner } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { getAlls } from "../../features/apiCall";
+import { getAlls,GetServiceTypes } from "../../features/apiCall";
+import { Suspense } from "react";
+import Loader from "./Components/Loader";
 
 const ServiceOption = ({ service, label, description, price, time }) => {
   const { selectedService, handleServiceChange } = service;
@@ -31,10 +33,22 @@ const ServiceOption = ({ service, label, description, price, time }) => {
   );
 };
 
+
 const DoctorServices = () => {
+  
   const [selectedService, setSelectedService] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [serviceTypeArray, setserviceTypeArray] = useState([])
+  const handleServicetype=async()=>{
+     const {serviceType}= await GetServiceTypes(dispatch)
+     setserviceTypeArray(serviceType)
+     console.log(serviceType)
+
+  }
+  useEffect(()=>{
+   handleServicetype()
+   },[])
   const services = [
     {
       label: "SportsVision",
@@ -71,6 +85,7 @@ const DoctorServices = () => {
   // Function to handle service change
   const handleServiceChange = (service) => {
     setSelectedService(service);
+  
   };
 
   const { isFetching } = useSelector((state) => state.auth);
@@ -87,11 +102,12 @@ const DoctorServices = () => {
       alert("Please select a service.");
       return;
     }
-    const selectedServiceObject = services.find(
-      (service) => service.label === selectedService
+    const selectedServiceObject = serviceTypeArray.find(
+      (service) => service.alias === selectedService
     );
-
-    localStorage.setItem("selectedServiceTime", selectedServiceObject.time);
+    console.log("-->",selectedServiceObject)
+      localStorage.setItem("selectedServiceTime", selectedServiceObject.duration);
+  
 
     localStorage.setItem("selectedService", selectedService);
     switch (selectedService) {
@@ -102,7 +118,7 @@ const DoctorServices = () => {
         navigate("/doctor/dashboard/appointment");
         break;
 
-      case "TrainingSessions":
+      case "AddTrainingSessions":
         // Logic for TrainingSessions service
         // You can navigate or perform other actions specific to this service
         navigate("/doctor/dashboard/doctor-service-selection/training");
@@ -138,6 +154,11 @@ const DoctorServices = () => {
 
       default:
         // Handle any other cases or provide a default action
+        fetchAvailable();
+
+        // Logic for Consultation service
+        navigate("/doctor/dashboard/appointment");
+
         break;
     }
   };
@@ -174,16 +195,22 @@ const DoctorServices = () => {
           </p>
         </div>
         <Form className="d-flex flex-wrap justify-content-center">
-          {services.map((service, index) => (
+          {isFetching?<><Loader/></>:
+          <>
+          {serviceTypeArray.map((service, index) => (
+            
             <ServiceOption
               key={index}
               service={{ selectedService, handleServiceChange }}
-              label={service.label}
-              description={service.description}
-              price={service.price}
-              time={service.time}
+              label={service.alias}
+              description={service.name}
+              price={service.cost}
+              time={service.duration}
             />
+            
           ))}
+          </>
+         }
         </Form>
         {isFetching ? (
           <button className="purple-button c-b">

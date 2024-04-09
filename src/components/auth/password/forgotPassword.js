@@ -6,15 +6,26 @@ import { ToastContainer } from "react-toastify";
 import { SendOtp, VerifyOtp } from "../../../features/apiCall";
 import BootstrapModal from "../../layout/Components/BootstrapModal";
 import AuthLayout from "../AuthLayout";
+import {toast} from "react-toastify"
 
 const ForgotPassword = () => {
   const navigate = useNavigate();
 
   const [showModal, setShowModal] = useState(false);
   const [email, setEmail] = useState("");
+    
   const dispatch = useDispatch();
   const { isFetching } = useSelector((state) => state.auth);
   const handleSendOtp = async () => {
+     // Regular expression pattern for validating email addresses
+  const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  
+  // Test the email against the pattern and return true if it matches, false otherwise
+  const flag= pattern.test(email);
+    if(!flag){
+       toast.error("Please valid email")
+       return;
+    }
     if (await SendOtp(dispatch, { email })) {
       setShowModal(true);
     }
@@ -44,7 +55,7 @@ const ForgotPassword = () => {
               placeholder="Enter Email Id"
               onChange={(e) => setEmail(e.target.value)}
               value={email}
-              className="mb-3 mt-2"
+              className="mb-3 mt-0"
             />
           </Form.Group>
           {isFetching ? (
@@ -81,7 +92,27 @@ const ModalContent = ({ email }) => {
   const lastFocusedInput = useRef(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [countdown, setCountdown] = useState(10);
+  const [resendDisabled, setResendDisabled] = useState(true);
+  const[resendflag,setResendFlag]=useState(false)
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCountdown((prevCountdown) => {
+        if (prevCountdown === 0) {
+          clearInterval(interval);
+          setResendDisabled(false);
+          return 10;
+        }
+       
+          return prevCountdown - 1;
+        
+       
+      });
+    }, 1000);
 
+    return () => clearInterval(interval);
+  }, [resendflag]);
+ 
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (
@@ -99,6 +130,7 @@ const ModalContent = ({ email }) => {
       }
     };
 
+
     document.addEventListener("keydown", handleKeyDown);
 
     return () => {
@@ -107,8 +139,14 @@ const ModalContent = ({ email }) => {
   }, [otp]);
 
   const handleOtpChange = (index, value) => {
+
+     const array=["1","2","3","4","5","6","7","8","9","0"]
+     if(!array.includes(value)){
+       return;
+     }
     const newOtp = [...otp];
     newOtp[index] = value;
+    
     setOtp(newOtp);
 
     if (value && index < 5) {
@@ -120,7 +158,12 @@ const ModalContent = ({ email }) => {
   };
 
   const sendOtpRequest = async (otpValue) => {
-    if (email) {
+     // Regular expression pattern for validating email addresses
+  const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  
+  // Test the email against the pattern and return true if it matches, false otherwise
+  const flag= pattern.test(email);
+    if (flag) {
       try {
         if (await VerifyOtp(dispatch, { email: email, code: otpValue })) {
           navigate("/update-password", { state: email });
@@ -129,10 +172,27 @@ const ModalContent = ({ email }) => {
         console.error("Error during OTP verification:", error);
       }
     }
+    else{
+       toast.error("Please enter email")
+    }
   };
 
   const handleSendOtp = async () => {
+    setResendDisabled(true);
+    setCountdown(10);
+    setResendFlag(!resendflag)
+
+    const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  
+  // Test the email against the pattern and return true if it matches, false otherwise
+  const flag= pattern.test(email);
+  if(flag){
     await SendOtp(dispatch, { email });
+  }
+  else{
+     toast.error("Please enter valid email")
+  }
+    
   };
 
   return (
@@ -175,13 +235,22 @@ const ModalContent = ({ email }) => {
         ))}
       </div>
       <div className="text-center">
-        <Link
+      <p>Time remaining: {countdown}s</p>
+      {resendDisabled?<> <Link
+          className="gray-text"
+          style={{ fontSize: "13px" }}
+         
+         >
+          Resend
+        </Link></>:<>  <Link
           className="purple-text"
           style={{ fontSize: "13px" }}
           onClick={() => handleSendOtp()}
-        >
+          
+         >
           Resend
-        </Link>
+        </Link></>}
+       
       </div>
       <button
         type="submit"

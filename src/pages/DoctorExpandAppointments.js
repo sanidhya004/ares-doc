@@ -42,12 +42,13 @@ const DoctorExpandAppointments = () => {
   console.log(Allappointments);
   // const todayDate = moment().format("YYYY-MM-DD");
   const fetchData = async () => {
+
     try {
-      const params = {};
+      const params = {searchQuery};
       if (searchQuery) {
         params.searchQuery = searchQuery;
       }
-      await GetAllAppointmentDetails(dispatch, { searchQuery });
+      await GetAllAppointmentDetails(dispatch, params);
 
       // setAppointments(data); // Assuming your API response is an array of appointments
     } catch (error) {
@@ -57,7 +58,7 @@ const DoctorExpandAppointments = () => {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [searchQuery]);
   const handleDateChange = (date) => {
     setSelectedDate(date);
     // alert(date);
@@ -155,6 +156,7 @@ const DoctorExpandAppointments = () => {
                   aria-label="Search"
                   aria-describedby="searchIcon"
                   style={{ height: "40px" }}
+                  onChange={(e)=>{setSearchQuery(e.target.value)}}
                 />
               </div>
 

@@ -106,13 +106,14 @@ const SignIn = () => {
               </NavLink>
             </InputGroup>
           </Form.Group>
-
+          <div style={{display:"flex",justifyContent:"flex-end"}} >
           <NavLink
-            className="d-block w-100 text-right mb-2 text-decoration-none purple-text"
+            className="d-block  mb-2 text-decoration-none purple-text"
             to="/forgot-password"
           >
             Forgot Password ?
           </NavLink>
+          </div>
           {/* <FormCheck
           type="checkbox"
           id="default-checkbox"
