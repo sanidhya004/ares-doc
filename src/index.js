@@ -8,15 +8,15 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import App from "./App";
 import store from "./features/store";
-
+import { HashRouter } from "react-router-dom";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-  <BrowserRouter >
+  <HashRouter>
     <Provider store={store}>
       <App />
       <ToastContainer position="top-center" />
     </Provider>
-  </BrowserRouter>
+    </HashRouter>
   </React.StrictMode>
 );
