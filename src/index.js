@@ -12,7 +12,7 @@ import { HashRouter } from "react-router-dom";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-  <HashRouter>
+  <HashRouter basename="/">
     <Provider store={store}>
       <App />
       <ToastContainer position="top-center" />
