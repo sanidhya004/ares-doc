@@ -36,6 +36,7 @@ const DrillForm = ({ activity, index, total }) => {
         activityId: activity._id,
         formData,
       });
+       window.location.reload()
     } catch (error) {
       toast.error("Unexpected Error !");
     }

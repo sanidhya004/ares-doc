@@ -20,7 +20,7 @@ const ServiceOption = ({ service, label, description, price, time }) => {
             <i class="fa-solid fa-clock" /> {time} mins Meeting
           </span>
         </div>
-        <h4>{price}</h4>
+        <h4>{price}$</h4>
       </div>
       <input
         type="radio"
@@ -186,7 +186,7 @@ const DoctorServices = () => {
 
       <section
         className="text-center d-flex flex-column justify-content-center align-items-center doctor-service-container"
-        // style={{ gap: "3vh" }}
+        style={{ maxHeight:"fit-content" ,padding:"10px" }}
       >
         <div className="text-left mb-3" style={{ width: "400px" }}>
           <h4 className="mb-0">Select type of Service</h4>

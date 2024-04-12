@@ -155,7 +155,8 @@ const DoctorAppointment = () => {
               <div className="form-group">
                 <label htmlFor="date">Appointment Date:</label>
                 <Datetime
-                  isValidDate={isValidDate}
+                  // isValidDate={isValidDate}
+                  minDate={new Date()}
                   timeFormat={false}
                   onChange={(date) => {
                     setSelectedDate(date);
@@ -163,6 +164,7 @@ const DoctorAppointment = () => {
                     setDoctors([]);
                     setDoctor("");
                     setSelectedTimeSlot("");
+                    
                   }}
                   inputProps={{ placeholder: "Select Appointment Date " }}
                 />

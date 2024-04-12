@@ -48,6 +48,7 @@ const ViewPrescriptionForm = () => {
 
   return (
     <DoctorMenu>
+      
       <div className="p-3 main-wrapper mt-2 booking-presc">
         <div className="frame" style={{ overflowY: "scroll" }}>
           <div className="recent-booking-head">

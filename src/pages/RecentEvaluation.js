@@ -11,7 +11,7 @@ const RecentEvaluation = () => {
       >
         <div className="recent-eval scroll">
           <div className="p-3" style={{ backgroundColor: "white" }}>
-            <button className="bt-2 bt-3">Recent Evaluation</button>
+            <button className="bt-2 bt-3">Recent Evaluatidon</button>
             <button className="bt-2"> Evaluation Requests</button>
           </div>
           <section className="d-flex flex-row justify-content-between align-items-center p-4">

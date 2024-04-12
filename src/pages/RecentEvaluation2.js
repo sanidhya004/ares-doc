@@ -30,7 +30,7 @@ const RecentEvaluation2 = () => {
                 style={{ width: "100%", paddingLeft: "15px" }}
               >
                 <div
-                  style={{ paddingRight: "10px" }}
+                  style={{ paddingRight: "10px",cursor:"pointer" }}
                   className={`bt-2  ${
                     activeTab === "Completed" ? "active bt-3" : ""
                   }`}
@@ -39,7 +39,7 @@ const RecentEvaluation2 = () => {
                   Completed Requests
                 </div>
                 <div
-                  style={{ paddingLeft: "10px" }}
+                  style={{ paddingLeft: "10px",cursor:"pointer" }}
                   className={`bt-2 ${
                     activeTab === "InQueue" ? "active bt-3" : ""
                   }`}

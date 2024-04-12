@@ -56,7 +56,7 @@ const AppointmentTableComponent = ({
               {booking?.client?.phone}
             </td>
             <td style={{ width: "150px", overflowWrap: "break-word" }}>
-              {Service_ENUM_values[booking?.service_type]}
+              {booking?.service_type}
             </td>
             <td style={{ width: "100px", overflowWrap: "break-word" }}>
               {booking?.app_time}

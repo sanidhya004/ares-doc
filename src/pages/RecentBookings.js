@@ -4,6 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 import Loader from "../components/layout/Components/Loader";
 import DoctorMenu from "../components/layout/DoctorMenu";
 import { GetRecentBookings } from "../features/apiCall";
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 const RecentBookings = () => {
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -133,6 +135,13 @@ const RecentBookings = () => {
     return `${startRange}-${endRange}`;
   };
 
+  const [startDate, setStartDate] = useState(null);
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleDatePicker = () => {
+    setIsOpen(!isOpen);
+  };
+
   const renderPaginationItems = () => {
     const items = [];
     const range = 1;
@@ -221,9 +230,31 @@ const RecentBookings = () => {
                   marginBottom: "18px",
                 }}
               >
-                <div className="calender-icon">
+                {/* <div className="calender-icon">
                   <i className="fa-regular fa-calendar m-auto" />
-                </div>
+
+                </div> */}
+                 <div className="input-group">
+      <div className="input-group-prepend">
+        <button className="calender-icon" type="button" onClick={toggleDatePicker}>
+        <i className="fa-regular fa-calendar m-auto" />
+        </button>
+      </div>
+      
+      {isOpen && (
+        <div className="date-picker-container" style={{position:"absolute",top:"40px",left:"-60px"}}>
+          <DatePicker
+          
+            selected={selectedDate}
+            onChange={(date) => {
+              setSelectedDate(date);
+              setIsOpen(false); // Close the date picker after selecting a date
+            }}
+            inline // Display the calendar inline
+          />
+        </div>
+      )}
+    </div>
                 <Dropdown>
                   <Dropdown.Toggle id="dropdown-pages">
                     {`${(currentPage - 1) * pageSize + 1}-${Math.min(
@@ -368,7 +399,7 @@ const RecentBookings = () => {
                                 </div>
                               </td>
                               <td className="service_type">
-                                {Service_ENUM_values[booking?.service_type]}
+                                {booking?.service_type}
                               </td>
                               <td className="date">
                                 {formatDate(booking?.app_date)}
