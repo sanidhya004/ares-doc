@@ -6,6 +6,7 @@ import DoctorMenu from "../components/layout/DoctorMenu";
 import { GetRecentBookings } from "../features/apiCall";
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import Fourzerfour from "../components/Fourzerfour";
 const RecentBookings = () => {
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -291,7 +292,7 @@ const RecentBookings = () => {
                       <div>Name</div>
                     </th>
                     <th>
-                      <Dropdown>
+                      <Dropdown style={{zIndex:"2"}}>
                         <Dropdown.Toggle
                           variant="light"
                           id="dropdown-basic"
@@ -446,9 +447,13 @@ const RecentBookings = () => {
                         <>
                           <tr>
                             <td>
-                              <div className="text-center ">
-                                No Appointments
-                              </div>
+                            <div
+                style={{ position: "absolute", margin: "40px 50px", width: "100%" }}
+               
+              >
+
+               <Fourzerfour/>
+              </div>
                             </td>
                           </tr>
                         </>

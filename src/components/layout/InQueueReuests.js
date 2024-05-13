@@ -3,7 +3,7 @@ import { Dropdown, Pagination, Table } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-
+import Fourzerfour from "../Fourzerfour";
 // import { Group } from "./Group";
 import "react-datepicker/dist/react-datepicker.css";
 import { Link } from "react-router-dom";
@@ -362,7 +362,13 @@ const InQueueReuests = () => {
                         ))}
                     </>
                   ) : (
-                    <>No appointments</>
+                    <div
+                    style={{ position: "absolute", margin: "40px 50px", width: "70%" }}
+                   
+                  >
+
+                     <Fourzerfour/>
+                  </div>
                   )}
                 </tbody>
               </>

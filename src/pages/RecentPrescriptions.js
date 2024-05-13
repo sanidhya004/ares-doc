@@ -8,6 +8,7 @@ import DoctorMenu from "../components/layout/DoctorMenu";
 import { GetRecentPrescriptions } from "../features/apiCall";
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import Fourzerfour from "../components/Fourzerfour";
 
 const RecentPrescriptions = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -204,7 +205,7 @@ const RecentPrescriptions = () => {
       </div>
       
       {isOpen && (
-        <div className="date-picker-container" style={{position:"absolute",top:"40px",left:"-60px",zIndex:"2g"}}>
+        <div className="date-picker-container" style={{position:"absolute",top:"40px",left:"-60px",zIndex:"2"}}>
           <DatePicker
           
             selected={selectedDate}
@@ -242,7 +243,7 @@ const RecentPrescriptions = () => {
                   <tr>
                     <th style={{ paddingLeft: "20px" }}>Name</th>
                     <th>
-                      <Dropdown>
+                      <Dropdown style={{zIndex:"3"}}>
                         <Dropdown.Toggle
                           variant="light"
                           id="dropdown-basic"
@@ -372,10 +373,14 @@ const RecentPrescriptions = () => {
                         </tbody>
                       </>
                     ) : (
-                      <div className="no-details">
-                        {" "}
-                        <p className="text-center ">No Appointments</p>
-                      </div>
+                      <div
+                style={{ position: "absolute", margin: "40px 50px", width: "70%" }}
+               
+              >
+                
+                 <Fourzerfour/>
+                
+              </div>
                     )}
                   </>
                 ) : (

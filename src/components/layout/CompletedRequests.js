@@ -15,6 +15,7 @@ import BootstrapModal from "./Components/BootstrapModal";
 import Loader from "./Components/Loader";
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import Fourzerfour from "../Fourzerfour";
 
 const CompletedRequests = () => {
   const [selectedDate, setSelectedDate] = useState(null);
@@ -357,7 +358,15 @@ const CompletedRequests = () => {
                         ))}
                     </>
                   ) : (
-                    <>No appointments</>
+                    <>
+                    <div
+                    style={{ position: "absolute", margin: "40px 50px", width: "70%" }}
+                   
+                  >
+
+                     <Fourzerfour/>
+                  </div>
+                  </>
                   )}
                 </tbody>
               </>

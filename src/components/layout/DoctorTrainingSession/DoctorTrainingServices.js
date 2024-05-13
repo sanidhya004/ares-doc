@@ -51,7 +51,7 @@ const DoctorTrainingServices = () => {
           {" "}
           <section
             className="text-center d-flex flex-column justify-content-center align-items-center select-user "
-            style={{ gap: "3vh", marginTop: "15vh" }}
+            style={{ gap: "3vh" }}
           >
             <div className="text-left mb-3" style={{ width: "400px" }}>
               <h4 className="mb-0">Select type of Plan</h4>

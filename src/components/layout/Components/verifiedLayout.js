@@ -3,16 +3,28 @@ import { useNavigate } from "react-router-dom";
 
 import DoctorMenu from "../DoctorMenu";
 import DoctorTodayAppointment from "../DoctorTodayAppointment"; // Importing DoctorTodayAppointment if not already imported
-
+import { useLocation } from "react-router-dom";
 const VerifiedLayout = ({ children }) => {
   const navigate = useNavigate();
   const fname = localStorage.getItem("ath-fname");
   const lname = localStorage.getItem("ath-lname");
   const email = localStorage.getItem("ath-email");
-  console.log(fname, lname, email);
+  const location=useLocation()
+  console.log(fname, lname, email,location.pathname);
   const handleGoBack = () => {
     console.log("Going back");
-    navigate(-1);
+    if(location.pathname=="/doctor/dashboard/doctor-service-selection"){
+      localStorage.removeItem("client_id");
+      localStorage.removeItem("ath-fname");
+      localStorage.removeItem("ath-lname");
+      localStorage.removeItem("ath-email");
+      
+    navigate("/doctor/dashboard");
+    }
+     else{
+      navigate(-1);
+     }
+   
   };
 
   return (

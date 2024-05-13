@@ -2,12 +2,15 @@ import React, { useEffect, useState } from "react";
 import ReactDatePicker from "react-datepicker";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import Fourzerfour from "../components/Fourzerfour";
 import AppointmentTableComponent from "../components/layout/AppointmentTableComponent";
 import BootstrapModal from "../components/layout/Components/BootstrapModal";
 import Loader from "../components/layout/Components/Loader";
 import DoctorMenu from "../components/layout/DoctorMenu";
 import { GetAllAppointmentDetails } from "../features/apiCall";
+import DatePicker from 'react-datepicker';
 import axios from "../utils/axios";
+var selected=""
 const DoctorExpandAppointments = () => {
   const token = localStorage.getItem("userToken");
   const [showDateInput, setShowDateInput] = useState(null);
@@ -42,9 +45,8 @@ const DoctorExpandAppointments = () => {
   console.log(Allappointments);
   // const todayDate = moment().format("YYYY-MM-DD");
   const fetchData = async () => {
-
     try {
-      const params = {searchQuery};
+      const params = { searchQuery };
       if (searchQuery) {
         params.searchQuery = searchQuery;
       }
@@ -87,14 +89,20 @@ const DoctorExpandAppointments = () => {
   const handleCompleteAppointment = (bookingId, name) => {
     setName(name);
     setBookingId(bookingId);
+   selected="complete"
     setModalData("completed");
 
     setShowModal(true);
   };
+  const [isOpen, setIsOpen] = useState(false);
 
+  const toggleDatePicker = () => {
+    setIsOpen(!isOpen);
+  };
   const handleCancelAppointment = (bookingId, name) => {
     setName(name);
     setBookingId(bookingId);
+    selected="cancel"
     setModalData("cancelled");
     setShowModal(true);
   };
@@ -156,7 +164,9 @@ const DoctorExpandAppointments = () => {
                   aria-label="Search"
                   aria-describedby="searchIcon"
                   style={{ height: "40px" }}
-                  onChange={(e)=>{setSearchQuery(e.target.value)}}
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value);
+                  }}
                 />
               </div>
 
@@ -170,11 +180,37 @@ const DoctorExpandAppointments = () => {
                 }}
               >
                 <div className="date-container">
-                  <div
-                    className="calender-icon"
-                    onClick={() => setShowDateInput(!showDateInput)}
-                  >
-                    <i className="fa-regular fa-calendar m-auto" />
+                  <div className="input-group">
+                    <div className="input-group-prepend">
+                      <button
+                        className="calender-icon"
+                        type="button"
+                        onClick={toggleDatePicker}
+                      >
+                        <i className="fa-regular fa-calendar m-auto" />
+                      </button>
+                    </div>
+
+                    {isOpen && (
+                      <div
+                        className="date-picker-container"
+                        style={{
+                          position: "absolute",
+                          top: "40px",
+                          left: "-60px",
+                          zIndex: "2",
+                        }}
+                      >
+                        <DatePicker
+                          selected={selectedDate}
+                          onChange={(date) => {
+                            setSelectedDate(date);
+                            setIsOpen(false); // Close the date picker after selecting a date
+                          }}
+                          inline // Display the calendar inline
+                        />
+                      </div>
+                    )}
                   </div>
                   {showDateInput && (
                     <ReactDatePicker
@@ -240,8 +276,14 @@ const DoctorExpandAppointments = () => {
               Allappointments &&
               Allappointments.success &&
               Allappointments.appointments.length === 0 && (
-                <div className="d-flex justify-content-center mt-5 m-auto ">
-                  <h2 className="text-muted"> No Appointments available.</h2>
+                <div
+                  style={{
+                    position: "absolute",
+                    margin: "40px 50px",
+                    width: "100%",
+                  }}
+                >
+                  <Fourzerfour />
                 </div>
               )}
           </div>{" "}
@@ -275,7 +317,7 @@ const ModalContent = ({ modalData, updateAppointmentStatus, name }) => {
     <section className="text-center">
       <div className="d-flex check-your-box-texts">
         <p className="text-muted">
-          Are you sure that you want to cancel an appointment
+          {`Are you sure that you want to ${selected} an appointment`}
           <br /> with <span className="purple-text">{name}</span> ?
         </p>
         <div className="d-flex justify-content-around mt-4">

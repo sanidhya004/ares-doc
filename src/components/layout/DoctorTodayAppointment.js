@@ -188,6 +188,7 @@ import { Image, Table } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { GetTodayAppointmentDetails } from "../../features/apiCall";
+import Fourzerfour from "../Fourzerfour";
 
 const DoctorTodayAppointment = () => {
   const isFetching = useSelector((state) => state.fetch_app.isFetching);
@@ -296,7 +297,7 @@ const DoctorTodayAppointment = () => {
                   color: "grey",
                 }}
               >
-                No Appointments
+               <Fourzerfour/>
               </div>
             </>
           )}

@@ -128,9 +128,10 @@ const ModalContent = ({ email }) => {
           document.getElementById(`otp-input-${currentIndex - 1}`).focus();
         }
       }
+      
     };
 
-
+   
     document.addEventListener("keydown", handleKeyDown);
 
     return () => {
@@ -151,7 +152,7 @@ const ModalContent = ({ email }) => {
 
     if (value && index < 5) {
       document.getElementById(`otp-input-${index + 1}`).focus();
-    }
+    } 
     if (newOtp.every((code) => code !== "")) {
       sendOtpRequest(newOtp.join(""));
     }
@@ -215,16 +216,25 @@ const ModalContent = ({ email }) => {
         </h6>
       </div>
 
-      <div className="otp-input-container">
+      <form className="otp-input-container" autoComplete="new-password" >
         {otp.map((digit, index) => (
           <input
             key={index}
             id={`otp-input-${index}`}
             type="text"
+            autoComplete="new-password"
             maxLength="1"
             value={digit}
             data-index={index}
+            onClick={()=>{const currentIndex = parseInt(lastFocusedInput.current.dataset.index);
+              if (currentIndex > 0) {
+                const newOtp = [...otp];
+                newOtp[index] = "";
+                setOtp(newOtp);
+                document.getElementById(`otp-input-${index}`).focus();
+              }}}
             onChange={(e) => handleOtpChange(index, e.target.value)}
+        
             onFocus={() => {
               lastFocusedInput.current = document.getElementById(
                 `otp-input-${index}`
@@ -233,7 +243,7 @@ const ModalContent = ({ email }) => {
             className="otp-input m-3"
           />
         ))}
-      </div>
+      </form>
       <div className="text-center">
       <p>Time remaining: {countdown}s</p>
       {resendDisabled?<> <Link

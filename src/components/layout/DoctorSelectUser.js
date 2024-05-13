@@ -13,10 +13,16 @@ const DoctorSelectUser = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [success, setSuccess] = useState(false); // Track form submission success
-
+const handleExistinuserLogin=()=>{
+   const user= localStorage.getItem("client_id")
+   if(user){
+   
+    navigate("/doctor/dashboard/doctor-service-selection");
+   }
+}
   useEffect(() => {
     localStorage.removeItem("selectedService");
-    localStorage.removeItem("client_id");
+    handleExistinuserLogin()
   }, []);
 
   const handleSubmit = (e) => {
