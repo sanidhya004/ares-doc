@@ -31,7 +31,7 @@ const DoctorInOffice = ({ navigate }) => {
     <>
       {showDoctorMonthly ? (
         <>
-          <DoctorMonthlyPackagePlans type={selectedInOfficeType} />
+          <DoctorMonthlyPackagePlans freq={selectedInOfficeType} type="in_office"/>
         </>
       ) : (
         <>

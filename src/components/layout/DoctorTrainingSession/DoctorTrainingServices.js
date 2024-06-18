@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Button, Form } from "react-bootstrap";
+
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import VerifiedLayout from "../Components/verifiedLayout";
 import DoctorInOffice from "./DoctorInOffice.js";
 import DoctorMonthlyPlans from "./DoctorPlans_Monthly_Package";
-
+import { Button, Form, Spinner } from "react-bootstrap";
 const DoctorTrainingServices = () => {
   const navigate = useNavigate();
   const { isFetching } = useSelector((state) => state.auth);
@@ -42,7 +42,7 @@ const DoctorTrainingServices = () => {
           ) : (
             <>
               {" "}
-              <DoctorMonthlyPlans navigate={navigate} type="Tele" />
+              <DoctorMonthlyPlans navigate={navigate} type="tele_session" freq="Packages" />
             </>
           )}
         </>
@@ -50,8 +50,8 @@ const DoctorTrainingServices = () => {
         <>
           {" "}
           <section
-            className="text-center d-flex flex-column justify-content-center align-items-center select-user "
-            style={{ gap: "3vh" }}
+            className="text-center d-flex flex-column  align-items-center select-user "
+            style={{ gap: "3vh",postion:"relative" }}
           >
             <div className="text-left mb-3" style={{ width: "400px" }}>
               <h4 className="mb-0">Select type of Plan</h4>
@@ -59,7 +59,7 @@ const DoctorTrainingServices = () => {
             </div>
             <Form
               className="d-flex flex-wrap justify-content-center "
-              style={{ gap: "24px" }}
+              style={{ gap: "24px"}}
               onSubmit={handleSubmit}
             >
               <div className="radio-container">
@@ -95,15 +95,24 @@ const DoctorTrainingServices = () => {
                   Tele Sessions
                 </label>
               </div>
-              <Button
-                type="submit"
-                className="purple-button "
-                style={{ width: "332px", height: "62px" }}
-                disabled={!selectedTrainingType}
-              >
-                Continue
-              </Button>
+             
             </Form>
+            <div style={{position:"absolute", bottom:"30px"}}>
+        {isFetching ? (
+          <button className="purple-button c-b">
+            <Spinner animation="border" variant="light" />
+          </button>
+        ) : (
+          <Button
+            onClick={handleSubmit}
+            className="purple-button"
+            style={{ width: "332px", height: "62px" }}
+            disabled={!selectedTrainingType}
+          >
+            Continue
+          </Button>
+        )}
+        </div>
           </section>
         </>
       )}

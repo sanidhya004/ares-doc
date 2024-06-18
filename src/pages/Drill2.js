@@ -6,12 +6,12 @@ import DoctorMenu from "../components/layout/DoctorMenu";
 import DrillForm from "../components/layout/DrillForm";
 import { GetDrillDetails, SubmitDrillForm } from "../features/apiCall";
 
-const Drill = (props) => {
+const Drill2 = (props) => {
   const [drill_week_details, setDrillWeekDetails] = useState(null);
   const { clientId, appointmentId } = useParams();
   const location = useLocation();
   const { firstName, lastName } = location.state.data;
-  const [totalWeeks, setTotalWeeks] = useState("");
+  const [totalWeeks, setTotalWeeks] = useState(0);
   const [completePercentage, setCompletePercentage] = useState("");
   const isFetching = useSelector((state) => state.fetch_app.isFetching);
   const dispatch = useDispatch();
@@ -20,10 +20,16 @@ const Drill = (props) => {
   const [ActivityId, setActivityId] = useState("");
   const [selectedIndex, setIndex] = useState(null);
   const [totalActivities, setTotal] = useState(null);
+  const [temparray,settemparray]=useState([])
 
   const handleWeekSelect = (weekNumber) => {
     setSelectedWeek(weekNumber);
   };
+
+  const handletempArray=()=>{
+    const dummy=[{"id":1}]
+     settemparray([...temparray,dummy])
+  }
   const fetchData = async () => {
     try {
       const params = { appointmentId, clientId, selectedWeek };
@@ -114,20 +120,49 @@ const Drill = (props) => {
             {" "}
             <div style={{ width: "100%" }}>
               <div
-                style={{ width: "fit-content" }}
-                className="d-flex buttons-cont m-auto mt-4 "
+                style={{ overflowX: "scroll" }}
+                className="d-flex buttons-cont m-auto mt-4 gap-3 "
               >
                 {/* Render buttons for each week */}
                 {[...Array(totalWeeks)].map((_, index) => (
                   <div
                     key={index}
-                    style={{ padding: "5px 13px 5px 13px" }}
+                    style={{
+                      padding: "5px 13px 5px 13px",
+                      width: "100px",
+                      fontSize: "small",
+                    }}
                     className={`bt-${selectedWeek === index + 1 ? "3" : "2"}`}
                     onClick={() => handleWeekSelect(index + 1)}
                   >
-                    Week {index + 1}
+                    <p>Session {index + 1}</p>
                   </div>
                 ))}
+              </div>
+              <div>
+                <button
+                  style={{
+                    background: "#7257FF",
+                    padding: "8px",
+                    right: "0px",
+                    fontColor: "white",
+                    fontWeight: "500",
+                    color: "white",
+                    borderRadius: "5px",
+                    zIndex:"3"
+                  }}
+                  onClick={() => {
+                    if(totalWeeks<=2){
+                        setTotalWeeks(totalWeeks + 1);
+                    }
+                    else{
+                         alert("Session Limit exceeded")
+                    }
+                   
+                  }}
+                >
+                  Add Session
+                </button>
               </div>
             </div>
           </Row>
@@ -226,7 +261,104 @@ const Drill = (props) => {
                     ))}
                   </Accordion>
                 ) : (
-                  <p>No data available</p>
+                  <p>
+                    <Accordion defaultActiveKey={["0"]} alwaysOpen>
+                      {[...Array(totalWeeks)].map((day, index) => (
+                        <Accordion.Item key={index} eventKey={index.toString()}>
+                          <Accordion.Header>
+                            <h6 className="w-25">Day {index + 1}</h6>
+                           
+                            <div className="d-flex acc-head-cont">
+                              
+                            </div>
+                          </Accordion.Header>
+                          <Accordion.Body>
+                          <div style={{height:"20px"}}>
+                          <div style={{position:"relative",width:"100%"}}>
+                              <button
+                  style={{
+                    background: "#7257FF",
+                    padding: "8px",
+                    right: "0px",
+                    fontColor: "white",
+                    fontWeight: "500",
+                    color: "white",
+                    borderRadius: "5px",
+                    fontSize:"small",
+                    position:"absolute",
+                    right:"0px"
+                  }}
+                  className="d-inline"
+                  onClick={() => {
+                    handletempArray()
+                  }}
+                >
+                  + Add Drill
+                </button>
+                                {/* <p> {day.activities.length} Drills</p> */}
+                              </div>
+                             </div>
+                            {temparray.map((item,index)=>{
+                                return(
+                                    <div className="days-cont">
+                              <div className="checkbox-wrapper-43">
+                                
+                                <label className="check d-inline">
+                                  
+                                Drill {index+1}
+                                </label>
+                              </div>
+                            </div>
+                                )
+                            })}
+                            {/* <div className="days-cont">
+                              <div className="checkbox-wrapper-43">
+                                
+                                <label className="check d-inline">
+                                  
+                                
+                                </label>
+                              </div>
+                            </div> */}
+                            {/* {day.activities.map((activity, activityIndex) => (
+                            <div className="days-cont" key={activity._id}>
+                              <div className="checkbox-wrapper-43">
+                                <input
+                                  type="checkbox"
+                                  id={activity._id}
+                                  checked={activity.isComplete}
+                                />
+                                <label
+                                  htmlFor={activity._id}
+                                  className="check d-inline"
+                                  onClick={() =>
+                                    handleLabelClick(
+                                      activity,
+                                      activityIndex,
+                                      day.activities.length
+                                    )
+                                  }
+                                >
+                                  <svg
+                                    width="18px"
+                                    height="18px"
+                                    viewBox="0 0 18 18"
+                                  >
+                                    <path d="M1,9 L1,3.5 C1,2 2,1 3.5,1 L14.5,1 C16,1 17,2 17,3.5 L17,14.5 C17,16 16,17 14.5,17 L3.5,17 C2,17 1,16 1,14.5 L1,9 Z"></path>
+                                    <polyline points="1 9 7 14 15 4"></polyline>
+                                  </svg>
+                                  <p className="d-inline">
+                                    {activity.activityName}
+                                  </p>
+                                </label>
+                              </div>
+                            </div>
+                          ))} */}
+                          </Accordion.Body>
+                        </Accordion.Item>
+                      ))}
+                    </Accordion>
+                  </p>
                 )}
               </section>
             </Col>
@@ -258,4 +390,4 @@ const Drill = (props) => {
   );
 };
 
-export default Drill;
+export default Drill2;

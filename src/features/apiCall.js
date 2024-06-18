@@ -339,6 +339,39 @@ export const GetEvalDiaForm = async (dispatch, { appointmentId }) => {
     return false; // Return false to indicate that the request failed
   }
 };
+
+
+export const Gettrainingsession=async(dispatch,{type,frequencyType})=>{
+  dispatch(FetchStart());
+  const token = localStorage.getItem("userToken");
+  try{
+    const {data}=await axios.get("/api/doctor/training-session",{params:{session_type:type,frequencyType:frequencyType},
+    headers: { Authorization: `Bearer ${token}` }})
+    dispatch(FetchSuccess({ type: "FETCH_Session_SUCCESS", payload: data }));
+    return data
+
+  }catch(error){
+
+  }
+}
+
+export const selecttrainingplan=async(dispatch,{clientId,sessionId})=>{
+  dispatch(FetchStart());
+  const token = localStorage.getItem("userToken");
+  try{
+    const {data}=await axios.post(`/api/doctor/buy-training-session?clientId=${clientId}&sessionId=${sessionId}`,{},
+      { headers: { Authorization: `Bearer ${token}` ,
+      'Content-Type': 'application/json'  }}
+    )
+    dispatch(FetchSuccess({ type: "FETCH_Session_SUCCESS", payload: data }));
+   
+    return {success:true,message:""}
+
+  }catch(error){
+    return {success:false,message:error}
+  }
+  
+}
 export const GetRecentBookings = async (
   dispatch,
   {

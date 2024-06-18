@@ -118,7 +118,7 @@ const DoctorServices = () => {
         navigate("/doctor/dashboard/appointment");
         break;
 
-      case "AddTrainingSessions":
+      case "TrainingSessions":
         // Logic for TrainingSessions service
         // You can navigate or perform other actions specific to this service
         navigate("/doctor/dashboard/doctor-service-selection/training");
@@ -194,7 +194,7 @@ const DoctorServices = () => {
             Please Select a type of Service for a user
           </p>
         </div>
-        <Form className="d-flex flex-wrap justify-content-center">
+        <Form className="d-flex flex-wrap justify-content-center gap-3" style={{overflowX:"scroll",height:"370px"}}>
           {isFetching?<><Loader/></>:
           <>
           {serviceTypeArray.map((service, index) => (
@@ -212,6 +212,7 @@ const DoctorServices = () => {
           </>
          }
         </Form>
+        <div style={{position:"absolute", bottom:"30px"}}>
         {isFetching ? (
           <button className="purple-button c-b">
             <Spinner animation="border" variant="light" />
@@ -226,6 +227,7 @@ const DoctorServices = () => {
             Continue
           </Button>
         )}
+        </div>
       </section>
     </>
   );

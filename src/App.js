@@ -32,6 +32,7 @@ import ViewEval_Dai from "./pages/ViewEval_Dia";
 import ViewPrescriptionForm from "./pages/ViewPrescriptionForm";
 import ErrorBoundary from "./utils/ErrorBoundary.js";
 import ProtectedRoute from "./utils/ProtectedRoute";
+import Drill2 from "./pages/Drill2";
 
 function App() {
   return (
@@ -40,6 +41,7 @@ function App() {
         {/* <Router> */}
         <Routes>
           <Route path="/" element={<SignIn />} />
+         
 
           <Route path="/forgot-password" element={<ForgotPassword />} />
 
@@ -57,8 +59,9 @@ function App() {
             <Route path="dashboard/edit-profile" element={<EditProfile />} />
             <Route
               path="dashboard/drill/:clientId/:appointmentId"
-              element={<Drill />}
+              element={<Drill2/>}
             />
+           
             <Route
               path="dashboard/doctor-service-selection"
               element={<DoctorServiceSelection />}
